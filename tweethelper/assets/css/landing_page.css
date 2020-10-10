@@ -1,0 +1,229 @@
+Body*/
+
+body{
+	font-family: 'Work Sans', sans-serif;
+	font-size: 14px;
+	overflow-x: hidden;
+}
+/*header*/
+header{
+	height: 100%;
+    position: relative;
+
+}
+
+header .overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    content: '';
+    opacity: 0.85;
+    background: #1DA1F2;
+    background: -moz-linear-gradient(45deg, #1DA1F2 0%, #23c5f2 100%);
+    background: -webkit-gradient(left bottom, right top, color-stop(0%, #1DA1F2), color-stop(100%, #23c5f2));
+    background: -webkit-linear-gradient(45deg, #1DA1F2 0%, #23c5f2 100%);
+    background: -o-linear-gradient(45deg, #1DA1F2 0%, #23c5f2 100%);
+    background: -ms-linear-gradient(45deg, #1DA1F2 0%, #23c5f2 100%);
+    background: linear-gradient(45deg, #1DA1F2 0%, #23c5f2 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#448ef6', endColorstr='#af05a9', GradientType=1 );
+}
+
+header .wrap{
+	padding: 10px 0;
+	top: 0;
+	width: 100%;
+	position: absolute;
+}
+header .wrap .navbar{
+	height: 50px;
+}
+header .wrap ul.navbar-nav li a{
+	color: #fff;
+	text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 4px;
+    margin-right: 5px;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    -ms-border-radius: 30px;
+    border-radius: 30px;
+}
+
+header .wrap ul.navbar-nav li a:hover{
+	background: #fff;
+	color: black;
+}
+
+header .wrap .header-title{
+	color: #fff;
+	z-index: 1;
+}
+
+header .wrap .header-title .text-title{
+	padding-top: 30%;
+	margin-bottom: 5px;
+    font-size: 55px;
+    color: #fff;
+    line-height: 1.2;
+    font-weight: 400;
+}
+
+header .wrap .header-title .btn-get-start{
+	border-radius: 30px;
+    border-width: 2px;
+}
+
+header .brand-website-logo img{
+	max-width: 250px;
+}
+
+.section-1 hr{
+	width: 112px;
+	margin: 52px auto;
+	border: 1px solid #35c2f8;
+}
+
+/*Section-1*/
+.section-1{
+	padding: 100px 0;
+}
+
+.section-1 .feature{
+	margin: 20px 0;
+}
+
+.section-1 .feature .icon{
+	font-size: 50px;
+    color: #2196F3;
+}
+
+.section-1 .feature h2{
+	font-size: 40px;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+
+.section-1 .content img{
+	opacity: 0.3;
+	padding-bottom: 20px;
+}
+
+.section-1 h2.title{
+    font-size: 40px;
+    color: #2196f3;
+    font-weight: 600;
+}
+
+.section-1 .content h4{
+	padding: 15px 0 0 0;
+	font-size: 18px;
+}
+.section-1 .content p{
+	font-size: 14px;
+	opacity: 0.8;
+	font-family: 'Noto Sans', sans-serif;
+}
+
+/*Section-2*/
+
+.section-2 {
+	background: #4a90e2;
+	color: #fff !important;
+	background: #2196F3 url(../images/bg-section-1.png);
+	opacity: 0.8;
+}
+
+.section-2 .content{
+	padding: 100px  0;
+}
+
+.section-2 .content h2.title{
+	color: #fff !important;
+}
+
+.section-2 .header-title hr{
+	width: 112px;
+    margin: 52px auto;
+    border: 1px solid #35c2f8;
+}
+.section-2 .about-contact{
+	padding-top: 25px;
+}
+
+.section-2 .content p.desc{
+    margin-bottom: 0.4rem !important;
+}
+
+.section-2 .footer-social-icon{
+	float: right !important;
+}
+
+.section-2 .footer-social-icon li.icon{
+	display: inline !important;
+}
+
+.section-2 .footer-social-icon li.icon a{
+    height: 50px;
+    width: 50px;
+    display: block;
+    float: left;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    position: relative;
+    margin-left: 8px;
+}
+
+.section-2 .footer-social-icon li.icon a span{
+    position: absolute;
+    color: #fff;
+    font-size: 26px;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+/*footer*/
+footer{
+	height: 60px;
+	line-height: 60px;
+	background: #0074d2;
+	color: #fff;
+	opacity: 0.8;
+}
+
+
+
+
+@media (max-width: 768px) {
+  	.navbar-nav {
+	    flex-direction: row-reverse !important; 
+	}
+}
+
+@media (max-width: 414px) {
+  	.navbar img {
+	    width: 120px !important; 
+
+	}
+	header .wrap .header-title .text-title {
+	    font-size: 44px;
+	}
+
+	header .wrap ul.navbar-nav li a {
+	    padding-top: 5px;
+	    padding-bottom: 5px;
+	    padding-left: 10px;
+	    padding-right: 10px;
+	    margin-top: 4px;
+	    margin-right: 5px;
+	}
+}
