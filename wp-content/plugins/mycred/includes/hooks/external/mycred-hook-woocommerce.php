@@ -48,7 +48,7 @@ endif;
 if ( ! function_exists( 'mycred_woo_add_product_metabox' ) ) :
 	function mycred_woo_add_product_metabox() {
 		$product = wc_get_product( get_the_ID() );
-		if( $product->is_type( 'simple' ) ) {	
+		if( $product->is_type( 'variable' ) != 'variable' ) {	
 			add_meta_box(
 				'mycred_woo_sales_setup',
 				mycred_label(),
@@ -71,7 +71,7 @@ if ( ! function_exists( 'mycred_woo_product_metabox' ) ) :
 	function mycred_woo_product_metabox( $post ) {
 		
 		$product = wc_get_product( get_the_ID() );
-		if( $product->is_type( 'simple' ) ) {	
+		if( $product->is_type( 'variable' ) != 'variable' ) {	
 			if ( ! current_user_can( apply_filters( 'mycred_woo_reward_cap', 'edit_others_posts' ) ) ) return;
 
 			$types = mycred_get_types();

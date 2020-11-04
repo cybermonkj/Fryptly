@@ -30,6 +30,9 @@ if ( ! function_exists( 'mycred_render_my_rank' ) ) :
 		if ( $user_id === false ) return;
 
 		$account_object = mycred_get_account( $user_id );
+		
+		if( empty( $account_object->balance[ $ctype ]->rank ) ) return;
+		
 		$rank_object    = $account_object->balance[ $ctype ]->rank;
 
 		if ( $rank_object !== false ) {

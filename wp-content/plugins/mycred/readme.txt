@@ -3,7 +3,7 @@ Contributors: mycred,wpexpertsio
 Tags: badges, gamification, loyalty, points, rewards
 Requires at least: 4.8
 Tested up to: 5.5.1
-Stable tag: 1.8.14
+Stable tag: 1.8.14.2
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -283,6 +283,12 @@ Bug fixes release.
 = 1.8.14 =
 Bug fixes release.
 
+= 1.8.14.1 =
+Bug fixes release.
+
+= 1.8.14.2 =
+Bug fixes release.
+
 == Other Notes ==
 
 = Requirements =
@@ -303,6 +309,15 @@ Bug fixes release.
 
 
 == Changelog ==
+
+= 1.8.14.2 =
+- **TWEAK** - Code optimization.
+
+= 1.8.14.1 =
+- **NEW** - Add filter for myCred Link Click hook
+- **FIX** - Reduce license requests
+- **FIX** - Rewards Points meta box is not displaying other than single product.
+- **TWEAK** - Remove Php warnings from myCred Rank Shortcode
 
 = 1.8.14 =
 - **FIX** - Comments hooks not working.

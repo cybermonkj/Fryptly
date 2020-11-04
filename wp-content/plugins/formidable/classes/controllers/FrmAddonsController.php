@@ -25,6 +25,9 @@ class FrmAddonsController {
 				'formidable-pro-upgrade',
 				'FrmAddonsController::upgrade_to_pro'
 			);
+		} elseif ( 'formidable-pro-upgrade' === FrmAppHelper::get_param( 'page' ) ) {
+			wp_safe_redirect( admin_url( 'admin.php?page=formidable' ) );
+			exit;
 		}
 	}
 
@@ -86,7 +89,7 @@ class FrmAddonsController {
 	 * @return array
 	 */
 	private static function fallback_plugin_list() {
-		return array(
+		$list = array(
 			'formidable-pro' => array(
 				'title'   => 'Formidable Forms',
 				'link'    => 'pricing/',
@@ -155,7 +158,21 @@ class FrmAddonsController {
 				'docs'    => 'knowledgebase/twilio-add-on/',
 				'excerpt' => 'Allow users to text their votes for polls created by Formidable Forms, or send SMS notifications when entries are submitted or updated.',
 			),
+			'views'          => array(
+				'title'   => 'Formidable Views',
+				'excerpt' => 'Add the power of views to your Formidable Forms to display your form submissions in listings, tables, calendars, and more.',
+			),
 		);
+
+		$defaults = array(
+			'released' => '',
+		);
+
+		foreach ( $list as $k => $info ) {
+			$info['slug'] = $k;
+			$list[ $k ]   = array_merge( $defaults, $info );
+		}
+		return $list;
 	}
 
 	/**
@@ -165,6 +182,18 @@ class FrmAddonsController {
 	 * @return string
 	 */
 	public static function get_pro_download_url() {
+		$license   = self::get_pro_license();
+		$api       = new FrmFormApi( $license );
+		$downloads = $api->get_api_info();
+		$pro       = self::get_pro_from_addons( $downloads );
+
+		return isset( $pro['url'] ) ? $pro['url'] : '';
+	}
+
+	/**
+	 * @since 4.08
+	 */
+	public static function get_pro_license() {
 		$pro_cred_store = 'frmpro-credentials';
 		$pro_wpmu_store = 'frmpro-wpmu-sitewide';
 		if ( is_multisite() && get_site_option( $pro_wpmu_store ) ) {
@@ -186,12 +215,14 @@ class FrmAddonsController {
 			// this is a fix for licenses saved in the past
 			$license = strtoupper( $license );
 		}
+		return $license;
+	}
 
-		$api       = new FrmFormApi( $license );
-		$downloads = $api->get_api_info();
-		$pro       = isset( $downloads['93790'] ) ? $downloads['93790'] : array();
-
-		return isset( $pro['url'] ) ? $pro['url'] : '';
+	/**
+	 * @since 4.08
+	 */
+	private static function get_pro_from_addons( $addons ) {
+		return isset( $addons['93790'] ) ? $addons['93790'] : array();
 	}
 
 	/**
@@ -209,7 +240,7 @@ class FrmAddonsController {
 			$type = isset( $addons['error']['type'] ) ? $addons['error']['type'] : $type;
 		}
 
-		$pro = isset( $addons['93790'] ) ? $addons['93790'] : array();
+		$pro = self::get_pro_from_addons( $addons );
 		if ( $type === 'free' ) {
 			$type = isset( $pro['type'] ) ? $pro['type'] : $type;
 			if ( $type === 'free' ) {
@@ -230,6 +261,44 @@ class FrmAddonsController {
 	 * @since 4.0.01
 	 */
 	public static function is_license_expired() {
+		$version_info = self::get_primary_license_info();
+		if ( ! isset( $version_info['error'] ) ) {
+			return false;
+		}
+
+		return $version_info['error'];
+	}
+
+	/**
+	 * @since 4.08
+	 *
+	 * @return boolean|int false or the number of days until expiration.
+	 */
+	public static function is_license_expiring() {
+		$version_info = self::get_primary_license_info();
+		if ( ! isset( $version_info['active_sub'] ) || $version_info['active_sub'] !== 'no' ) {
+			// Check for a subscription first.
+			return false;
+		}
+
+		if ( isset( $version_info['error'] ) || empty( $version_info['expires'] ) ) {
+			// It's either invalid or already expired.
+			return false;
+		}
+
+		$expiration = $version_info['expires'];
+		$days_left  = ( $expiration - time() ) / DAY_IN_SECONDS;
+		if ( $days_left > 30 ) {
+			return false;
+		}
+
+		return $days_left;
+	}
+
+	/**
+	 * @since 4.08
+	 */
+	private static function get_primary_license_info() {
 		$installed_addons = apply_filters( 'frm_installed_addons', array() );
 		if ( empty( $installed_addons ) || ! isset( $installed_addons['formidable_pro'] ) ) {
 			return false;
@@ -238,12 +307,7 @@ class FrmAddonsController {
 			'formidable_pro' => $installed_addons['formidable_pro'],
 		);
 
-		$version_info = self::fill_update_addon_info( $installed_addons );
-		if ( ! isset( $version_info['error'] ) ) {
-			return false;
-		}
-
-		return $version_info['error'];
+		return self::fill_update_addon_info( $installed_addons );
 	}
 
 	/**
@@ -377,20 +441,14 @@ class FrmAddonsController {
 	 * Get the action link for an addon that isn't active.
 	 *
 	 * @since 3.06.03
-	 * @param string $addon The plugin slug
+	 * @param string $plugin The plugin slug
 	 * @return array
 	 */
 	public static function install_link( $plugin ) {
-		$link    = array();
-		$addons = self::get_api_addons();
-		self::prepare_addons( $addons );
+		$link  = array();
+		$addon = self::get_addon( $plugin );
 
-		foreach ( $addons as $addon ) {
-			$slug = explode( '/', $addon['plugin'] );
-			if ( $slug[0] !== 'formidable-' . $plugin ) {
-				continue;
-			}
-
+		if ( $addon ) {
 			if ( $addon['status']['type'] === 'installed' && ! empty( $addon['activate_url'] ) ) {
 				$link = array(
 					'url'   => $addon['plugin'],
@@ -410,9 +468,39 @@ class FrmAddonsController {
 			if ( ! empty( $link ) ) {
 				$link['status'] = $addon['status']['type'];
 			}
-
-			return $link;
 		}
+
+		return $link;
+	}
+
+	/**
+	 * @since 4.09
+	 * @param string $plugin The plugin slug
+	 * @return array|false
+	 */
+	private static function get_addon( $plugin ) {
+		$addons = self::get_api_addons();
+		self::prepare_addons( $addons );
+		foreach ( $addons as $addon ) {
+			$slug = explode( '/', $addon['plugin'] );
+			if ( $slug[0] === 'formidable-' . $plugin ) {
+				return $addon;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @since 4.09
+	 * @return string
+	 */
+	private static function get_license_type() {
+		$license_type = '';
+		$addons       = self::get_api_addons();
+		if ( isset( $addons['error'] ) && isset( $addons['error']['type'] ) ) {
+			$license_type = $addons['error']['type'];
+		}
+		return $license_type;
 	}
 
 	/**
@@ -458,6 +546,9 @@ class FrmAddonsController {
 					$base_file = 'formidable-' . $slug;
 				}
 				$file_name = $base_file . '/' . $base_file . '.php';
+				if ( ! isset( $addon['plugin'] ) ) {
+					$addon['plugin'] = $file_name;
+				}
 			}
 
 			$addon['installed']    = self::is_installed( $file_name );
@@ -759,7 +850,8 @@ class FrmAddonsController {
 			// The plugin was installed, but not active. Download it now.
 			self::ajax_install_addon();
 		} else {
-			$response['active'] = true;
+			$response['active']  = true;
+			$response['success'] = true;
 		}
 
 		echo json_encode( $response );
@@ -773,14 +865,7 @@ class FrmAddonsController {
 
 		self::install_addon_permissions();
 
-		// Set the current screen to avoid undefined notices.
-		global $hook_suffix;
-		set_current_screen();
-
-		self::maybe_show_cred_form();
-
-		$installed = self::install_addon();
-		self::maybe_activate_addon( $installed );
+		self::download_and_activate();
 
 		// Send back a response.
 		echo json_encode( __( 'Your plugin has been installed. Please reload the page to see more options.', 'formidable' ) );
@@ -788,9 +873,32 @@ class FrmAddonsController {
 	}
 
 	/**
+	 * @since 4.08
+	 */
+	private static function download_and_activate() {
+		// Set the current screen to avoid undefined notices.
+		if ( is_admin() ) {
+			global $hook_suffix;
+			set_current_screen();
+		}
+
+		self::maybe_show_cred_form();
+
+		$installed = self::install_addon();
+		if ( is_array( $installed ) && isset( $installed['message'] ) ) {
+			return $installed;
+		}
+		self::maybe_activate_addon( $installed );
+	}
+
+	/**
 	 * @since 3.04.02
 	 */
 	private static function maybe_show_cred_form() {
+		if ( ! function_exists( 'request_filesystem_credentials' ) ) {
+			include_once( ABSPATH . 'wp-admin/includes/file.php' );
+		}
+
 		// Start output bufferring to catch the filesystem form if credentials are needed.
 		ob_start();
 
@@ -808,10 +916,15 @@ class FrmAddonsController {
 		}
 
 		if ( $show_form ) {
-			//$form = ob_get_clean();
-			//TODO: test this: echo json_encode( array( 'form' => $form ) );
-			echo json_encode( array( 'form' => __( 'Sorry, you\'re site requires FTP authentication. Please install plugins manaully.', 'formidable' ) ) );
-			wp_die();
+			$form     = ob_get_clean();
+			$message  = __( 'Sorry, your site requires FTP authentication. Please download plugins from FormidableForms.com and install them manually.', 'formidable' );
+			$data     = $form;
+			$response = array(
+				'success' => false,
+				'message' => $message,
+				'form'    => $form,
+			);
+			wp_send_json( $response );
 		}
 
 		ob_end_clean();
@@ -835,7 +948,14 @@ class FrmAddonsController {
 		// Flush the cache and return the newly installed plugin basename.
 		wp_cache_flush();
 
-		return $installer->plugin_info();
+		$plugin = $installer->plugin_info();
+		if ( empty( $plugin ) ) {
+			return array(
+				'message' => 'Plugin was not installed. ' . $installer->result,
+				'success' => false,
+			);
+		}
+		return $plugin;
 	}
 
 	/**
@@ -903,8 +1023,14 @@ class FrmAddonsController {
 		if ( is_wp_error( $activate ) ) {
 			// Ignore the invalid header message that shows with nested plugins.
 			if ( $activate->get_error_code() !== 'no_plugin_header' ) {
-				echo json_encode( array( 'error' => $activate->get_error_message() ) );
-				wp_die();
+				if ( wp_doing_ajax() ) {
+					echo json_encode( array( 'error' => $activate->get_error_message() ) );
+					wp_die();
+				}
+				return array(
+					'message' => $activate->get_error_message(),
+					'success' => false,
+				);
 			}
 		}
 	}
@@ -921,6 +1047,115 @@ class FrmAddonsController {
 			echo json_encode( true );
 			wp_die();
 		}
+	}
+
+	/**
+	 * @since 4.08
+	 */
+	public static function connect_link() {
+		$auth = get_option( 'frm_connect_token' );
+		if ( empty( $auth ) ) {
+			$auth = hash( 'sha512', wp_rand() );
+			update_option( 'frm_connect_token', $auth );
+		}
+		$link = FrmAppHelper::admin_upgrade_link( 'connect', 'api-connect' );
+		$args = array(
+			'v'       => 2,
+			'siteurl' => FrmAppHelper::site_url(),
+			'url'     => get_rest_url(),
+			'token'   => $auth,
+			'l'       => self::get_pro_license(),
+		);
+
+		return add_query_arg( $args, $link );
+	}
+
+	/**
+	 * Check the auth value for install permission.
+	 *
+	 * @since 4.08
+	 *
+	 * @return bool
+	 */
+	public static function can_install_addon_api() {
+		// Verify params present (auth & download link).
+		$post_auth = FrmAppHelper::get_param( 'token', '', 'request', 'sanitize_text_field' );
+		$post_url  = FrmAppHelper::get_param( 'file_url', '', 'request', 'sanitize_text_field' );
+
+		if ( empty( $post_auth ) || empty( $post_url ) ) {
+			return false;
+		}
+
+		// Verify auth.
+		$auth = get_option( 'frm_connect_token' );
+		if ( empty( $auth ) || ! hash_equals( $auth, $post_auth ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Install and/or activate the add-on file.
+	 *
+	 * @since 4.08
+	 */
+	public static function install_addon_api() {
+		// Sanitize when it's used to prevent double sanitizing.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		$_POST['plugin'] = isset( $_REQUEST['file_url'] ) ? $_REQUEST['file_url'] : ''; // Set for later use
+
+		$error = esc_html__( 'Could not install an upgrade. Please download from formidableforms.com and install manually.', 'formidable' );
+
+		// Delete so cannot replay.
+		delete_option( 'frm_connect_token' );
+
+		// It's already installed and active.
+		$active = activate_plugin( 'formidable-pro/formidable-pro.php', false, false, true );
+		if ( is_wp_error( $active ) ) {
+			// Download plugin now.
+			$response = self::download_and_activate();
+			if ( is_array( $response ) && isset( $response['success'] ) ) {
+				return $response;
+			}
+		}
+
+		// If empty license, save it now.
+		if ( empty( self::get_pro_license() ) && function_exists( 'load_formidable_pro' ) ) {
+			load_formidable_pro();
+			$license = stripslashes( FrmAppHelper::get_param( 'key', '', 'request', 'sanitize_text_field' ) );
+			if ( empty( $license ) ) {
+				return array(
+					'success' => false,
+					'error'   => 'That site does not have a valid license key.',
+				);
+			}
+
+			$response = FrmAddon::activate_license_for_plugin( $license, 'formidable_pro' );
+			if ( ! $response['success'] ) {
+				// Could not activate license.
+				return $response;
+			}
+		}
+
+		return array(
+			'success' => true,
+		);
+	}
+
+	/**
+	 * Render a conditional action button for a specified plugin
+	 *
+	 * @param string $plugin
+	 * @param array|string $upgrade_link_args
+	 * @since 4.09
+	 */
+	public static function conditional_action_button( $plugin, $upgrade_link_args ) {
+		$addon         = self::get_addon( $plugin );
+		$license_type  = self::get_license_type();
+		$plan_required = FrmFormsHelper::get_plan_required( $addon );
+		$upgrade_link  = FrmAppHelper::admin_upgrade_link( $upgrade_link_args );
+		FrmAppHelper::conditional_action_button( $addon, $license_type, $plan_required, $upgrade_link );
 	}
 
 	/**

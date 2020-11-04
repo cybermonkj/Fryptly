@@ -151,7 +151,7 @@ function frmFrontFormJS() {
 	}
 
 	function validateForm( object ) {
-		var r, rl, n, nl, emailFields, fields, field, value, requiredFields,
+		var r, rl, n, nl, fields, field, value, requiredFields,
 			errors = [];
 
 		// Make sure required text field is filled in
@@ -164,7 +164,6 @@ function frmFrontFormJS() {
 			}
 		}
 
-		emailFields = jQuery( object ).find( 'input[type=email]' ).filter( ':visible' );
 		fields = jQuery( object ).find( 'input,select,textarea' );
 		if ( fields.length ) {
 			for ( n = 0, nl = fields.length; n < nl; n++ ) {
@@ -176,7 +175,9 @@ function frmFrontFormJS() {
 					} else if ( field.type === 'number' ) {
 						errors = checkNumberField( field, errors );
 					} else if ( field.type === 'email' ) {
-						errors = checkEmailField( field, errors, emailFields );
+						errors = checkEmailField( field, errors );
+					} else if ( field.type === 'password' ) {
+						errors = checkPasswordField( field, errors );
 					} else if ( field.type === 'url' ) {
 						errors = checkUrlField( field, errors );
 					} else if ( field.pattern !== null ) {
@@ -209,7 +210,7 @@ function frmFrontFormJS() {
 	}
 
 	function validateField( fieldId, field ) {
-		var key, emailFields,
+		var key,
 			errors = [];
 
 		var $fieldCont = jQuery( field ).closest( '.frm_form_field' );
@@ -219,8 +220,9 @@ function frmFrontFormJS() {
 
 		if ( errors.length < 1 ) {
 			if ( field.type === 'email' ) {
-				emailFields = jQuery( field ).closest( 'form' ).find( 'input[type=email]' );
-				errors = checkEmailField( field, errors, emailFields );
+				errors = checkEmailField( field, errors );
+			} else if ( field.type === 'password' ) {
+				errors = checkPasswordField( field, errors );
 			} else if ( field.type === 'number' ) {
 				errors = checkNumberField( field, errors );
 			} else if ( field.type === 'url' ) {
@@ -337,34 +339,45 @@ function frmFrontFormJS() {
 		return errors;
 	}
 
-	function checkEmailField( field, errors, emailFields ) {
-		var isConf, re, invalidMsg, confName, match,
-			emailAddress = field.value,
-			fieldID = getFieldId( field, true );
+	function checkEmailField( field, errors ) {
+		var fieldID = getFieldId( field, true ),
+			pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;
 
-		if ( fieldID in errors ) {
-			return errors;
+		// validate the current field we're editing first
+		if ( '' !== field.value && pattern.test( field.value ) === false ) {
+			errors[ fieldID ] = getFieldValidationMessage( field, 'data-invmsg' );
 		}
 
-		isConf = ( fieldID.indexOf( 'conf_' ) === 0 );
-		if ( emailAddress !== '' || isConf ) {
-			re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;
-			invalidMsg = getFieldValidationMessage( field, 'data-invmsg' );
-			if ( emailAddress !== '' && re.test( emailAddress ) === false ) {
-				errors[ fieldID ] = invalidMsg;
-				if ( isConf ) {
-					errors[ fieldID.replace( 'conf_', '' ) ] = '';
-				}
-			} else if ( isConf ) {
-				confName = field.name.replace( 'conf_', '' );
-				match = emailFields.filter( '[name="' + confName + '"]' ).val();
-				if ( match !== emailAddress ) {
-					errors[ fieldID ] = '';
-					errors[ fieldID.replace( 'conf_', '' ) ] = '';
-				}
-			}
-		}
+		confirmField( field, errors );
 		return errors;
+	}
+
+	function checkPasswordField( field, errors ) {
+		confirmField( field, errors );
+		return errors;
+	}
+
+	function confirmField( field, errors ) {
+		var value, confirmValue, firstField,
+			fieldID = getFieldId( field, true ),
+			strippedId = field.id.replace( 'conf_', '' ),
+			strippedFieldID = fieldID.replace( 'conf_', '' ),
+			confirmField = document.getElementById( strippedId.replace( 'field_', 'field_conf_' ) );
+
+		if ( confirmField === null || typeof errors[ 'conf_' + strippedFieldID ] !== 'undefined' ) {
+			return;
+		}
+
+		if ( fieldID !== strippedFieldID ) {
+			firstField = document.getElementById( strippedId );
+			value = firstField.value;
+			confirmValue = confirmField.value;
+			if ( '' !== value && '' !== confirmValue && value !== confirmValue ) {
+				errors[ 'conf_' + strippedFieldID ] = getFieldValidationMessage( confirmField, 'data-confmsg' );
+			}
+		} else {
+			validateField( 'conf_' + strippedFieldID, confirmField );
+		}
 	}
 
 	function checkNumberField( field, errors ) {
