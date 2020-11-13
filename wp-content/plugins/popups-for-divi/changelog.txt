@@ -1,3 +1,24 @@
+
+= Version 2.2.5 =
+* Improve: We have made the Visual Builder integration (the "Popup-Tab") faster and more stable.
+* Improve: Do not include the JS API for certain 404 results, such as missing images.
+* Change: New JS API function `DiviAreaItem.isPrepared()` to check if an Area is fully initialized.
+* Change: New JS filter to add custom initialization code - `pre_init_area`
+* Change: New JS filter to dynamically change an Areas z-index - `apply_z_index`
+* Change: New JS filter to adjust Area initialization - `area_preparation_time`
+* Change: The JS API function `DiviAreaItem.getData()` does not require a parameter anymore.
+* Fix: The z-index is correctly applied again.
+* Fix: Improve the full-height calculation of Popups
+
+= Version 2.2.4 =
+* Improve: Area sizes are more accurate when using Divis responsive sizes.
+* Improve: Images inside Popups are instantly loaded in Chrome (fixed a lazy-load bug).
+* Improve: Area size is re-calculated when the Area contents change, e.g. when an accordion is opened or closed.
+* Improve: When a Popup is opened, scrolling is disabled in all browsers, without shifting the content!
+* Change: New JS action that fires when an Area was resized `resize_area`.
+* Change: New JS action to customize screen-position of an Area `position_area` (not available for Inline Areas).
+* Fix: Full-Height Popups can be scrolled again in Safari/iPhones.
+
 = 2.2.3 =
 * Fix: Position of close button is correct in full-height Popups.
 

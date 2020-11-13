@@ -13,7 +13,7 @@
  * When this file needs to be updated, change the version number and propagate all
  * changes to the other plugins!
  *
- * @version 2.0.1
+ * @version 2.1.0
  */
 class PFD_Component {
 	/**

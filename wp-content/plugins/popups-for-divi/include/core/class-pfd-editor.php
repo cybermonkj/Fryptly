@@ -52,7 +52,6 @@ class PFD_Editor extends PFD_Component {
 			[ $this, 'add_section_config' ]
 		);
 
-		// Todo: This filter is deprecated. Find a better way!
 		add_filter(
 			'et_builder_main_tabs',
 			[ $this, 'add_tab' ],
@@ -82,7 +81,7 @@ class PFD_Editor extends PFD_Component {
 				'on'  => esc_html__( 'Yes', 'divi-popup' ),
 			],
 			'default'         => 'off',
-			'description'     => esc_html__( 'Turn this section into a Divi Popup section.', 'divi-popup' ),
+			'description'     => esc_html__( 'Turn this section into an On-Page Popup. Note, that this Popup is available on this page only. To create a global Popup, place an On-Page Popup into the theme Footer (or Header) using Divis Theme Builder.', 'divi-popup' ),
 			'tab_slug'        => 'da',
 			'toggle_slug'     => 'da_general',
 		];
@@ -90,7 +89,7 @@ class PFD_Editor extends PFD_Component {
 			'label'           => esc_html__( 'Popup ID', 'divi-popup' ),
 			'type'            => 'text',
 			'option_category' => 'configuration',
-			'description'     => esc_html__( 'Assign a unique ID to the Popup. You can display this Popup by using this name in an anchor link, like "#slug".', 'divi-popup' ),
+			'description'     => esc_html__( 'Assign a unique ID to the Popup. You can display this Popup by using this name in an anchor link, like "#slug". The Popup ID is case-sensitive and we recommend to always use a lower-case ID', 'divi-popup' ),
 			'tab_slug'        => 'da',
 			'toggle_slug'     => 'da_general',
 			'show_if'         => [
@@ -341,22 +340,29 @@ class PFD_Editor extends PFD_Component {
 	 */
 	public function et_fb_ajax_save() {
 		/**
-		 * We disable phpcs for the following block, so we can use the identical
-		 * code that is used inside the Divi theme.
+		 * We disable phpcs for the following block, so we can use the identical code
+		 * that is used inside the Divi theme.
 		 *
 		 * @see et_fb_ajax_save() in themes/Divi/includes/builder/functions.php
 		 */
-		// phpcs:disable
 		if (
 			! isset( $_POST['et_fb_save_nonce'] ) ||
-			! wp_verify_nonce( $_POST['et_fb_save_nonce'], 'et_fb_save_nonce' )
+			! wp_verify_nonce( sanitize_key( $_POST['et_fb_save_nonce'] ), 'et_fb_save_nonce' )
 		) {
 			return;
 		}
 
-		$post_id = absint( $_POST['post_id'] );
+		$post_id = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
 
-		if ( ! et_fb_current_user_can_save( $post_id, $_POST['options']['status'] ) ) {
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		// phpcs:disable ET.Sniffs.ValidatedSanitizedInput.InputNotSanitized
+		if (
+			! isset( $_POST['options'] )
+			|| ! isset( $_POST['options']['status'] )
+			|| ! isset( $_POST['modules'] )
+			|| ! et_fb_current_user_can_save( $post_id, $_POST['options']['status'] )
+		) {
 			return;
 		}
 
@@ -377,6 +383,22 @@ class PFD_Editor extends PFD_Component {
 			'da_with_loader'     => 'off',
 			'da_has_shadow'      => 'on',
 			'da_disable_devices' => [ 'off', 'off', 'off' ],
+		];
+
+		// Remove all functional classes from the section.
+		$special_classes = [
+			'popup',
+			'on-exit',
+			'no-close',
+			'close-alt',
+			'dark',
+			'is-modal',
+			'single',
+			'with-loader',
+			'no-shadow',
+			'not-mobile',
+			'not-tablet',
+			'not-desktop',
 		];
 
 		foreach ( $shortcode_data as $id => $item ) {
@@ -442,22 +464,6 @@ class PFD_Editor extends PFD_Component {
 					$attrs[ $key ] = $def_value;
 				}
 			}
-
-			// Remove all functional classes from the section.
-			$special_classes = [
-				'popup',
-				'on-exit',
-				'no-close',
-				'close-alt',
-				'dark',
-				'is-modal',
-				'single',
-				'with-loader',
-				'no-shadow',
-				'not-mobile',
-				'not-tablet',
-				'not-desktop',
-			];
 
 			$classes = array_diff( $classes, $special_classes );
 

@@ -77,7 +77,7 @@ class Wt_Import_Export_For_Woo_basic_User {
         if ($this->module_base != $base) {
             return $import_data;
         }
-                
+                        
         if(0 == $batch_offset){                        
             $memory = size_format(wt_let_to_num_basic(ini_get('memory_limit')));
             $wp_memory = size_format(wt_let_to_num_basic(WP_MEMORY_LIMIT));                      
@@ -99,7 +99,7 @@ class Wt_Import_Export_For_Woo_basic_User {
     public function exporter_do_export($export_data, $base, $step, $form_data, $selected_template_data, $method_export, $batch_offset) {
         if ($this->module_base != $base) {
             return $export_data;
-        }
+        }        
 
         switch ($method_export) {
             case 'quick':

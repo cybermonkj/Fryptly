@@ -44,10 +44,10 @@ class PFD_Asset extends PFD_Component {
 	public function enqueue_js_library() {
 		global $wp_query;
 
-		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
-			return;
-		}
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		if (
+			( defined( 'DOING_CRON' ) && DOING_CRON )
+			|| ( defined( 'DOING_AJAX' ) && DOING_AJAX )
+		) {
 			return;
 		}
 
@@ -57,6 +57,15 @@ class PFD_Asset extends PFD_Component {
 		 */
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( 'true' === $wp_query->get( 'et_pb_preview' ) && isset( $_GET['et_pb_preview_nonce'] ) ) { // input var okay.
+			return;
+		}
+
+		if ( is_admin() || apply_filters( 'divi_areas_is_build_mode', false ) ) {
+			$base_name = 'builder';
+		} elseif ( ! $this->is_missing_file() ) {
+			$base_name = 'front';
+		} else {
+			// Not in builder mode, but also no front-end document: Do not load API.
 			return;
 		}
 
@@ -372,17 +381,7 @@ class PFD_Asset extends PFD_Component {
 		 */
 		$js_data['sys'] = apply_filters( 'divi_areas_debug_infos', [] );
 
-		if ( is_admin() || apply_filters( 'divi_areas_is_build_mode', false ) ) {
-			$base_name  = 'builder';
-			$inline_css = '';
-		} else {
-			$base_name  = 'front';
-			$inline_css = sprintf(
-				'%s{display:none}',
-				$js_data['popupSelector']
-			);
-		}
-
+		// Force reload of the JS API assets during debugging.
 		if ( $js_data['debug'] || ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ) {
 			$cache_version .= '-' . time();
 		}
@@ -409,7 +408,12 @@ class PFD_Asset extends PFD_Component {
 		wp_enqueue_script( 'js-divi-area' );
 		wp_enqueue_style( 'css-divi-area' );
 
-		if ( $inline_css ) {
+		if ( 'front' === $base_name ) {
+			$inline_css = sprintf(
+				'%s{display:none}',
+				$js_data['popupSelector']
+			);
+
 			wp_add_inline_style( 'css-divi-area', $inline_css );
 		}
 	}
@@ -569,5 +573,67 @@ class PFD_Asset extends PFD_Component {
 		}
 
 		return $infos;
+	}
+
+	/**
+	 * Determines whether the current request tries to load a missing page resource,
+	 * such as a .js or .map file.
+	 *
+	 * When such a request is detected, the JS API is not initialized, so we do not
+	 * return JS code for the resource. So far we know that this fixes issues where
+	 * .svg files are used that do not exist: WP will return the 404 page result which
+	 * is parsed by the parent document. During that process the JS API can spill into
+	 * the parent document and interfere with the Visual Builder.
+	 *
+	 * @since DAP 2.2.0
+	 * @return bool True, when we suspect that the 404 request is accessing a missing
+	 *              page resource.
+	 */
+	public function is_missing_file() {
+		static $is_missing_file = null;
+
+		if ( null === $is_missing_file ) {
+			$is_missing_file = false;
+
+			if ( is_404() ) {
+				if ( isset( $_SERVER['HTTP_SEC_FETCH_DEST'] ) ) {
+					/*
+					 * When a Sec-Fetch-Dest header is present, we use that
+					 * information to determine how this resource should be used. Only
+					 * documents and embeds should load JS sources.
+					 */
+					$is_missing_file = ! in_array(
+						$_SERVER['HTTP_SEC_FETCH_DEST'],
+						[ 'document', 'embed', 'nested-document' ],
+						true
+					);
+				} elseif ( ! empty( $_SERVER['REQUEST_URI'] ) && ! wp_get_raw_referer() ) {
+					/*
+					 * If no Sec-Fetch-Dest header is present, we evaluate the
+					 * requested URI to determine, if it looks like a page resource.
+					 * Of course, we only do this when no referer is present, as a
+					 * referer always indicates a top-level document.
+					 */
+					$requested_url = esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) );
+					$questionmark  = strpos( $requested_url, '?' );
+
+					if ( $questionmark > 1 ) {
+						$requested_url = substr( $requested_url, 0, $questionmark );
+					}
+
+					/**
+					 * If the requested URL starts with "/wp-content/", or if it ends
+					 * with a dot followed by 2-4 letters (like .js, .map, .json,
+					 * .svg) then we're pretty sure that the request tries to find a
+					 * missing page resource.
+					 */
+					if ( preg_match( '!(^/wp-content/|\.[a-z]{2,4}$)!i', $requested_url ) ) {
+						$is_missing_file = true;
+					}
+				}
+			}
+		}
+
+		return $is_missing_file;
 	}
 }

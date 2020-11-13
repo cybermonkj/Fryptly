@@ -1,11 +1,11 @@
 === Import Export WordPress Users ===
 Contributors: webtoffee
 Donate link: https://www.webtoffee.com/plugins/
-Tags: user import, user export, export customers, import customers, export users to csv, import users from csv, woocommerce export customers, export import users,  woocommerce import customers, woocommerce export customer email
+Tags: user import, user export, csv, woocommerce, customers, import, export, export customers, import customers, export users to csv, import users from csv, woocommerce export customers, export import users, woocommerce import customers, woocommerce export customer email
 Requires at least: 3.0.1
 Tested up to: 5.5
 Requires PHP: 5.6
-Stable tag: 2.0.1
+Stable tag: 2.0.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -20,7 +20,7 @@ Import users and export users made fast and simple! Import Export WordPress User
 
  &#128312; Users Export - Export Users to CSV file.</li>
  &#128312; Users import - Import Users from CSV format to WordPress/WooCommerce Store.
- &#128312; Tested OK with WooCommerce 4.6.1
+ &#128312; Tested OK with WooCommerce 4.7.0
  &#128312; Tested OK with PHP 7.3.5
 
 Highlights: WordPress Users Export, WordPress Users CSV Import Suite, Export WordPress Users to CSV. Pro Version supports export and import of all additional user meta like WooCommerce details.
@@ -160,6 +160,11 @@ By default, admin and store manager are given access to export users. Please vis
 3. Premium export Screen
 
 == Changelog ==
+= 2.0.2 =
+* Fix: Batch count issue for quick export.
+* Fix: Issue with password migration for quick import.
+* Tested OK with WC 4.7.0.
+* Version 2.0.0 onward has been revamped majorly.
 = 2.0.1 =
 * Fix: Browser popup blocker issue.
 * Tested OK with WC 4.6.1.
@@ -284,7 +289,8 @@ By default, admin and store manager are given access to export users. Please vis
 
 == Upgrade Notice ==
 
-= 2.0.1 =
-* Fix: Browser popup blocker issue.
-* Tested OK with WC 4.6.1.
+= 2.0.2 =
+* Fix: Batch count issue for quick export.
+* Fix: Issue with password migration for quick import.
+* Tested OK with WC 4.7.0.
 * Version 2.0.0 onward has been revamped majorly.

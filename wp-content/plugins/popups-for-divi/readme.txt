@@ -1,8 +1,8 @@
 === Popups for Divi ===
 Contributors: strackerphil-1
 Tags: popup, marketing, divi
-Requires at least: 3.0.1
-Tested up to: 5.5.6
+Requires at least: 4.0.0
+Tested up to: 5.5.3
 Stable tag: trunk
 Requires PHP: 5.6
 License: GPLv2 or later
@@ -148,16 +148,16 @@ Here's how you can revert to an older version of the plugin:
 2. Pick your version and click "Download" (you can choose any version since 1.5.1)
 3. Now go to your wp-admin Panel and open the Plugins list
 4. Deactivate and Delete the Popups for Divi plugin! *Note: You will not lose any data, but while the plugin is deactivated/missing your Popups might be visible like normal page content.*
-5. On the Plugins page click "Add New" button in the top and then click on "Upload Plugin"
+5. On the Plugins page click the "Add New" button in the top and then click on "Upload Plugin"
 6. Select the .zip file which you downloaded in Step 2 and upload it. Activate and you're done!
 
-Alternatively you can replace the `popups-for-divi` folder via FTP: Extract the .zip file which you downloaded in Step 2 and upload it to your `/wp-content/plugins` folder.
+Alternatively, you can replace the `popups-for-divi` folder via FTP: Extract the .zip file which you downloaded in Step 2 and upload it to your `/wp-content/plugins` folder.
 
 = I have more questions or need help =
 
 Please first visit the [**plugin website**](https://divimode.com/divi-popup/?utm_source=wporg&utm_medium=link&utm_campaign=popups-for-divi), as it includes examples and documentation that could answer your questions.
 
-If that does not help, then head over to the [**support forum**](https://wordpress.org/support/plugin/popups-for-divi/?utm_source=wporg&utm_medium=link&utm_campaign=popups-for-divi) to see if someone else had the same problem and found a solution to it. Also, feel free to ask for help there.
+If that does not help, then head over to the [**support forum**](https://wordpress.org/support/plugin/popups-for-divi/) to see if someone else had the same problem and found a solution to it. Also, feel free to ask for help there.
 
 You can also send us a private support request via the [**support form on divimode.com**](https://divimode.com/get-support//?utm_source=wporg&utm_medium=link&utm_campaign=popups-for-divi). Please note, that might need a while to answer your private support requests.
 
@@ -167,21 +167,36 @@ When you need additional features, then please have a look at our the Premium pl
 
 1. Step 1: Prepare your Popup inside a normal Divi Section, right on your page.
 2. Step 2: Open the Section Settings, enable the "This is a Popup" flag and define a unique Popup ID.
-3. Step 3: That's how the final Popup is dispayed to a visitor.
+3. Step 3: That's how the final Popup is displayed to a visitor.
 4. Check out the extensive API documentation and popup samples on divimode.com
 5. Our free email course walks you through every aspect of the plugin - from the basics to advanced use-cases and techniques.
 
-== Upgrade Notice ==
-
-= 2.2.0 =
-Attention: The JS API changes! Developers, please first read https://divimode.com/api-1-2-0-changes/
-
 == Changelog ==
 
-= 2.2.3 =
-* Fix: Position of close button is correct in full-height Popups.
+= Version 2.2.5 =
+* Improve: We have made the Visual Builder integration (the "Popup-Tab") faster and more stable.
+* Improve: Do not include the JS API for certain 404 results, such as missing images.
+* Change: New JS API function `DiviAreaItem.isPrepared()` to check if an Area is fully initialized.
+* Change: New JS filter to add custom initialization code - `pre_init_area`
+* Change: New JS filter to dynamically change an Areas z-index - `apply_z_index`
+* Change: New JS filter to adjust Area initialization - `area_preparation_time`
+* Change: The JS API function `DiviAreaItem.getData()` does not require a parameter anymore.
+* Fix: The z-index is correctly applied again.
+* Fix: Improve the full-height calculation of Popups
 
-Plugin tested with WordPress 5.5.6 and Divi 4.6.5
+Plugin tested with WordPress 5.5.3 and Divi 4.6.6
+
+= 2.2.4 =
+* Improve: Area sizes are more accurate when using Divis responsive sizes.
+* Improve: Images inside Popups are instantly loaded in Chrome (fixed a lazy-load bug).
+* Improve: Area size is re-calculated when the Area contents change, e.g. when an accordion is opened or closed.
+* Improve: When a Popup is opened, scrolling is disabled in all browsers, without shifting the content!
+* Change: New JS action that fires when an Area was resized `resize_area`.
+* Change: New JS action to customize screen-position of an Area `position_area` (not available for Inline Areas).
+* Fix: Full-Height Popups can be scrolled again in Safari/iPhones.
+
+= 2.2.3 =
+* Fix: Position of the close button is correct in full-height Popups.
 
 = 2.2.2 =
 * Improve: Images inside Areas are instantly loaded in Chrome (fixed a lazy-load bug).

@@ -6,8 +6,8 @@
   Description: Export and Import User/Customers details From and To your WordPress/WooCommerce.
   Author: WebToffee
   Author URI: https://www.webtoffee.com/product/wordpress-users-woocommerce-customers-import-export/
-  Version: 2.0.1
-  WC tested up to: 4.6.1
+  Version: 2.0.2
+  WC tested up to: 4.7.0
   Text Domain: users-customers-import-export-for-wp-woocommerce
   License: GPLv3
   License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -43,7 +43,7 @@ if ( ! defined( 'WT_IEW_DEBUG_BASIC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'WT_U_IEW_VERSION', '2.0.1' );
+define( 'WT_U_IEW_VERSION', '2.0.2' );
 
 /**
  * The code that runs during plugin activation.
@@ -123,7 +123,7 @@ function wt_uiew_plugin_action_links_basic_user($links)
 
 	$links[] = '<a href="https://www.webtoffee.com/user-import-export-plugin-wordpress-user-guide/" target="_blank">'.__('Documentation').'</a>';
         $links[] = '<a target="_blank" href="https://wordpress.org/support/plugin/users-customers-import-export-for-wp-woocommerce/">' . __('Support') . '</a>';
-        $links[] = '<a target="_blank" href="https://www.webtoffee.com/product/wordpress-users-woocommerce-customers-import-export/?utm_source=user-import-export&utm_medium=dashboard&utm_campaign=upgrade" style="color:#3db634;">' . __('Premium Upgrade') . '</a>';        
+        $links[] = '<a target="_blank" href="https://www.webtoffee.com/product/wordpress-users-woocommerce-customers-import-export/?utm_source=free_plugin_listing&utm_medium=user_imp_exp_basic&utm_campaign=User_Import_Export&utm_content='.WT_U_IEW_VERSION.'" style="color:#3db634;">' . __('Premium Upgrade') . '</a>';        
         if (array_key_exists('deactivate', $links)) {
             $links['deactivate'] = str_replace('<a', '<a class="userimport-deactivate-link"', $links['deactivate']);
         }

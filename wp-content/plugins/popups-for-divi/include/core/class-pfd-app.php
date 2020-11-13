@@ -21,12 +21,6 @@ class PFD_App extends PFD_Component {
 	 * @since 2.0.4 function renamed from __construct() to setup().
 	 */
 	public function setup() {
-		load_plugin_textdomain(
-			'popups-for-divi',
-			false,
-			dirname( DIVI_POPUP_PLUGIN ) . '/lang/'
-		);
-
 		// Do not load the JS library, when the Pro version is active.
 		if ( defined( 'DIVI_AREAS_PLUGIN' ) ) {
 			return;
@@ -55,6 +49,11 @@ class PFD_App extends PFD_Component {
 	 */
 	public function setup_hooks() {
 		add_filter(
+			'init',
+			[ $this, 'translate_plugin' ]
+		);
+
+		add_filter(
 			'plugin_action_links_' . DIVI_POPUP_PLUGIN,
 			[ $this, 'plugin_add_settings_link' ]
 		);
@@ -69,6 +68,24 @@ class PFD_App extends PFD_Component {
 		add_action(
 			'wp_enqueue_scripts',
 			[ $this->module( 'asset' ), 'enqueue_js_library' ]
+		);
+	}
+
+	/**
+	 * Load plugin translations.
+	 *
+	 * Note: Loading the plugin translations should not be done during plugins_loaded
+	 * action since that is too early and prevent other language related plugins from
+	 * correctly hooking up with load_textdomain() function. Calling
+	 * load_plugin_textdomain() should be delayed until init action.
+	 *
+	 * @since 2.2.5
+	 */
+	public function translate_plugin() {
+		load_plugin_textdomain(
+			'popups-for-divi',
+			false,
+			dirname( DIVI_POPUP_PLUGIN ) . '/lang/'
 		);
 	}
 

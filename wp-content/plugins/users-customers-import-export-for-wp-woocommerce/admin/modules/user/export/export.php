@@ -26,7 +26,6 @@ class Wt_Import_Export_For_Woo_basic_User_Export {
      */
     public function prepare_data_to_export($form_data, $batch_offset) {
         
-
         $export_user_roles = !empty($form_data['filter_form_data']['wt_iew_roles']) ? $form_data['filter_form_data']['wt_iew_roles'] : array();
         $export_sortby = !empty($form_data['filter_form_data']['wt_iew_sort_columns']) ? $form_data['filter_form_data']['wt_iew_sort_columns'] : array('user_login');
         $export_sort_order = !empty($form_data['filter_form_data']['wt_iew_order_by']) ? $form_data['filter_form_data']['wt_iew_order_by'] : 'ASC';
@@ -34,14 +33,10 @@ class Wt_Import_Export_For_Woo_basic_User_Export {
         $export_start_date = !empty($form_data['filter_form_data']['wt_iew_date_from']) ? $form_data['filter_form_data']['wt_iew_date_from'] : '';
         $export_end_date = !empty($form_data['filter_form_data']['wt_iew_date_to']) ? $form_data['filter_form_data']['wt_iew_date_to'] : '';
 
-        $v_export_guest_user = (!empty($form_data['advanced_form_data']['wt_iew_export_guest_user']) && $form_data['advanced_form_data']['wt_iew_export_guest_user'] == 'Yes') ? true : false;
-
-
         $export_limit = !empty($form_data['filter_form_data']['wt_iew_limit']) ? intval($form_data['filter_form_data']['wt_iew_limit']) : 999999999; //user limit
         $current_offset = !empty($form_data['filter_form_data']['wt_iew_offset']) ? intval($form_data['filter_form_data']['wt_iew_offset']) : 0; //user offset
-        $batch_count = !empty($form_data['advanced_form_data']['wt_iew_batch_count']) ? $form_data['advanced_form_data']['wt_iew_batch_count'] : 10;
+        $batch_count = !empty($form_data['advanced_form_data']['wt_iew_batch_count']) ? $form_data['advanced_form_data']['wt_iew_batch_count'] : Wt_Import_Export_For_Woo_Basic_Common_Helper::get_advanced_settings('default_export_batch');
         
-
 
         $real_offset = ($current_offset + $batch_offset);
 
@@ -125,31 +120,7 @@ class Wt_Import_Export_For_Woo_basic_User_Export {
                 $data = self::get_customers_csv_row($user);
                 $data_array[] = apply_filters('hf_customer_csv_exclude_admin', $data);
             }
-
-            if ($v_export_guest_user) {
-                $query_args = array(
-                    'fields' => 'ids',
-                    'post_type' => 'shop_order',
-                    'post_status' => 'any',
-                    'posts_per_page' => -1,
-                );
-                $query_args['meta_query'] = array(array(
-                        'key' => '_customer_user',
-                        'value' => 0,
-                        'compare' => '',
-                ));
-                $query = new WP_Query($query_args);
-                $order_ids = $query->posts;
-                foreach ($order_ids as $order_id) {
-                    $order = new WC_Order($order_id);
-                    $user = get_user_by('email', $order->get_billing_email());
-                    if (!isset($user->ID)) {
-                        $data = self::get_guest_customers_csv_row($order);
-                        $data_array[] = apply_filters('hf_customer_csv_exclude_admin', $data);
-                    }
-                }
-            }
-
+            
             $return['total'] = $total_records;
             $return['data'] = $data_array;
             return $return;

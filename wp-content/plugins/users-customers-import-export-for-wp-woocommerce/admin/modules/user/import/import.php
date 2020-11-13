@@ -81,15 +81,16 @@ class Wt_Import_Export_For_Woo_basic_User_Import {
     }
     
     public function prepare_data_to_import($import_data,$form_data, $batch_offset, $is_last_batch){
-                
+
         $this->skip_new = !empty($form_data['advanced_form_data']['wt_iew_skip_new']) ? 1 : 0;
         $this->merge_with = !empty($form_data['advanced_form_data']['wt_iew_merge_with']) ? $form_data['advanced_form_data']['wt_iew_merge_with'] : 'id'; 
         $this->found_action = !empty($form_data['advanced_form_data']['wt_iew_found_action']) ? $form_data['advanced_form_data']['wt_iew_found_action'] : 'skip'; 
-        $this->use_same_password = !empty($form_data['advanced_form_data']['wt_iew_use_same_password']) ? 1 : 0; 
+        $this->use_same_password = isset($form_data['advanced_form_data']['wt_iew_use_same_password']) ? $form_data['advanced_form_data']['wt_iew_use_same_password'] : 1; 
         $this->merge_empty_cells = !empty($form_data['advanced_form_data']['wt_iew_merge_empty_cells']) ? 1 : 0;
         $this->send_mail = !empty($form_data['advanced_form_data']['wt_iew_send_mail']) ? 1 : 0;
         $this->delete_existing = !empty($form_data['advanced_form_data']['wt_iew_delete_products']) ? 1 : 0; 
-               
+        
+        
         wp_defer_term_counting(true);
         wp_defer_comment_counting(true);
         wp_suspend_cache_invalidation(true);

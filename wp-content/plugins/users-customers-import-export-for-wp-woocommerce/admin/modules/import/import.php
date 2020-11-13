@@ -1144,8 +1144,11 @@ class Wt_Import_Export_For_Woo_Basic_Import
 	}
 	protected function evaluate_data($key, $value, $data_row, $mapping_fields, $input_date_format)
 	{
+                if (preg_match('/{(.*?)}/', $value, $match) == 1) {
+                       $maping_key = $match[1] ? $match[1]:'';
+                }
 		$value=$this->add_input_file_data($key, $value, $data_row, $mapping_fields, $input_date_format);
-		$value=$this->do_arithmetic($value);
+		$value= !empty($data_row[$maping_key]) ? $this->do_arithmetic($value) : $value;
 		$data_row=null;
 		unset($data_row);
 		return $value;

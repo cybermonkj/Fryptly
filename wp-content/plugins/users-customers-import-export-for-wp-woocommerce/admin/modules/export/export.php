@@ -543,7 +543,13 @@ class Wt_Import_Export_For_Woo_Basic_Export
 			$file_as=(isset($form_data['advanced_form_data']['wt_iew_file_as']) ? $form_data['advanced_form_data']['wt_iew_file_as'] : 'csv');
 			$csv_delimiter=(isset($form_data['advanced_form_data']['wt_iew_delimiter']) ? $form_data['advanced_form_data']['wt_iew_delimiter'] : ',');
 			$csv_delimiter=($csv_delimiter=="" ? ',' : $csv_delimiter);
-		}		
+		}
+                
+                //for Quick method exicuted from step 2(method of export)
+                if(empty($form_data['advanced_form_data']['wt_iew_batch_count'])){
+                    $form_data['advanced_form_data']['wt_iew_batch_count'] = $batch_count;
+                }
+                
 		$file_as=(isset($this->allowed_export_file_type[$file_as]) ? $file_as : 'csv');
 
 		

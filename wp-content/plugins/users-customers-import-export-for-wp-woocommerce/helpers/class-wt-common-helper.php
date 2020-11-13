@@ -282,3 +282,16 @@ function wt_removeBomUtf8_basic($s) {
     }
 }
 }
+
+if(!function_exists('wt_iew_utf8ize_basic')){
+    function wt_iew_utf8ize_basic($d) {
+        if (is_array($d)) {
+            foreach ($d as $k => $v) {
+                $d[$k] = wt_iew_utf8ize_basic($v);
+            }
+        } else if (is_string ($d)) {
+            return utf8_encode($d);
+        }
+        return $d;
+    }
+}

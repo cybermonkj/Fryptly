@@ -13,7 +13,7 @@
  * Author:      divimode.com
  * Author URI:  https://divimode.com/?utm_source=wpadmin&utm_medium=link&utm_campaign=popups-for-divi
  * Created:     30.12.2017
- * Version:     2.2.3
+ * Version:     2.2.5
  * Text Domain: divi-popup
  * Domain Path: /lang
  * License:     GPL v2 or later
@@ -40,7 +40,7 @@ defined( 'ABSPATH' ) || die();
 /**
  * A new version value will force refresh of CSS and JS files for all users.
  */
-define( 'DIVI_POPUP_VERSION', '2.2.3' );
+define( 'DIVI_POPUP_VERSION', '2.2.5' );
 
 /**
  * Absolute path and file name of the main plugin file.
