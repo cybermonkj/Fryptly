@@ -13,15 +13,11 @@ if (!class_exists('daftplugInstantifyPwaAdminPushnotifications')) {
         public $version;
         public $textDomain;
         public $optionName;
-        public static $pluginOptionName;
-
-        public static $pluginFile;
+        public $pluginFile;
         public $pluginBasename;
-
         public $settings;
-        public static $vapidKeys;
-        public static $subscribedDevices;
-        public $subscribedDevicesNostatic;
+        public $vapidKeys;
+        public $subscribedDevices;
 
         public function __construct($config) {
             $this->name = $config['name'];
@@ -30,38 +26,36 @@ if (!class_exists('daftplugInstantifyPwaAdminPushnotifications')) {
             $this->version = $config['version'];
             $this->textDomain = $config['text_domain'];
             $this->optionName = $config['option_name'];
-            self::$pluginOptionName = $config['option_name'];
-
-            self::$pluginFile = $config['plugin_file'];
+            $this->pluginFile = $config['plugin_file'];
             $this->pluginBasename = $config['plugin_basename'];
-
             $this->settings = $config['settings'];
-            self::$vapidKeys = get_option("{$this->optionName}_vapid_keys", true);
-            self::$subscribedDevices = get_option("{$this->optionName}_subscribed_devices", true);
-            $this->subscribedDevicesNostatic = get_option("{$this->optionName}_subscribed_devices", true);
+            $this->vapidKeys = get_option("{$this->optionName}_vapid_keys", true);
+            $this->subscribedDevices = get_option("{$this->optionName}_subscribed_devices", true);
 
             add_action("wp_ajax_{$this->optionName}_send_notification", array($this, 'doModalPush'));
             add_action('add_meta_boxes', array($this, 'addMetaBoxes'), 10, 2);
-            add_filter('wp_insert_post_data', array($this, 'filterWooCommercePostData'), 10, 2);
+            if (daftplugInstantify::isWooCommerceActive()) {
+                add_filter('wp_insert_post_data', array($this, 'filterWooCommercePostData'), 10, 2);
+            }
             add_action('save_post',  array($this, 'doAutoPush'), 10, 2);
 
-			foreach ($this->subscribedDevicesNostatic as $key => $value) {
-			    if (!array_key_exists('endpoint', $this->subscribedDevicesNostatic[$key])) {
-			        unset($this->subscribedDevicesNostatic[$key]);
+			foreach ($this->subscribedDevices as $key => $value) {
+			    if (!array_key_exists('endpoint', $this->subscribedDevices[$key])) {
+			        unset($this->subscribedDevices[$key]);
 			    }
 			}
 
-	        update_option("{$this->optionName}_subscribed_devices", $this->subscribedDevicesNostatic);
+	        update_option("{$this->optionName}_subscribed_devices", $this->subscribedDevices);
         }
 
         public function doModalPush() {
             $pushData = array(
-                'title' => $_POST['pushTitle'],
-                'body' => $_POST['pushBody'],
-                'image' => esc_url_raw(wp_get_attachment_image_src($_POST['pushImage'], 'full')[0]),
-                'icon' => esc_url_raw(wp_get_attachment_image_src($_POST['pushIcon'], 'full')[0]),
+                'title' => !empty($_POST['pushTitle']) ? $_POST['pushTitle'] : '',
+                'body' => !empty($_POST['pushBody']) ? $_POST['pushBody'] : '',
+                'image' => !empty($_POST['pushImage']) ? esc_url_raw(wp_get_attachment_image_src($_POST['pushImage'], 'full')[0]) : '',
+                'icon' => !empty($_POST['pushIcon']) ? esc_url_raw(wp_get_attachment_image_src($_POST['pushIcon'], 'full')[0]) : '',
                 'data' => array(
-                    'url' => trailingslashit(esc_url_raw($_POST['pushUrl'])).'?utm_source=pwa-notification',
+                    'url' => !empty($_POST['pushUrl']) ? trailingslashit(esc_url_raw($_POST['pushUrl'])).'?utm_source=pwa-notification' : '',
                 ),
             );
 
@@ -90,49 +84,49 @@ if (!class_exists('daftplugInstantifyPwaAdminPushnotifications')) {
         }
 
         public function renderMetaBoxContent($post, $callbackArgs) {
-            $pwaNoPushNewPost = get_post_meta($post->ID, 'pwaNoPushNewPost', true);
-            $pwaNoPushNewProduct = get_post_meta($post->ID, 'pwaNoPushNewProduct', true);
-            $pwaNoPushPriceDrop = get_post_meta($post->ID, 'pwaNoPushPriceDrop', true);
-            $pwaNoPushSalePrice = get_post_meta($post->ID, 'pwaNoPushSalePrice', true);
-            $pwaNoPushBackInStock = get_post_meta($post->ID, 'pwaNoPushBackInStock', true);
+            $pwaNoPushNewContent = get_post_meta($post->ID, 'pwaNoPushNewContent', true);
+            $pwaNoPushWooNewProduct = get_post_meta($post->ID, 'pwaNoPushWooNewProduct', true);
+            $pwaNoPushWooPriceDrop = get_post_meta($post->ID, 'pwaNoPushWooPriceDrop', true);
+            $pwaNoPushWooSalePrice = get_post_meta($post->ID, 'pwaNoPushWooSalePrice', true);
+            $pwaNoPushWooBackInStock = get_post_meta($post->ID, 'pwaNoPushWooBackInStock', true);
             wp_nonce_field("{$this->optionName}_no_push_meta_nonce", "{$this->optionName}_no_push_meta_nonce");
-            if ($post->post_type == 'product') {
-                if (daftplugInstantify::getSetting('pwaPushNewProduct') == 'on') { ?>
+            if (daftplugInstantify::isWooCommerceActive() && $post->post_type == 'product') {
+                if (daftplugInstantify::getSetting('pwaPushWooNewProduct') == 'on') { ?>
                     <label style="display: block; margin: 5px;">
-                        <input type="checkbox" name="pwaNoPushNewProduct" value="on" <?php checked($pwaNoPushNewProduct, 'on'); ?>>
-                        <?php esc_html_e('Don\'t Send New Product Notification', $this->textDomain); ?>
+                        <input type="checkbox" name="pwaNoPushWooNewProduct" value="on" <?php checked($pwaNoPushWooNewProduct, 'on'); ?>>
+                        <?php esc_html_e('Don\'t Send WooCommerce New Product Notification', $this->textDomain); ?>
                     </label style="display: block; margin: 5px;">
                 <?php }
-                if (daftplugInstantify::getSetting('pwaPushPriceDrop') == 'on') { ?>
+                if (daftplugInstantify::getSetting('pwaPushWooPriceDrop') == 'on') { ?>
                     <label style="display: block; margin: 5px;">
-                        <input type="checkbox" name="pwaNoPushPriceDrop" value="on" <?php checked($pwaNoPushPriceDrop, 'on'); ?>>
-                        <?php esc_html_e('Don\'t Send Price Drop Notification', $this->textDomain); ?>
+                        <input type="checkbox" name="pwaNoPushWooPriceDrop" value="on" <?php checked($pwaNoPushWooPriceDrop, 'on'); ?>>
+                        <?php esc_html_e('Don\'t Send WooCommerce Price Drop Notification', $this->textDomain); ?>
                     </label>
                 <?php }
-                if (daftplugInstantify::getSetting('pwaPushSalePrice') == 'on') { ?>
+                if (daftplugInstantify::getSetting('pwaPushWooSalePrice') == 'on') { ?>
                     <label style="display: block; margin: 5px;">
-                        <input type="checkbox" name="pwaNoPushSalePrice" value="on" <?php checked($pwaNoPushSalePrice, 'on'); ?>>
-                        <?php esc_html_e('Don\'t Send Sale Price Notification', $this->textDomain); ?>
+                        <input type="checkbox" name="pwaNoPushWooSalePrice" value="on" <?php checked($pwaNoPushWooSalePrice, 'on'); ?>>
+                        <?php esc_html_e('Don\'t Send WooCommerce Sale Price Notification', $this->textDomain); ?>
                     </label>
                 <?php }
-                if (daftplugInstantify::getSetting('pwaPushBackInStock') == 'on') { ?>
+                if (daftplugInstantify::getSetting('pwaPushWooBackInStock') == 'on') { ?>
                     <label style="display: block; margin: 5px;">
-                        <input type="checkbox" name="pwaNoPushBackInStock" value="on" <?php checked($pwaNoPushBackInStock, 'on'); ?>>
-                        <?php esc_html_e('Don\'t Send Back In Stock Notification', $this->textDomain); ?>
+                        <input type="checkbox" name="pwaNoPushWooBackInStock" value="on" <?php checked($pwaNoPushWooBackInStock, 'on'); ?>>
+                        <?php esc_html_e('Don\'t Send WooCommerce Back In Stock Notification', $this->textDomain); ?>
                     </label>
                 <?php }
             } else {
-                if (daftplugInstantify::getSetting('pwaPushNewPost') == 'on') { ?>
+                if (daftplugInstantify::getSetting('pwaPushNewContent') == 'on') { ?>
                     <label style="display: block; margin: 5px;">
-                        <input type="checkbox" name="pwaNoPushNewPost" value="on" <?php checked($pwaNoPushNewPost, 'on'); ?>>
-                        <?php esc_html_e('Don\'t Send New Post Notification', $this->textDomain); ?>
+                        <input type="checkbox" name="pwaNoPushNewContent" value="on" <?php checked($pwaNoPushNewContent, 'on'); ?>>
+                        <?php esc_html_e('Don\'t Send New Content Notification', $this->textDomain); ?>
                     </label>
                 <?php }
             }
         }
 
         public function addMetaBoxes($postType, $post)  {
-            if (in_array($post->post_type, (array)daftplugInstantify::getSetting('pwaPushNewPostPostTypes')) || $post->post_type == 'product') {
+            if (in_array($post->post_type, (array)daftplugInstantify::getSetting('pwaPushNewContentPostTypes')) || $post->post_type == 'product') {
                 add_meta_box("{$this->optionName}_no_push_meta_box", esc_html__('Push Notifications', $this->textDomain), array($this, 'renderMetaBoxContent'), $postType, 'side', 'default', array());
             }
         }
@@ -178,19 +172,19 @@ if (!class_exists('daftplugInstantifyPwaAdminPushnotifications')) {
             $isAutosave = (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) || wp_is_post_autosave($id);
             $isRevision = wp_is_post_revision($id);
             $isValidNonce = (isset($_POST["{$this->optionName}_no_push_meta_nonce"]) && wp_verify_nonce($_POST["{$this->optionName}_no_push_meta_nonce"], $this->pluginBasename)) ? 'true' : 'false';
-            $pwaNoPushNewPostMeta = (isset($_POST['pwaNoPushNewPost']) ? $_POST['pwaNoPushNewPost'] : 'off');
-            $pwaNoPushNewProductMeta = (isset($_POST['pwaNoPushNewProduct']) ? $_POST['pwaNoPushNewProduct'] : 'off');
-            $pwaNoPushPriceDropMeta = (isset($_POST['pwaNoPushPriceDrop']) ? $_POST['pwaNoPushPriceDrop'] : 'off');
-            $pwaNoPushSalePriceMeta = (isset($_POST['pwaNoPushSalePrice']) ? $_POST['pwaNoPushSalePrice'] : 'off');
-            $pwaNoPushBackInStockMeta = (isset($_POST['pwaNoPushBackInStock']) ? $_POST['pwaNoPushBackInStock'] : 'off');
+            $pwaNoPushNewContentMeta = (isset($_POST['pwaNoPushNewContent']) ? $_POST['pwaNoPushNewContent'] : 'off');
+            $pwaNoPushWooNewProductMeta = (isset($_POST['pwaNoPushWooNewProduct']) ? $_POST['pwaNoPushWooNewProduct'] : 'off');
+            $pwaNoPushWooPriceDropMeta = (isset($_POST['pwaNoPushWooPriceDrop']) ? $_POST['pwaNoPushWooPriceDrop'] : 'off');
+            $pwaNoPushWooSalePriceMeta = (isset($_POST['pwaNoPushWooSalePrice']) ? $_POST['pwaNoPushWooSalePrice'] : 'off');
+            $pwaNoPushWooBackInStockMeta = (isset($_POST['pwaNoPushWooBackInStock']) ? $_POST['pwaNoPushWooBackInStock'] : 'off');
 
             if ($isAutosave || $isRevision || !$isValidNonce) {
                 return;
             }
 
             if ($post->post_type !== 'product') {
-                // New Post Push
-                if (daftplugInstantify::getSetting('pwaPushNewPost') == 'on' && $pwaNoPushNewPostMeta == 'off' && in_array($post->post_type, (array)daftplugInstantify::getSetting('pwaPushNewPostPostTypes'))) {
+                // New Content Push
+                if (daftplugInstantify::getSetting('pwaPushNewContent') == 'on' && $pwaNoPushNewContentMeta == 'off' && in_array($post->post_type, (array)daftplugInstantify::getSetting('pwaPushNewContentPostTypes'))) {
                     if (isset($post->post_status) && 'auto-draft' == $post->post_status) {
                         return;
                     }
@@ -213,7 +207,7 @@ if (!class_exists('daftplugInstantifyPwaAdminPushnotifications')) {
                 }
             } else {
                 // New Product Push
-                if (daftplugInstantify::getSetting('pwaPushNewProduct') == 'on' && $pwaNoPushNewProductMeta == 'off') {
+                if (daftplugInstantify::getSetting('pwaPushWooNewProduct') == 'on' && $pwaNoPushWooNewProductMeta == 'off') {
                     if (isset($post->post_status) && 'auto-draft' == $post->post_status) {
                         return;
                     }
@@ -236,7 +230,7 @@ if (!class_exists('daftplugInstantifyPwaAdminPushnotifications')) {
                 }
 
                 // Price Drop Push
-                if (daftplugInstantify::getSetting('pwaPushPriceDrop') == 'on' && $pwaNoPushPriceDropMeta == 'off' && get_transient("{$this->optionName}_dropped_price")) {
+                if (daftplugInstantify::getSetting('pwaPushWooPriceDrop') == 'on' && $pwaNoPushWooPriceDropMeta == 'off' && get_transient("{$this->optionName}_dropped_price")) {
                     $pushData = array(
                         'title' => sprintf(__('Price Drop - %s', $this->textDomain), $post->post_title),
                         'body' => sprintf(__('Price dropped from %s to %s', $this->textDomain), get_transient("{$this->optionName}_regular_price"), get_transient("{$this->optionName}_dropped_price")),
@@ -253,7 +247,7 @@ if (!class_exists('daftplugInstantifyPwaAdminPushnotifications')) {
                 }
 
                 // Sale Price Push
-                if (daftplugInstantify::getSetting('pwaPushSalePrice') == 'on' && $pwaNoPushSalePriceMeta == 'off' && get_transient("{$this->optionName}_sale_price")) {
+                if (daftplugInstantify::getSetting('pwaPushWooSalePrice') == 'on' && $pwaNoPushWooSalePriceMeta == 'off' && get_transient("{$this->optionName}_sale_price")) {
                     $pushData = array(
                         'title' => sprintf(__('New Sale Price - %s', $this->textDomain), $post->post_title),
                         'body' => sprintf(__('New Sale Price: %s', $this->textDomain), get_transient("{$this->optionName}_sale_price")),
@@ -270,7 +264,7 @@ if (!class_exists('daftplugInstantifyPwaAdminPushnotifications')) {
                 }
 
                 // Back In Stock Push
-                if (daftplugInstantify::getSetting('pwaPushBackInStock') == 'on' && $pwaNoPushBackInStockMeta == 'off' && get_transient("{$this->optionName}_back_in_stock")) {
+                if (daftplugInstantify::getSetting('pwaPushWooBackInStock') == 'on' && $pwaNoPushWooBackInStockMeta == 'off' && get_transient("{$this->optionName}_back_in_stock")) {
                     $pushData = array(
                         'title' => sprintf(__('Back In Stock - %s', $this->textDomain), $post->post_title),
                         'body' => sprintf(__('%s is now back in stock', $this->textDomain), $post->post_title),
@@ -288,14 +282,14 @@ if (!class_exists('daftplugInstantifyPwaAdminPushnotifications')) {
             }
         }
 
-        public static function sendNotification($pushData, $segment = 'all') {
-            require_once plugin_dir_path(self::$pluginFile) . implode(DIRECTORY_SEPARATOR, array('pwa', 'includes', 'libs', 'web-push-php', 'autoload.php'));
+        public function sendNotification($pushData, $segment = 'all') {
+            require_once plugin_dir_path($this->pluginFile) . implode(DIRECTORY_SEPARATOR, array('pwa', 'includes', 'libs', 'web-push-php', 'autoload.php'));
 
             $auth = array(
                 'VAPID' => array(
                     'subject' => get_bloginfo('wpurl'),
-                    'publicKey' => self::$vapidKeys['pwaPublicKey'],
-                    'privateKey' => self::$vapidKeys['pwaPrivateKey'],
+                    'publicKey' => $this->vapidKeys['pwaPublicKey'],
+                    'privateKey' => $this->vapidKeys['pwaPrivateKey'],
                 ),
             );
 
@@ -310,31 +304,10 @@ if (!class_exists('daftplugInstantifyPwaAdminPushnotifications')) {
                 'data' => '',
             ));
 
-            if ($segment == 'all') {
-                $subscriptions = array();
-                foreach (self::$subscribedDevices as $subscribedDevice) {
-                    $subscriptions[] =  array(
-                                            'subscription' => Subscription::create(
-                                                array(
-                                                    'endpoint' => $subscribedDevice['endpoint'],
-                                                    'publicKey' => $subscribedDevice['userKey'],
-                                                    'authToken' => $subscribedDevice['userAuth'],
-                                                )
-                                            ),
-                                            'payload' => null
-                                        );
-                }
-
-                foreach ($subscriptions as $subscription) {
-                    $webPush->sendNotification(
-                        $subscription['subscription'],
-                        json_encode($pushData)
-                    );
-                }
-            } elseif ($segment == 'mobile') {
-                $subscriptions = array();
-                foreach (self::$subscribedDevices as $subscribedDevice) {
-                    if (preg_match('[Android|iOS]', $subscribedDevice['deviceInfo'])) {
+            switch ($segment) {
+                case 'all':
+                    $subscriptions = array();
+                    foreach ($this->subscribedDevices as $subscribedDevice) {
                         $subscriptions[] =  array(
                                                 'subscription' => Subscription::create(
                                                     array(
@@ -346,84 +319,109 @@ if (!class_exists('daftplugInstantifyPwaAdminPushnotifications')) {
                                                 'payload' => null
                                             );
                     }
-                }
-
-                foreach ($subscriptions as $subscription) {
-                    $webPush->sendNotification(
-                        $subscription['subscription'],
-                        json_encode($pushData)
-                    );
-                }
-            } elseif ($segment == 'desktop') {
-                $subscriptions = array();
-                foreach (self::$subscribedDevices as $subscribedDevice) {
-                    if (preg_match('[Windows|Linux|Mac|Ubuntu|Solaris]', $subscribedDevice['deviceInfo'])) {
-                        $subscriptions[] =  array(
-                                                'subscription' => Subscription::create(
-                                                    array(
-                                                        'endpoint' => $subscribedDevice['endpoint'],
-                                                        'publicKey' => $subscribedDevice['userKey'],
-                                                        'authToken' => $subscribedDevice['userAuth'],
-                                                    )
-                                                ),
-                                                'payload' => null
-                                            );
+    
+                    foreach ($subscriptions as $subscription) {
+                        $webPush->sendNotification(
+                            $subscription['subscription'],
+                            json_encode($pushData)
+                        );
                     }
-                }
-
-                foreach ($subscriptions as $subscription) {
-                    $webPush->sendNotification(
-                        $subscription['subscription'],
-                        json_encode($pushData)
-                    );
-                }
-            } elseif ($segment == 'registered') {
-                $subscriptions = array();
-                foreach (self::$subscribedDevices as $subscribedDevice) {
-                    if (is_numeric($subscribedDevice['user'])) {
-                        $subscriptions[] =  array(
-                                                'subscription' => Subscription::create(
-                                                    array(
-                                                        'endpoint' => $subscribedDevice['endpoint'],
-                                                        'publicKey' => $subscribedDevice['userKey'],
-                                                        'authToken' => $subscribedDevice['userAuth'],
-                                                    )
-                                                ),
-                                                'payload' => null
-                                            );
+                    break;
+                case 'mobile':
+                    $subscriptions = array();
+                    foreach ($this->subscribedDevices as $subscribedDevice) {
+                        if (preg_match('[Android|iOS]', $subscribedDevice['deviceInfo'])) {
+                            $subscriptions[] =  array(
+                                                    'subscription' => Subscription::create(
+                                                        array(
+                                                            'endpoint' => $subscribedDevice['endpoint'],
+                                                            'publicKey' => $subscribedDevice['userKey'],
+                                                            'authToken' => $subscribedDevice['userAuth'],
+                                                        )
+                                                    ),
+                                                    'payload' => null
+                                                );
+                        }
                     }
-                }
+    
+                    foreach ($subscriptions as $subscription) {
+                        $webPush->sendNotification(
+                            $subscription['subscription'],
+                            json_encode($pushData)
+                        );
+                    }
+                    break;
+                case 'desktop':
+                    $subscriptions = array();
+                    foreach ($this->subscribedDevices as $subscribedDevice) {
+                        if (preg_match('[Windows|Linux|Mac|Ubuntu|Solaris]', $subscribedDevice['deviceInfo'])) {
+                            $subscriptions[] =  array(
+                                                    'subscription' => Subscription::create(
+                                                        array(
+                                                            'endpoint' => $subscribedDevice['endpoint'],
+                                                            'publicKey' => $subscribedDevice['userKey'],
+                                                            'authToken' => $subscribedDevice['userAuth'],
+                                                        )
+                                                    ),
+                                                    'payload' => null
+                                                );
+                        }
+                    }
+    
+                    foreach ($subscriptions as $subscription) {
+                        $webPush->sendNotification(
+                            $subscription['subscription'],
+                            json_encode($pushData)
+                        );
+                    }
+                    break;
+                case 'registered':
+                    $subscriptions = array();
+                    foreach ($this->subscribedDevices as $subscribedDevice) {
+                        if (is_numeric($subscribedDevice['user'])) {
+                            $subscriptions[] =  array(
+                                                    'subscription' => Subscription::create(
+                                                        array(
+                                                            'endpoint' => $subscribedDevice['endpoint'],
+                                                            'publicKey' => $subscribedDevice['userKey'],
+                                                            'authToken' => $subscribedDevice['userAuth'],
+                                                        )
+                                                    ),
+                                                    'payload' => null
+                                                );
+                        }
+                    }
+    
+                    foreach ($subscriptions as $subscription) {
+                        $webPush->sendNotification(
+                            $subscription['subscription'],
+                            json_encode($pushData)
+                        );
+                    }
+                    break;
+                default:
+                    $subscription = array(
+                        'subscription' => Subscription::create(
+                            array(
+                                'endpoint' => $this->subscribedDevices[$segment]['endpoint'],
+                                'publicKey' => $this->subscribedDevices[$segment]['userKey'],
+                                'authToken' => $this->subscribedDevices[$segment]['userAuth'],
+                            )
+                        ),
+                        'payload' => null
+                    );
 
-                foreach ($subscriptions as $subscription) {
                     $webPush->sendNotification(
                         $subscription['subscription'],
                         json_encode($pushData)
                     );
-                }
-            } else {
-                $subscription = array(
-                                    'subscription' => Subscription::create(
-                                        array(
-                                            'endpoint' => self::$subscribedDevices[$segment]['endpoint'],
-                                            'publicKey' => self::$subscribedDevices[$segment]['userKey'],
-                                            'authToken' => self::$subscribedDevices[$segment]['userAuth'],
-                                        )
-                                    ),
-                                    'payload' => null
-                                );
-
-                $webPush->sendNotification(
-                    $subscription['subscription'],
-                    json_encode($pushData)
-                );
             }
 
             foreach ($webPush->flush() as $report) {
                 $endpoint = $report->getRequest()->getUri()->__toString();
                 if (!$report->isSuccess()) {
-                    $optionName = self::$pluginOptionName;
-                    unset(self::$subscribedDevices[$endpoint]);
-                    update_option("{$optionName}_subscribed_devices", self::$subscribedDevices);
+                    unset($this->subscribedDevices[$endpoint]);
+                    update_option("{$this->optionName}_subscribed_devices", $this->subscribedDevices);
                     //wp_die("[x] Message failed to sent for subscription {$endpoint}: {$report->getReason()}");
                 } else {
                     return true;

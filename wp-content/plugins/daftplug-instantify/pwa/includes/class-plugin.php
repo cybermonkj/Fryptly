@@ -11,14 +11,14 @@ if (!class_exists('daftplugInstantifyPwa')) {
         public $daftplugInstantifyPwaPublicAddtohomescreen;
         public $daftplugInstantifyPwaPublicOfflineusage;
         public $daftplugInstantifyPwaPublicAccessibility;
-        public $daftplugInstantifyPwaPublicOptimizations;
+        public $daftplugInstantifyPwaPublicEnhancements;
         public $daftplugInstantifyPwaPublicPushnotifications;
 
         public $daftplugInstantifyPwaAdmin;
         public $daftplugInstantifyPwaAdminAddtohomescreen;
         public $daftplugInstantifyPwaAdminOfflineusage;
         public $daftplugInstantifyPwaAdminAccessibility;
-        public $daftplugInstantifyPwaAdminOptimizations;
+        public $daftplugInstantifyPwaAdminEnhancements;
         public $daftplugInstantifyPwaAdminPushnotifications;
 
         public $daftplugInstantifyPwaOnesignal;
@@ -50,17 +50,14 @@ if (!class_exists('daftplugInstantifyPwa')) {
 	            require_once(plugin_dir_path(dirname(__FILE__)) . 'public/class-accessibility.php');
 	            $this->daftplugInstantifyPwaPublicAccessibility = new daftplugInstantifyPwaPublicAccessibility($config, $this->daftplugInstantifyPwaPublic);
 
-	            require_once(plugin_dir_path(dirname(__FILE__)) . 'public/class-optimizations.php');
-	            $this->daftplugInstantifyPwaPublicOptimizations = new daftplugInstantifyPwaPublicOptimizations($config, $this->daftplugInstantifyPwaPublic);
+	            require_once(plugin_dir_path(dirname(__FILE__)) . 'public/class-enhancements.php');
+	            $this->daftplugInstantifyPwaPublicEnhancements = new daftplugInstantifyPwaPublicEnhancements($config, $this->daftplugInstantifyPwaPublic);
 
 	            if (!$this->isOnesignalActive()) {
 	            	if (!version_compare(PHP_VERSION, '7.1', '<') && extension_loaded('gmp') && extension_loaded('mbstring') && extension_loaded('openssl')) {
 		                require_once(plugin_dir_path(dirname(__FILE__)) . 'public/class-pushnotifications.php');
 		                $this->daftplugInstantifyPwaPublicPushnotifications = new daftplugInstantifyPwaPublicPushnotifications($config, $this->daftplugInstantifyPwaPublic);
 	            	}
-	            } else {
-	            	require_once(plugin_dir_path(dirname(__FILE__)) . 'includes/3rdsupport/class-onesignal.php');
-	                $this->daftplugInstantifyPwaOnesignal = new daftplugInstantifyPwaOnesignal($config, $this->daftplugInstantifyPwaPublicAddtohomescreen, $this->daftplugInstantifyPwaPublicOfflineusage);
 	            }
             }
 
@@ -74,8 +71,8 @@ if (!class_exists('daftplugInstantifyPwa')) {
                 require_once(plugin_dir_path(dirname(__FILE__)) . 'admin/class-accessibility.php');
                 $this->daftplugInstantifyPwaAdminAccessibility = new daftplugInstantifyPwaAdminAccessibility($config);
 
-                require_once(plugin_dir_path(dirname(__FILE__)) . 'admin/class-optimizations.php');
-                $this->daftplugInstantifyPwaAdminOptimizations = new daftplugInstantifyPwaAdminOptimizations($config);
+                require_once(plugin_dir_path(dirname(__FILE__)) . 'admin/class-enhancements.php');
+                $this->daftplugInstantifyPwaAdminEnhancements = new daftplugInstantifyPwaAdminEnhancements($config);
 
                 if (!version_compare(PHP_VERSION, '7.1', '<') && extension_loaded('gmp') && extension_loaded('mbstring') && extension_loaded('openssl')) {
 	                require_once(plugin_dir_path(dirname(__FILE__)) . 'admin/class-pushnotifications.php');
@@ -84,10 +81,10 @@ if (!class_exists('daftplugInstantifyPwa')) {
 
                 require_once(plugin_dir_path(dirname(__FILE__)) . 'admin/class-admin.php');
                 $this->daftplugInstantifyPwaAdmin = new daftplugInstantifyPwaAdmin($config, $this->daftplugInstantifyPwaAdminAddtohomescreen, $this->daftplugInstantifyPwaAdminOfflineusage, $this->daftplugInstantifyPwaAdminAccessibility,
-                    $this->daftplugInstantifyPwaAdminOptimizations, $this->daftplugInstantifyPwaAdminPushnotifications);
+                    $this->daftplugInstantifyPwaAdminEnhancements, $this->daftplugInstantifyPwaAdminPushnotifications);
             }
         }
-
+        
         public static function isOnesignalActive() {
             include_once(ABSPATH . 'wp-admin/includes/plugin.php');
             return is_plugin_active('onesignal-free-web-push-notifications/onesignal.php');

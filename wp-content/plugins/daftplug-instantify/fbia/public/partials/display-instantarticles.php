@@ -32,7 +32,8 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>';
 					<html lang="<?php echo get_bloginfo('language'); ?>" <?php if (daftplugInstantify::getSetting('fbiaRtlPublishing') == 'on') {echo 'dir="rtl"';} ?> prefix="op: http://media.facebook.com/op#">
 					<head>
 				        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-				        <meta property="op:markup_version" content="v1.0">
+						<meta property="op:markup_version" content="v1.0">
+						<meta property="fb:article_style" content="<?php echo daftplugInstantify::getSetting('fbiaArticleStyle'); ?>">
 				        <?php
 				        if (!empty(wp_get_canonical_url())) { echo '<link rel="canonical" href="'.esc_url(wp_get_canonical_url()).'" />'; }
 				        echo apply_filters("{$this->optionName}_articles_head", '', get_the_ID()); 

@@ -20,6 +20,7 @@ if (!class_exists('daftplugInstantifyPwaPublicAddtohomescreen')) {
 
         public $daftplugInstantifyPwaPublic;
 
+        public static $manifestName;
         public $manifest;
 
         public function __construct($config, $daftplugInstantifyPwaPublic) {
@@ -39,13 +40,13 @@ if (!class_exists('daftplugInstantifyPwaPublicAddtohomescreen')) {
 
             $this->daftplugInstantifyPwaPublic = $daftplugInstantifyPwaPublic;
 
+            self::$manifestName = 'daftplugInstantifyPwaManifest';
             $this->manifest = array();
 
             add_action('parse_request', array($this, 'generateManifest'));
-            add_action('wp_head', array($this, 'renderManifestMetaTagsInHeader'), 1);
+            add_action('wp_head', array($this, 'renderMetaTagsInHeader'), 1);
             add_action("wp_ajax_{$this->optionName}_save_installation_analytics", array($this, 'saveInstallationAnalytics'));
             add_action("wp_ajax_nopriv_{$this->optionName}_save_installation_analytics", array($this, 'saveInstallationAnalytics'));
-            add_filter('query_vars', array($this, 'addManifestQueryVar'));
             add_shortcode('pwa-install-button', array($this, 'renderInstallationButton'));
 
             if (wp_is_mobile()) {
@@ -73,113 +74,110 @@ if (!class_exists('daftplugInstantifyPwaPublicAddtohomescreen')) {
         }
        
         public function generateManifest() {
-            if (isset($GLOBALS['wp']->query_vars['daftplugInstantifyPwaManifest'])) {
-                if ($GLOBALS['wp']->query_vars['daftplugInstantifyPwaManifest'] == 1) {
-                    header('Content-Type: text/javascript; charset=utf-8');
-                    $this->manifest['name'] = (!empty($_GET['name']) ? $_GET['name'] : daftplugInstantify::getSetting('pwaName'));
-
-                    if (strlen(daftplugInstantify::getSetting('pwaShortName')) > 12) {
-                        $manifestShortName = substr(daftplugInstantify::getSetting('pwaShortName'), 0, 9).'...';
-                    } else {
-                        $manifestShortName = daftplugInstantify::getSetting('pwaShortName');
-                    }
-
-                    $this->manifest['short_name'] = (!empty($_GET['short_name']) ? $_GET['short_name'] : $manifestShortName);
-                    $this->manifest['start_url'] = (!empty($_GET['start_url']) ? $_GET['start_url'] : trailingslashit(daftplugInstantify::getSetting('pwaStartPage'))).'?utm_source=pwa-homescreen';
-                    $this->manifest['description'] = (!empty($_GET['description']) ? $_GET['description'] : daftplugInstantify::getSetting('pwaDescription'));
-                    $this->manifest['display'] = daftplugInstantify::getSetting('pwaDisplayMode');
-
-                    $homeUrlParts = parse_url(trailingslashit(home_url('/', 'https')));
-                    $scope = '/';
-
-                    if (array_key_exists('path', $homeUrlParts)) {
-                        $scope = $homeUrlParts['path'];
-                    }
-
-                    $this->manifest['scope'] = $scope;
-                    $this->manifest['orientation'] = daftplugInstantify::getSetting('pwaOrientation');
-                    $this->manifest['dir'] = is_rtl() ? 'rtl' : 'ltr';
-                    $this->manifest['background_color'] = daftplugInstantify::getSetting('pwaBackgroundColor');
-                    $this->manifest['theme_color'] = daftplugInstantify::getSetting('pwaThemeColor');
-
-                    if (get_bloginfo('language')) {
-                        $this->manifest['lang'] = get_bloginfo('language');
-                    }
-
-                    $icon = (has_site_icon()) ? get_option('site_icon') : daftplugInstantify::getSetting('pwaIcon');
-                    $iconWidth = wp_get_attachment_image_src($icon, 'full')[1];
-                    $iconSizes = array(180, 192, 512);
-
-                    if (daftplugInstantify::getSetting('pwaIconMaskable') == 'on') {
-                        $iconPurpose = 'maskable any';
-                    } else {
-                        $iconPurpose = 'any';
-                    }
-
-                    if (wp_attachment_is_image(intval($icon))) {
-                        foreach ($iconSizes as $iconSize) {
-                            if ($iconWidth < $iconSize) {
-                                continue;
-                            }
-
-                            $newIcon = daftplugInstantifyPwa::resizeImage($icon, $iconSize, $iconSize, true, 'png');
-
-                            if ($newIcon[1] != $iconSize) {
-                                continue;
-                            }
-
-                            $this->manifest['icons'][] = array(
-                                'src' => $newIcon[0],
-                                'sizes' => "{$iconSize}x{$iconSize}",
-                                'type' => 'image/png',
-                                'purpose' => $iconPurpose,
-                            );
-                        }
-                    }
-
-                    $this->manifest['screenshots'][] = array(
-                        'src' => 'http://s.wordpress.com/mshots/v1/'.urlencode(trailingslashit(daftplugInstantify::getSetting('pwaStartPage'))).'?w=1280&h=800',
-                        'sizes' => '1280x800',
-                        'type' => 'image/png',
-                    );
-
-                    $appShortcutOptionNames = array('pwaAppShortcut1', 'pwaAppShortcut2', 'pwaAppShortcut3', 'pwaAppShortcut4');
-                    foreach ($appShortcutOptionNames as $appShortcutOptionName) {
-                        $icon = daftplugInstantifyPwa::resizeImage(daftplugInstantify::getSetting($appShortcutOptionName.'Icon'), '192', '192', true, 'png');
-                        if (daftplugInstantify::getSetting($appShortcutOptionName) == 'on') {
-                            $this->manifest['shortcuts'][] = array(
-                                'name' => daftplugInstantify::getSetting($appShortcutOptionName.'Name'),
-                                'short_name' => substr(daftplugInstantify::getSetting($appShortcutOptionName.'Name'), 0, 12),
-                                'url' => daftplugInstantify::getSetting($appShortcutOptionName.'Url'),
-                            );
-
-                            if (wp_attachment_is_image(intval(daftplugInstantify::getSetting($appShortcutOptionName.'Icon')))) {
-                                $this->manifest['shortcuts'][0]['icons'][] = array(
-                                    'src' => $icon[0],
-                                    'sizes' => '192x192',
-                                    'type' => 'image/png',
-                                );
-                            }
-                        }
-                    }
-
-                    $this->manifest = apply_filters("{$this->optionName}_pwa_manifest", $this->manifest);
-                    $this->manifest = json_encode($this->manifest, JSON_UNESCAPED_SLASHES);
-
-                    echo $this->manifest;
-                    exit;
+            global $wp;
+            if ($wp->request == self::$manifestName) {
+                header('Content-Type: text/javascript; charset=utf-8');
+                $homeUrlParts = parse_url(trailingslashit(home_url('/', 'https')));
+                $scope = '/';
+                if (array_key_exists('path', $homeUrlParts)) {
+                    $scope = $homeUrlParts['path'];
                 }
+
+                if (strlen(daftplugInstantify::getSetting('pwaShortName')) > 12) {
+                    $manifestShortName = substr(daftplugInstantify::getSetting('pwaShortName'), 0, 9).'...';
+                } else {
+                    $manifestShortName = daftplugInstantify::getSetting('pwaShortName');
+                }
+
+                if (get_bloginfo('language')) {
+                    $this->manifest['lang'] = get_bloginfo('language');
+                }
+
+                $this->manifest['dir'] = is_rtl() ? 'rtl' : 'ltr';
+                $this->manifest['name'] = (!empty($_GET['name']) ? $_GET['name'] : daftplugInstantify::getSetting('pwaName'));
+                $this->manifest['scope'] = $scope;
+                $this->manifest['start_url'] = (!empty($_GET['start_url']) ? $_GET['start_url'] : trailingslashit(daftplugInstantify::getSetting('pwaStartPage'))).'?utm_source=pwa-homescreen';
+                $this->manifest['short_name'] = (!empty($_GET['short_name']) ? $_GET['short_name'] : $manifestShortName);
+                $this->manifest['description'] = (!empty($_GET['description']) ? $_GET['description'] : daftplugInstantify::getSetting('pwaDescription'));
+                $this->manifest['display'] = daftplugInstantify::getSetting('pwaDisplayMode');
+                $this->manifest['orientation'] = daftplugInstantify::getSetting('pwaOrientation');
+                $this->manifest['theme_color'] = daftplugInstantify::getSetting('pwaThemeColor');
+                $this->manifest['background_color'] = daftplugInstantify::getSetting('pwaBackgroundColor');
+                $this->manifest['categories'] = (array)daftplugInstantify::getSetting('pwaCategories');
+                $this->manifest['prefer_related_applications'] = true;
+                $this->manifest['related_applications'][] = array(
+                    'platform' => 'webapp',
+                    'url' => $this->getManifestUrl(false),
+                );
+
+                if (daftplugInstantify::getSetting('pwaRelatedApplication') == 'on') {
+                    $this->manifest['related_applications'][] = array(
+                        'platform' => daftplugInstantify::getSetting('pwaRelatedApplicationPlatform'),
+                        'url' => daftplugInstantify::getSetting('pwaRelatedApplicationUrl'),
+                        'id' => daftplugInstantify::getSetting('pwaRelatedApplicationId'),
+                    );
+                }
+
+                $icon = (has_site_icon()) ? get_option('site_icon') : daftplugInstantify::getSetting('pwaIcon');
+                $iconWidth = wp_get_attachment_image_src($icon, 'full')[1];
+                $iconSizes = array(180, 192, 512);
+                if (wp_attachment_is_image(intval($icon))) {
+                    foreach ($iconSizes as $iconSize) {
+                        if ($iconWidth < $iconSize) {
+                            continue;
+                        }
+
+                        $newIcon = daftplugInstantifyPwa::resizeImage($icon, $iconSize, $iconSize, true, 'png');
+
+                        if ($newIcon[1] != $iconSize) {
+                            continue;
+                        }
+
+                        $this->manifest['icons'][] = array(
+                            'src' => $newIcon[0],
+                            'sizes' => "{$iconSize}x{$iconSize}",
+                            'type' => 'image/png',
+                            'purpose' => 'maskable any',
+                        );
+                    }
+                }
+
+                $this->manifest['screenshots'][] = array(
+                    'src' => 'http://s.wordpress.com/mshots/v1/'.urlencode(trailingslashit(daftplugInstantify::getSetting('pwaStartPage'))).'?w=1280&h=800',
+                    'sizes' => '1280x800',
+                    'type' => 'image/png',
+                );
+
+                $appShortcutOptionNames = array('pwaAppShortcut1', 'pwaAppShortcut2', 'pwaAppShortcut3', 'pwaAppShortcut4');
+                foreach ($appShortcutOptionNames as $appShortcutOptionName) {
+                    $icon = daftplugInstantifyPwa::resizeImage(daftplugInstantify::getSetting($appShortcutOptionName.'Icon'), '192', '192', true, 'png');
+                    if (daftplugInstantify::getSetting($appShortcutOptionName) == 'on') {
+                        $this->manifest['shortcuts'][] = array(
+                            'name' => daftplugInstantify::getSetting($appShortcutOptionName.'Name'),
+                            'short_name' => substr(daftplugInstantify::getSetting($appShortcutOptionName.'Name'), 0, 12),
+                            'url' => daftplugInstantify::getSetting($appShortcutOptionName.'Url'),
+                        );
+
+                        if (wp_attachment_is_image(intval(daftplugInstantify::getSetting($appShortcutOptionName.'Icon')))) {
+                            $this->manifest['shortcuts'][0]['icons'][] = array(
+                                'src' => $icon[0],
+                                'sizes' => '192x192',
+                                'type' => 'image/png',
+                            );
+                        }
+                    }
+                }
+
+                $this->manifest = apply_filters("{$this->optionName}_pwa_manifest", $this->manifest);
+                $this->manifest = wp_json_encode($this->manifest, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+                
+                echo $this->manifest;
+                exit;
             }
         }
 
-        public function addManifestQueryVar($queryVars) {
-            $queryVars[] = 'daftplugInstantifyPwaManifest';
-
-            return $queryVars;
-        }
-
-        public function renderManifestMetaTagsInHeader() {
-            include_once($this->daftplugInstantifyPwaPublic->partials['manifestMetaTags']);
+        public function renderMetaTagsInHeader() {
+            include_once($this->daftplugInstantifyPwaPublic->partials['metaTags']);
         }
 
         public function renderRotateNotice() {
@@ -275,8 +273,8 @@ if (!class_exists('daftplugInstantifyPwaPublicAddtohomescreen')) {
         }
 
         public function getManifestUrl($encoded = true) {
-            $queryArgs = array('daftplugInstantifyPwaManifest' => 1);
-
+            $url = untrailingslashit(home_url('/', 'https') . self::$manifestName);
+            $queryArgs = array();
             if (daftplugInstantify::getSetting('pwaDynamicManifest')  == 'on' && is_singular() & !is_front_page()) {
                 $queryArgs['name'] = get_the_title();
 
@@ -295,8 +293,7 @@ if (!class_exists('daftplugInstantifyPwaPublicAddtohomescreen')) {
                 $queryArgs['start_url'] = daftplugInstantify::getCurrentUrl();
             }
 
-            $manifestUrl = add_query_arg($queryArgs, home_url('/', 'https'));
-
+            $manifestUrl = add_query_arg($queryArgs, $url);
             if ($encoded) {
                 return wp_json_encode($manifestUrl);
             }

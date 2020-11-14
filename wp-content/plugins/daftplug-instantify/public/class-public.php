@@ -44,7 +44,7 @@ if (!class_exists('daftplugInstantifyPublic')) {
 
             $this->dependencies = array();
 
-            $this->purchaseCode = "B5E0B5F8-DD8689E6-ACA49DD6-E6E1A930";
+            $this->purchaseCode = get_option("{$this->optionName}_purchase_code");
 
             $this->capability = 'manage_options';
 

@@ -20,26 +20,12 @@ if (!defined('ABSPATH')) exit;
                         <img class="daftplugAdminNotice_img" src="<?php echo plugins_url('admin/assets/img/image-playstore-frame.png', $this->pluginFile); ?>"/>
                     </div>
                     <div class="daftplugAdminNotice_text -flex6 -textCenter">
-                    	<h3 class="daftplugAdminNotice_title"><?php esc_html_e('Want your PWA on Google Play?', $this->textDomain); ?></h3>
-                    	<p class="daftplugAdminNotice_desc"><?php esc_html_e('Get your PWA website in Google Play store as a native Android application. We can convert your PWA website into Google Play ready APK package on top of TWA (Trusted Web Activity) technology for $19. You will get a ready-made APK file with the tutorial how to submit it to Google Play store. Push notifications will work without permissions in your PWA Android application.', $this->textDomain); ?></p>
-                    	<span class="daftplugAdminButton -generateApp" data-open-popup="generateAppModal"><?php esc_html_e('Generate PWA App', $this->textDomain); ?></span>
+                    	<h3 class="daftplugAdminNotice_title"><?php esc_html_e('Want your website published on Google Play Store?', $this->textDomain); ?></h3>
+                    	<p class="daftplugAdminNotice_desc"><?php esc_html_e('Get your PWA website in Google Play store as a native Android application. We can convert your PWA website into Google Play ready APK package on top of TWA (Trusted Web Activity) technology for $19. You will get a ready-made APK file with the tutorial how to submit it to Google Play store.', $this->textDomain); ?></p>
+                    	<span class="daftplugAdminButton -generateApp" data-open-popup="generateAppModal"><?php esc_html_e('Get Android App', $this->textDomain); ?></span>
                     </div>
                 </div>
-            </div> 
-		    <div class="daftplugAdminPopup" data-popup="generateAppModal">
-		        <div class="daftplugAdminPopup_container">
-		            <div class="daftplugAdminRating">
-		                <h4 class="daftplugAdminRating_title"><?php esc_html_e('Send us email for generating PWA App', $this->textDomain); ?></h4>
-		                <p class="daftplugAdminRating_description"><?php _e('Please write us your website URL and purchase code on <a href="mailto:support@daftplug.com">support@daftplug.com</a>, so that we will be able check your website eligibility for TWA (Trusted Web Activity) and verify your purchase. If you are unable to send an email, use the <a href="https://codecanyon.net/user/daftplug#contact" target="_blank">contact form</a> found on our CodeCanyon profile page.', $this->textDomain); ?></p>
-						<div class="daftplugAdminField">
-                        	<div class="daftplugAdminField_label -flexAuto"><?php printf(__('Website URL: %s', $this->textDomain), home_url()); ?></div>
-                    	</div>
-						<div class="daftplugAdminField">
-                        	<div class="daftplugAdminField_label -flexAuto"><?php printf(__('Purchase Code: %s', $this->textDomain), $this->purchaseCode); ?></div>
-                    	</div>
-		            </div>
-		        </div>
-		    </div>   
+            </div>
         </div>
     </div>
 	<?php $this->renderNotice(); ?>
@@ -83,7 +69,7 @@ if (!defined('ABSPATH')) exit;
                 <div class="daftplugAdminStatus_container">
                     <div class="daftplugAdminStatus_label -flex4"><?php esc_html_e('Action', $this->textDomain); ?></div>
                     <div class="daftplugAdminStatus_text -flex8">
-						<button type="submit" class="daftplugAdminButton -submit -confirm -deactivateLicense" data-submit="<?php esc_html_e('Deactivate License', $this->textDomain); ?>" data-waiting="<?php esc_html_e('Waiting', $this->textDomain); ?>" data-submitted="<?php esc_html_e('License Deactivated', $this->textDomain); ?>" data-failed="<?php esc_html_e('Deactivation Failed', $this->textDomain); ?>" data-sure="<?php esc_html_e('Are You Sure?', $this->textDomain); ?>" data-duration="2000ms" data-nonce="<?php echo wp_create_nonce("{$this->optionName}_deactivate_license_nonce"); ?>" data-tooltip="<?php esc_html_e('Press & Hold to deactivate license', $this->textDomain); ?>"></button>
+						<button type="submit" class="daftplugAdminButton -submit -confirm -deactivateLicense" data-submit="<?php esc_html_e('Deactivate License', $this->textDomain); ?>" data-waiting="<?php esc_html_e('Waiting', $this->textDomain); ?>" data-submitted="<?php esc_html_e('License Deactivated', $this->textDomain); ?>" data-failed="<?php esc_html_e('Deactivation Failed', $this->textDomain); ?>" data-sure="<?php esc_html_e('Are You Sure?', $this->textDomain); ?>" data-duration="2000ms" data-nonce="<?php echo wp_create_nonce("{$this->optionName}_deactivate_license_nonce"); ?>" data-tooltip="<?php esc_html_e('Press & Hold to deactivate license', $this->textDomain); ?>" data-tooltip-flow="top"></button>
                     </div>                
                 </div>
             </div>

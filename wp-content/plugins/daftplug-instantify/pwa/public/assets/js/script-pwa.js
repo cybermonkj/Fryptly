@@ -7,6 +7,7 @@ jQuery(function() {
     var pushButton = daftplugPublic.find('.daftplugPublicPushButton');
     var pushPrompt = daftplugPublic.find('.daftplugPublicPushPrompt');
     var navigationTabBar = daftplugPublic.find('.daftplugPublicNavigationTabBar');
+    var webShareButton = daftplugPublic.find('.daftplugPublicWebShareButton');
     var isMobilePad = client.isMobile() || client.isIpad();
     var isAndroidChrome = client.isMobileAndroid() && client.isChrome();
     var isAndroidFirefox = client.isMobileAndroid() && client.isFirefox();
@@ -29,6 +30,7 @@ jQuery(function() {
     var checkoutOverlay = daftplugPublic.find('.daftplugPublicCheckoutOverlay');
     var postOverlay = daftplugPublic.find('.daftplugPublicPostOverlay');
     var installButton = daftplugPublic.find('.daftplugPublicInstallButton');
+    var rotateNotice = daftplugPublic.find('.daftplugPublicRotateNotice');
 
     // Check if PWA
     function isPwa() {
@@ -74,6 +76,9 @@ jQuery(function() {
                 break;
             case 'incompatible':
                 pushButton.removeClass('-loading').removeClass('-off').addClass('-on').addClass('-disabled');
+                break;
+            case 'hidden':
+                pushButton.removeClass('-loading').removeClass('-off').removeClass('-on').addClass('-hidden');
                 break;
             default:
                 console.error('Unhandled push button state', state);
@@ -247,16 +252,22 @@ jQuery(function() {
 	            }
 
 	            // Handle push button
-	            if (objectName.settings.pwaPushButton == 'on') {                   
+	            if (objectName.settings.pwaPushButton == 'on') {    
 	                if (subscription) {
-	                    changePushButtonState('enabled');
-	                    pushButton.css('display', 'flex').on('click', function(e) {
-	                        deregisterPushDevice();
-	                    });
+                        if (objectName.settings.pwaPushButtonBehavior == 'shown') {
+                            changePushButtonState('enabled');
+                            pushButton.css('display', 'flex').on('click', function(e) {
+                                deregisterPushDevice();
+                            });
+                        }
 	                } else {
-	                    changePushButtonState('disabled');
+                        changePushButtonState('disabled');
 	                    pushButton.css('display', 'flex').on('click', function(e) {
-	                        registerPushDevice();
+                            if (objectName.settings.pwaPushButtonBehavior == 'hidden') {
+                                registerPushDevice().then(() => changePushButtonState('hidden'));
+                            } else {
+                                registerPushDevice();
+                            }
 	                    });
 	                }
 	            }
@@ -273,29 +284,145 @@ jQuery(function() {
 
     // Handle ajaxify
     if (objectName.settings.pwaAjaxify == 'on') {
+        if (objectName.settings.pwaAjaxifySelectors == '') {
+            var additionalSelectors = 'a:not(.no-ajaxy)';
+        } else {
+            var additionalSelectors = 'a:not(.no-ajaxy),' + objectName.settings.pwaAjaxifySelectors;
+        }
+        
         if (objectName.settings.pwaAjaxifyForms == 'on') {
             var formsSelector = 'form:not(.no-ajaxy)';
         } else {
             var formsSelector = false;
         }
 
-        jQuery().ajaxify({
-            selector: 'a:not(.no-ajaxy)',
+        jQuery('body').ajaxify({
+            selector: additionalSelectors,
             forms: formsSelector,
             refresh: true,
-            deltas : false,
+            deltas: false,
             alwayshints: 'daftplug-instantify',
         });
     }
 
     // Handle preloader
     if (objectName.settings.pwaPreloader == 'on') {
+        var perfData = window.performance.timing,
+        EstimatedTime = -(perfData.loadEventEnd - perfData.navigationStart),
+        time = parseInt((EstimatedTime / 1000) % 60) * 100,
+        start = 0,
+        end = 70,
+        duration = time,
+        range = end - start,
+        current = start,
+        increment = end > start ? 1 : -1,
+        stepTime = Math.abs(Math.floor(duration / range));
+        
         jQuery(window).on('beforeunload pronto.request', function(e) {
             e.returnValue = '';
             jQuery('.daftplugPublicPreloader').css('display', 'flex').hide().fadeIn(200);
-        }).on('load pronto.render', function(e) {
-            jQuery('.daftplugPublicPreloader').fadeOut('slow');
         });
+
+        if (objectName.settings.pwaPreloaderStyle == 'percent') {
+            var progressFill = jQuery('.daftplugPublicPreloader_fill');
+            var counter = jQuery('.daftplugPublicPreloader_counter');
+            var timer = setInterval(function() {
+                if (current < end) {
+                    current += increment;
+                }
+                progressFill.css({
+                    'transition-duration': '0.001s',
+                    'width': current + '%',
+                });
+                counter.text(current + '%');
+                if ((current == end && perfData.loadEventEnd > 0) || perfData.loadEventEnd > 0) {
+                    var endLoading = setInterval(function() {
+                        current += increment;
+                        progressFill.css('width', current + '%');
+                        counter.text(current + '%');
+                        if (current == 100) {
+                            setTimeout(function() {
+                                jQuery('.daftplugPublicPreloader').fadeOut(500, function(e) {
+                                    progressFill.css('width', '0');
+                                    counter.text('0%');
+                                });
+                            }, 300);
+                            clearInterval(endLoading);
+                        }
+                    }, 1)
+                    clearInterval(timer);
+                }
+            }, stepTime);
+        } else if (objectName.settings.pwaPreloaderStyle == 'skeleton') {
+            var timer = setInterval(function() {
+                if (current < end) {
+                    current += increment;
+                }
+                jQuery('.daftplugPublicPreloader').hide();
+                jQuery('a, svg, i, input, select, button, video').addClass('-daftplugPublicSkeletonLoad');
+                jQuery('img:visible').each(function(e) {
+                    jQuery(this).wrap(`<div class="${jQuery(this).attr('class')} -daftplugPublicSkeletonLoad -image" style="width: ${jQuery(this).width()}px; height: ${jQuery(this).height()}px;"></div>`).hide();
+                });
+                jQuery('*:visible').filter(function() {
+                    if (this.currentStyle) {
+                        return this.currentStyle['backgroundImage'] !== 'none';
+                    } else if (window.getComputedStyle) {
+                        return document.defaultView.getComputedStyle(this,null).getPropertyValue('background-image') !== 'none';
+                    }
+                }).addClass('-daftplugPublicSkeletonLoad');
+                jQuery('*:visible').filter(function() {
+                    return jQuery(this).children().length == 0 && jQuery.trim(jQuery(this).text()).length > 0;
+                }).addClass('-daftplugPublicSkeletonLoad');
+                jQuery('*').not('iframe, .-daftplugPublicSkeletonLoad').contents().each(function() {
+                    if (this.nodeType == 3 && jQuery.trim(this.nodeValue) != '') {
+                        jQuery(this).wrap('<ins class="-daftplugPublicSkeletonLoad"/>');
+                    }
+                });
+                if ((current == end && perfData.loadEventEnd > 0) || perfData.loadEventEnd > 0) {
+                    var endLoading = setInterval(function() {
+                        current += increment;
+                        if (current == 100) {
+                            jQuery('.-daftplugPublicSkeletonLoad.-image').contents().unwrap().show();
+                            jQuery('ins[class="-daftplugPublicSkeletonLoad"]').contents().unwrap();
+                            jQuery('*').removeClass('-daftplugPublicSkeletonLoad');
+                            jQuery('#daftplugPublicSkeletonLoadCss').remove();
+                            clearInterval(endLoading);
+                        }
+                    }, 1)
+                    clearInterval(timer);
+                }
+            }, stepTime);
+        } else {
+            var timer = setInterval(function() {
+                if (current < end) {
+                    current += increment;
+                }
+                if ((current == end && perfData.loadEventEnd > 0) || perfData.loadEventEnd > 0) {
+                    var endLoading = setInterval(function() {
+                        current += increment;
+                        if (current == 100) {
+                            setTimeout(function() {
+                                jQuery('.daftplugPublicPreloader').fadeOut(500);
+                            }, 300);
+                            clearInterval(endLoading);
+                        }
+                    }, 1)
+                    clearInterval(timer);
+                }
+            }, stepTime);
+        }
+    }
+
+    // Handle persistent storage
+    if (objectName.settings.pwaPersistentStorage == 'on') {
+        if (navigator.storage && navigator.storage.persist) {
+            (async function() {
+                var isPersisted = await navigator.storage.persisted();
+                if (!isPersisted) {
+                    await navigator.storage.persist();
+                }
+            })();
+        }
     }
 
     // Handle mobile staff
@@ -304,22 +431,29 @@ jQuery(function() {
         if (objectName.settings.pwaNavigationTabBar == 'on') {
         	if (navigationTabBar.find('li').length == 0) {
         		navigationTabBar.hide();
-        	}
-
-            if (navigationTabBar.is(':visible')) {
-                jQuery('#daftplugPublicToastMessage').css('bottom', '80px');
-                if (objectName.settings.pwaPushButton == 'on' && objectName.settings.pwaButtonPosition.indexOf('bottom') >= 0) {
-                    pushButton.css('bottom', '60px');
+            } else {
+                if (navigationTabBar.is(':visible')) {
+                    setInterval(function(e) {
+                        jQuery('#daftplugPublicToastMessage').css('bottom', '85px');
+                    }, 10);
+    
+                    if (objectName.settings.pwaPushButton == 'on' && objectName.settings.pwaPushButtonPosition.indexOf('bottom') >= 0 && pushButton.length) {
+                        pushButton.css('bottom', '75px');
+                    }
+    
+                    if (objectName.settings.pwaWebShareButton == 'on' && objectName.settings.pwaWebShareButtonPosition.indexOf('bottom') >= 0 && webShareButton.length) {
+                        webShareButton.css('bottom', '75px');
+                    }
                 }
-            }
-
-            if (objectName.settings.pwaNavigationTabBarSearch == '*directSearch*') {
-                var searchItem = daftplugPublic.find('.daftplugPublicNavigationTabBar_item.-search');
-                var searchContainer = searchItem.find('.daftplugPublicNavigationTabBar_search');
-                var searchForm = searchContainer.find('.daftplugPublicNavigationTabBar_searchForm');
-                var searchField = searchForm.find('.daftplugPublicNavigationTabBar_searchField');
-
-                searchItem.click(function(e) {
+                
+                var directSearchItem = navigationTabBar.find('.daftplugPublicNavigationTabBar_item.-directSearch');
+                var directSearchLink = directSearchItem.find('.daftplugPublicNavigationTabBar_link');
+                directSearchLink.click(function(e) {
+                    e.preventDefault();
+                    var self = jQuery(this);
+                    var searchContainer = self.prev();
+                    var searchForm = searchContainer.find('.daftplugPublicNavigationTabBar_searchForm');
+                    var searchField = searchForm.find('.daftplugPublicNavigationTabBar_searchField');
                     searchContainer.fadeIn('fast', function(e) {
                         searchField.focus().blur(function(e) {
                             searchForm[0].reset();
@@ -328,6 +462,16 @@ jQuery(function() {
                     });
                 });
             }
+        }
+
+        // Handle web share button
+        if (objectName.settings.pwaWebShareButton == 'on' && navigator.share) {
+            webShareButton.css('display', 'flex').on('click', function(e) {
+                navigator.share({
+                    title: document.title,
+                    url: document.querySelector('link[rel=canonical]') ? document.querySelector('link[rel=canonical]').href : document.location.href,
+                }).catch(console.error);
+            });
         }
 
         // Handle pull down navigation
@@ -362,6 +506,24 @@ jQuery(function() {
             window.addEventListener('shake', function() {
                 location.reload();
             }, false);
+        }
+
+        // Handle screen wake lock
+        if (objectName.settings.pwaScreenWakeLock == 'on') {
+            if ('wakeLock' in navigator) {
+                var wakeLock = null;
+                var requestWakeLock = async function requestWakeLock() {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                };
+                var handleVisibilityChange = function handleVisibilityChange() {
+                    if (wakeLock !== null && document.visibilityState === 'visible') {
+                        requestWakeLock();
+                    }
+                };
+                requestWakeLock();                 
+                document.addEventListener('visibilitychange', handleVisibilityChange);
+                document.addEventListener('fullscreenchange', handleVisibilityChange);
+            }
         }
 
         // Handle vibration
@@ -689,24 +851,6 @@ jQuery(function() {
                     });
                 });
             }
-
-            setTimeout(function() {
-            	var pushDisplayValue = pushButton.css('display');
-                var navDisplayValue = navigationTabBar.css('display');
-                setInterval(function() {
-                    if (fullscreenOverlay.is(':visible') || postOverlay.is(':visible')) {
-                    	if (pushDisplayValue == 'flex') {
-                    		pushButton.fadeOut('fast');
-                    	}
-                        if (navDisplayValue == 'flex') {
-                            navigationTabBar.fadeOut('fast');
-                        }
-                    } else {
-                    	pushButton.css('display', pushDisplayValue);
-                        navigationTabBar.css('display', navDisplayValue);
-                    }
-                }, 100);
-            }, 3000);
         }
 
         // Handle installation button
@@ -776,9 +920,9 @@ jQuery(function() {
             // Display rotate device notice based on orientation
             setInterval(function() {
                 if ((objectName.settings.pwaOrientation == 'portrait' && window.matchMedia('(orientation: landscape)').matches) || (objectName.settings.pwaOrientation == 'landscape' && window.matchMedia('(orientation: portrait)').matches)) {
-                    daftplugPublic.find('.daftplugPublicRotateNotice').css('display', 'flex');
+                    rotateNotice.css('display', 'flex');
                     window.onorientationchange = function(e) {
-                        daftplugPublic.find('.daftplugPublicRotateNotice').hide();
+                        rotateNotice.hide();
                     };
                 }
             }, 100);

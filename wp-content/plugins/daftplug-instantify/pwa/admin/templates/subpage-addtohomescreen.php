@@ -70,13 +70,6 @@ if (!defined('ABSPATH')) exit;
                         ?>
                     </div>
                     <div class="daftplugAdminField">
-                        <p class="daftplugAdminField_description"><?php esc_html_e('Maskable icons is a new icon format that ensures that your PWA icon looks great on all Android devices. On newer Android devices, PWA icons that don\'t follow the maskable icon format are a given a white background. When you use a maskable icon, it ensures that the icon takes up all of the space that Android provides for it.', $this->textDomain); ?></p>
-                        <label for="pwaIconMaskable" class="daftplugAdminField_label -flex4"><?php esc_html_e('Maskable Icon', $this->textDomain); ?></label>
-                        <label class="daftplugAdminInputCheckbox -flexAuto">
-                            <input type="checkbox" name="pwaIconMaskable" id="pwaIconMaskable" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pwaIconMaskable'), 'on'); ?>>
-                        </label>
-                    </div>
-                    <div class="daftplugAdminField">
                         <p class="daftplugAdminField_description"><?php esc_html_e('Select the display mode of your web application. We recommend to choose Standalone, as it provides a native app feeling.', $this->textDomain); ?></p>
                         <label for="pwaDisplayMode" class="daftplugAdminField_label -flex4"><?php esc_html_e('Display Mode', $this->textDomain); ?></label>
                         <div class="daftplugAdminInputSelect -flexAuto">
@@ -123,99 +116,106 @@ if (!defined('ABSPATH')) exit;
                             <input type="text" name="pwaBackgroundColor" id="pwaBackgroundColor" class="daftplugAdminInputColor_field" value="<?php echo daftplugInstantify::getSetting('pwaBackgroundColor'); ?>" data-placeholder="<?php esc_html_e('Background Color', $this->textDomain); ?>" required>
                         </div>
                     </div>
-                </fieldset>
-                <fieldset class="daftplugAdminFieldset">
-                    <h4 class="daftplugAdminFieldset_title"><?php esc_html_e('App Shortcuts', $this->textDomain); ?></h4>
-                    <p class="daftplugAdminFieldset_description"><?php esc_html_e('App shortcuts help users quickly start common or recommended tasks within your web app. Easy access to those tasks from anywhere the app icon is displayed will enhance users productivity as well as increase their engagement with the web app. The app shortcuts menu is invoked by right-clicking the app icon in the taskbar (Windows) or dock (macOS) on the user\'s desktop, or long pressing the app\'s launcher icon on Android.', $this->textDomain); ?></p>
-                    <div class="daftplugAdminFieldset -miniFieldset -pwaAppShortcut1">
-                        <h5 class="daftplugAdminFieldset_title"><?php esc_html_e('App Shortcut 1', $this->textDomain); ?></h5>
-	                    <label class="daftplugAdminInputCheckbox -flexAuto -hidden">
-							<input type="checkbox" name="pwaAppShortcut1" id="pwaAppShortcut1" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pwaAppShortcut1'), 'on'); ?>>
-						</label>
-                        <div class="daftplugAdminField">
-                            <div class="daftplugAdminInputText -flexAuto">
-                                <input type="text" name="pwaAppShortcut1Name" id="pwaAppShortcut1Name" class="daftplugAdminInputText_field" value="<?php echo daftplugInstantify::getSetting('pwaAppShortcut1Name'); ?>" data-placeholder="<?php esc_html_e('Name', $this->textDomain); ?>" autocomplete="off" required>
-                            </div>
-                        </div>
-                        <div class="daftplugAdminField">
-                            <div class="daftplugAdminInputText -flexAuto">
-                                <input type="url" name="pwaAppShortcut1Url" id="pwaAppShortcut1Url" class="daftplugAdminInputText_field" value="<?php echo daftplugInstantify::getSetting('pwaAppShortcut1Url'); ?>" data-placeholder="<?php esc_html_e('URL', $this->textDomain); ?>" autocomplete="off" required>
-                            </div>
-                        </div>
-                        <div class="daftplugAdminField">
-                            <div class="daftplugAdminInputUpload -flexAuto">
-                                <input type="text" name="pwaAppShortcut1Icon" id="pwaAppShortcut1Icon" class="daftplugAdminInputUpload_field" value="<?php echo daftplugInstantify::getSetting('pwaAppShortcut1Icon'); ?>" data-mimes="png" data-min-width="192" data-max-width="" data-min-height="192" data-max-height="" data-attach-url="<?php echo wp_get_attachment_image_src(daftplugInstantify::getSetting('pwaAppShortcut1Icon'), array(192, 192))[0]; ?>">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="daftplugAdminFieldset -miniFieldset -pwaAppShortcut2">
-                        <h5 class="daftplugAdminFieldset_title"><?php esc_html_e('App Shortcut 2', $this->textDomain); ?></h5>
-                    	<label class="daftplugAdminInputCheckbox -flexAuto -hidden">
-                    		<input type="checkbox" name="pwaAppShortcut2" id="pwaAppShortcut2" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pwaAppShortcut2'), 'on'); ?>>
-                    	</label>
-                        <div class="daftplugAdminField">
-                            <div class="daftplugAdminInputText -flexAuto">
-                                <input type="text" name="pwaAppShortcut2Name" id="pwaAppShortcut2Name" class="daftplugAdminInputText_field" value="<?php echo daftplugInstantify::getSetting('pwaAppShortcut2Name'); ?>" data-placeholder="<?php esc_html_e('Name', $this->textDomain); ?>" autocomplete="off" required>
-                            </div>
-                        </div>
-                        <div class="daftplugAdminField">
-                            <div class="daftplugAdminInputText -flexAuto">
-                                <input type="url" name="pwaAppShortcut2Url" id="pwaAppShortcut2Url" class="daftplugAdminInputText_field" value="<?php echo daftplugInstantify::getSetting('pwaAppShortcut2Url'); ?>" data-placeholder="<?php esc_html_e('URL', $this->textDomain); ?>" autocomplete="off" required>
-                            </div>
-                        </div>
-                        <div class="daftplugAdminField">
-                            <div class="daftplugAdminInputUpload -flexAuto">
-                                <input type="text" name="pwaAppShortcut2Icon" id="pwaAppShortcut2Icon" class="daftplugAdminInputUpload_field" value="<?php echo daftplugInstantify::getSetting('pwaAppShortcut2Icon'); ?>" data-mimes="png" data-min-width="192" data-max-width="" data-min-height="192" data-max-height="" data-attach-url="<?php echo wp_get_attachment_image_src(daftplugInstantify::getSetting('pwaAppShortcut2Icon'), array(192, 192))[0]; ?>">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="daftplugAdminFieldset -miniFieldset -pwaAppShortcut3">
-                        <h5 class="daftplugAdminFieldset_title"><?php esc_html_e('App Shortcut 3', $this->textDomain); ?></h5>
-                    	<label class="daftplugAdminInputCheckbox -flexAuto -hidden">
-                    		<input type="checkbox" name="pwaAppShortcut3" id="pwaAppShortcut3" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pwaAppShortcut3'), 'on'); ?>>
-                    	</label>
-                        <div class="daftplugAdminField">
-                            <div class="daftplugAdminInputText -flexAuto">
-                                <input type="text" name="pwaAppShortcut3Name" id="pwaAppShortcut3Name" class="daftplugAdminInputText_field" value="<?php echo daftplugInstantify::getSetting('pwaAppShortcut3Name'); ?>" data-placeholder="<?php esc_html_e('Name', $this->textDomain); ?>" autocomplete="off" required>
-                            </div>
-                        </div>
-                        <div class="daftplugAdminField">
-                            <div class="daftplugAdminInputText -flexAuto">
-                                <input type="url" name="pwaAppShortcut3Url" id="pwaAppShortcut3Url" class="daftplugAdminInputText_field" value="<?php echo daftplugInstantify::getSetting('pwaAppShortcut3Url'); ?>" data-placeholder="<?php esc_html_e('URL', $this->textDomain); ?>" autocomplete="off" required>
-                            </div>
-                        </div>
-                        <div class="daftplugAdminField">
-                            <div class="daftplugAdminInputUpload -flexAuto">
-                                <input type="text" name="pwaAppShortcut3Icon" id="pwaAppShortcut3Icon" class="daftplugAdminInputUpload_field" value="<?php echo daftplugInstantify::getSetting('pwaAppShortcut3Icon'); ?>" data-mimes="png" data-min-width="192" data-max-width="" data-min-height="192" data-max-height="" data-attach-url="<?php echo wp_get_attachment_image_src(daftplugInstantify::getSetting('pwaAppShortcut3Icon'), array(192, 192))[0]; ?>">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="daftplugAdminFieldset -miniFieldset -pwaAppShortcut4">
-                        <h5 class="daftplugAdminFieldset_title"><?php esc_html_e('App Shortcut 4', $this->textDomain); ?></h5>
-                    	<label class="daftplugAdminInputCheckbox -flexAuto -hidden">
-                    		<input type="checkbox" name="pwaAppShortcut4" id="pwaAppShortcut4" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pwaAppShortcut4'), 'on'); ?>>
-                    	</label>
-                        <div class="daftplugAdminField">
-                            <div class="daftplugAdminInputText -flexAuto">
-                                <input type="text" name="pwaAppShortcut4Name" id="pwaAppShortcut4Name" class="daftplugAdminInputText_field" value="<?php echo daftplugInstantify::getSetting('pwaAppShortcut4Name'); ?>" data-placeholder="<?php esc_html_e('Name', $this->textDomain); ?>" autocomplete="off" required>
-                            </div>
-                        </div>
-                        <div class="daftplugAdminField">
-                            <div class="daftplugAdminInputText -flexAuto">
-                                <input type="url" name="pwaAppShortcut4Url" id="pwaAppShortcut4Url" class="daftplugAdminInputText_field" value="<?php echo daftplugInstantify::getSetting('pwaAppShortcut4Url'); ?>" data-placeholder="<?php esc_html_e('URL', $this->textDomain); ?>" autocomplete="off" required>
-                            </div>
-                        </div>
-                        <div class="daftplugAdminField">
-                            <div class="daftplugAdminInputUpload -flexAuto">
-                                <input type="text" name="pwaAppShortcut4Icon" id="pwaAppShortcut4Icon" class="daftplugAdminInputUpload_field" value="<?php echo daftplugInstantify::getSetting('pwaAppShortcut4Icon'); ?>" data-mimes="png" data-min-width="192" data-max-width="" data-min-height="192" data-max-height="" data-attach-url="<?php echo wp_get_attachment_image_src(daftplugInstantify::getSetting('pwaAppShortcut4Icon'), array(192, 192))[0]; ?>">
-                            </div>
+                    <div class="daftplugAdminField">
+                        <p class="daftplugAdminField_description"><?php esc_html_e('Select the categories of your web application. The categories describe the expected application categories to which the web application belongs. It\'s used as a hint to catalogs or store listing web applications and it is expected that these will make a best effort to find appropriate categories (or category) under which to list the web application. You can choose maximum 3 categories.', $this->textDomain); ?></p>
+                        <label for="pwaCategories" class="daftplugAdminField_label -flex4"><?php esc_html_e('Categories', $this->textDomain); ?></label>
+                        <div class="daftplugAdminInputSelect -flexAuto">
+                            <select multiple name="pwaCategories" id="pwaCategories" class="daftplugAdminInputSelect_field" data-placeholder="<?php esc_html_e('Categories', $this->textDomain); ?>" data-max="3" autocomplete="off" required>
+                                <option value="books" <?php selected(true, in_array('books', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Books', $this->textDomain); ?></option>
+                                <option value="business" <?php selected(true, in_array('business', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Business', $this->textDomain); ?></option>
+                                <option value="education" <?php selected(true, in_array('education', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Education', $this->textDomain); ?></option>
+                                <option value="entertainment" <?php selected(true, in_array('entertainment', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Entertainment', $this->textDomain); ?></option>
+                                <option value="finance" <?php selected(true, in_array('finance', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Finance', $this->textDomain); ?></option>
+                                <option value="fitness" <?php selected(true, in_array('fitness', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Fitness', $this->textDomain); ?></option>
+                                <option value="food" <?php selected(true, in_array('food', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Food', $this->textDomain); ?></option>
+                                <option value="games" <?php selected(true, in_array('games', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Games', $this->textDomain); ?></option>
+                                <option value="government" <?php selected(true, in_array('government', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Government', $this->textDomain); ?></option>
+                                <option value="health" <?php selected(true, in_array('health', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Health', $this->textDomain); ?></option>
+                                <option value="kids" <?php selected(true, in_array('kids', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Kids', $this->textDomain); ?></option>
+                                <option value="lifestyle" <?php selected(true, in_array('lifestyle', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Lifestyle', $this->textDomain); ?></option>
+                                <option value="magazines" <?php selected(true, in_array('magazines', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Magazines', $this->textDomain); ?></option>
+                                <option value="medical" <?php selected(true, in_array('medical', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Medical', $this->textDomain); ?></option>
+                                <option value="music" <?php selected(true, in_array('music', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Music', $this->textDomain); ?></option>
+                                <option value="navigation" <?php selected(true, in_array('navigation', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Navigation', $this->textDomain); ?></option>
+                                <option value="news" <?php selected(true, in_array('news', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('News', $this->textDomain); ?></option>
+                                <option value="personalization" <?php selected(true, in_array('personalization', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Personalization', $this->textDomain); ?></option>
+                                <option value="photo" <?php selected(true, in_array('photo', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Photo', $this->textDomain); ?></option>
+                                <option value="politics" <?php selected(true, in_array('politics', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Politics', $this->textDomain); ?></option>
+                                <option value="productivity" <?php selected(true, in_array('productivity', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Productivity', $this->textDomain); ?></option>
+                                <option value="security" <?php selected(true, in_array('security', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Security', $this->textDomain); ?></option>
+                                <option value="shopping" <?php selected(true, in_array('shopping', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Shopping', $this->textDomain); ?></option>
+                                <option value="social" <?php selected(true, in_array('social', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Social', $this->textDomain); ?></option>
+                                <option value="sports" <?php selected(true, in_array('sports', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Sports', $this->textDomain); ?></option>
+                                <option value="travel" <?php selected(true, in_array('travel', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Travel', $this->textDomain); ?></option>
+                                <option value="utilities" <?php selected(true, in_array('utilities', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Utilities', $this->textDomain); ?></option>
+                                <option value="weather" <?php selected(true, in_array('weather', (array)daftplugInstantify::getSetting('pwaCategories'))); ?>><?php esc_html_e('Weather', $this->textDomain); ?></option>
+                            </select>
                         </div>
                     </div>
                     <div class="daftplugAdminField">
+                        <p class="daftplugAdminField_description"><?php _e('Related application option gives you the ability to let users quickly and seamlessly install your native app on their device directly from the app store, without leaving the browser, and without showing an annoying interstitial. So if you will relate your native application to your PWA, browser will prompt the user with your native app instead of the PWA web app. If you don\'t have a native application for your web app, you can <span class="daftplugAdminButton -miniGenerateApp" data-open-popup="generateAppModal">Get Android App</span> now.', $this->textDomain); ?></p>
+                        <label for="pwaRelatedApplication" class="daftplugAdminField_label -flex4"><?php esc_html_e('Related Application', $this->textDomain); ?></label>
+                        <label class="daftplugAdminInputCheckbox -flexAuto">
+                            <input type="checkbox" name="pwaRelatedApplication" id="pwaRelatedApplication" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pwaRelatedApplication'), 'on'); ?>>
+                        </label>
+                    </div>
+                    <fieldset class="daftplugAdminFieldset -miniFieldset -pwaRelatedApplicationDependentHideD">
+                        <div class="daftplugAdminField">
+                            <p class="daftplugAdminField_description"><?php esc_html_e('Example: Android', $this->textDomain); ?></p>
+                            <label for="pwaRelatedApplicationPlatform" class="daftplugAdminField_label -flex4"><?php esc_html_e('Platform', $this->textDomain); ?></label>
+                            <div class="daftplugAdminInputSelect -flexAuto">
+                                <select name="pwaRelatedApplicationPlatform" id="pwaRelatedApplicationPlatform" class="daftplugAdminInputSelect_field" data-placeholder="<?php esc_html_e('Platform', $this->textDomain); ?>" autocomplete="off" required>
+                                    <option value="play" <?php selected(daftplugInstantify::getSetting('pwaRelatedApplicationPlatform'), 'play') ?>><?php esc_html_e('Android', $this->textDomain); ?></option>
+                                    <option value="itunes" <?php selected(daftplugInstantify::getSetting('pwaRelatedApplicationPlatform'), 'itunes') ?>><?php esc_html_e('iOS', $this->textDomain); ?></option>
+                                    <option value="windows" <?php selected(daftplugInstantify::getSetting('pwaRelatedApplicationPlatform'), 'windows') ?>><?php esc_html_e('Windows', $this->textDomain); ?></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="daftplugAdminField">
+                            <p class="daftplugAdminField_description"><?php esc_html_e('Example: https://play.google.com/store/apps/details?id=sdm.apps.twademo', $this->textDomain); ?></p>
+                            <label for="pwaRelatedApplicationUrl" class="daftplugAdminField_label -flex4"><?php esc_html_e('URL', $this->textDomain); ?></label>
+                            <div class="daftplugAdminInputText -flexAuto">
+                                <input type="url" name="pwaRelatedApplicationUrl" id="pwaRelatedApplicationUrl" class="daftplugAdminInputText_field" value="<?php echo daftplugInstantify::getSetting('pwaRelatedApplicationUrl'); ?>" data-placeholder="<?php esc_html_e('URL', $this->textDomain); ?>" autocomplete="off" required>
+                            </div>
+                        </div>
+                        <div class="daftplugAdminField">
+                            <p class="daftplugAdminField_description"><?php esc_html_e('Example: sdm.apps.twademo', $this->textDomain); ?></p>
+                            <label for="pwaRelatedApplicationId" class="daftplugAdminField_label -flex4"><?php esc_html_e('ID', $this->textDomain); ?></label>
+                            <div class="daftplugAdminInputText -flexAuto">
+                                <input type="text" name="pwaRelatedApplicationId" id="pwaRelatedApplicationId" class="daftplugAdminInputText_field" value="<?php echo daftplugInstantify::getSetting('pwaRelatedApplicationId'); ?>" data-placeholder="<?php esc_html_e('ID', $this->textDomain); ?>" autocomplete="off" required>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="daftplugAdminField">
+                        <p class="daftplugAdminField_description"><?php esc_html_e('App shortcuts help users quickly start common or recommended tasks within your web app. Easy access to those tasks from anywhere the app icon is displayed will enhance users productivity as well as increase their engagement with the web app. The app shortcuts menu is invoked by right-clicking the app icon in the taskbar (Windows) or dock (macOS) on the user\'s desktop, or long pressing the app\'s launcher icon on Android.', $this->textDomain); ?></p>
+                        <label for="pwaAppShortcut" class="daftplugAdminField_label -flex4"><?php esc_html_e('App Shortcuts', $this->textDomain); ?></label>
                         <div class="daftplugAdminInputAddField -flexAuto">
-                            <span class="daftplugAdminButton -addField" data-add="pwaAppShortcut" data-max="4"><?php esc_html_e('+ Add App Shortcut', $this->textDomain); ?></span>
+                            <span class="daftplugAdminButton -addField" data-add="pwaAppShortcut"><?php esc_html_e('+ Add App Shortcut', $this->textDomain); ?></span>
                         </div>
                     </div>
+                    <?php for ($a = 1; $a <= 4; $a++) { ?>
+                    <fieldset class="daftplugAdminFieldset -miniFieldset -pwaAppShortcut<?php echo $a; ?>">
+                        <h5 class="daftplugAdminFieldset_title"><?php printf(__('App Shortcut %s', $this->textDomain), $a); ?></h5>
+	                    <label class="daftplugAdminInputCheckbox -flexAuto -hidden">
+							<input type="checkbox" name="pwaAppShortcut<?php echo $a; ?>" id="pwaAppShortcut<?php echo $a; ?>" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting(sprintf('pwaAppShortcut%s', $a)), 'on'); ?>>
+						</label>
+                        <div class="daftplugAdminField">
+                            <div class="daftplugAdminInputText -flexAuto">
+                                <input type="text" name="pwaAppShortcut<?php echo $a; ?>Name" id="pwaAppShortcut<?php echo $a; ?>Name" class="daftplugAdminInputText_field" value="<?php echo daftplugInstantify::getSetting(sprintf('pwaAppShortcut%sName', $a)); ?>" data-placeholder="<?php esc_html_e('Name', $this->textDomain); ?>" autocomplete="off" required>
+                            </div>
+                        </div>
+                        <div class="daftplugAdminField">
+                            <div class="daftplugAdminInputText -flexAuto">
+                                <input type="url" name="pwaAppShortcut<?php echo $a; ?>Url" id="pwaAppShortcut<?php echo $a; ?>Url" class="daftplugAdminInputText_field" value="<?php echo daftplugInstantify::getSetting(sprintf('pwaAppShortcut%sUrl', $a)); ?>" data-placeholder="<?php esc_html_e('URL', $this->textDomain); ?>" autocomplete="off" required>
+                            </div>
+                        </div>
+                        <div class="daftplugAdminField">
+                            <div class="daftplugAdminInputUpload -flexAuto">
+                                <input type="text" name="pwaAppShortcut<?php echo $a; ?>Icon" id="pwaAppShortcut<?php echo $a; ?>Icon" class="daftplugAdminInputUpload_field" value="<?php echo daftplugInstantify::getSetting(sprintf('pwaAppShortcut%sIcon', $a)); ?>" data-mimes="png" data-min-width="192" data-max-width="" data-min-height="192" data-max-height="" data-attach-url="<?php echo wp_get_attachment_image_src(daftplugInstantify::getSetting(sprintf('pwaAppShortcut%sIcon', $a)), array(192, 192))[0]; ?>">
+                            </div>
+                        </div>
+                    </fieldset>
+                    <?php } ?>
                 </fieldset>
                 <fieldset class="daftplugAdminFieldset">
                     <h4 class="daftplugAdminFieldset_title"><?php esc_html_e('Installation Overlays', $this->textDomain); ?></h4>

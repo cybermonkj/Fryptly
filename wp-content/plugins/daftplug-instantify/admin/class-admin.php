@@ -58,7 +58,7 @@ if (!class_exists('daftplugInstantifyAdmin')) {
 
             $this->dependencies = array();
 
-            $this->purchaseCode = "B5E0B5F8-DD8689E6-ACA49DD6-E6E1A930";
+            $this->purchaseCode = get_option("{$this->optionName}_purchase_code");
 
             $this->capability = 'manage_options';
 
@@ -145,6 +145,10 @@ if (!class_exists('daftplugInstantifyAdmin')) {
                     'template' => plugin_dir_path(__FILE__) . implode(DIRECTORY_SEPARATOR, array('templates', 'page-support.php'))
                 ),
                 array(
+                    'id' => 'activation',
+                    'template' => plugin_dir_path(__FILE__) . implode(DIRECTORY_SEPARATOR, array('templates', 'page-activation.php'))
+                ),
+                array(
                     'id' => 'error',
                     'template' => plugin_dir_path(__FILE__) . implode(DIRECTORY_SEPARATOR, array('templates', 'page-error.php'))
                 )
@@ -185,9 +189,9 @@ if (!class_exists('daftplugInstantifyAdmin')) {
                     <section class="daftplugAdminPages">
                         <?php
                         foreach ($this->pages as $page) {
-                          
-                            include_once($page['template']);
-                            
+                            if (!in_array('activation', $page)) {
+                                include_once($page['template']);
+                            }
                         }
                         ?> 
                     </section>
@@ -208,23 +212,44 @@ if (!class_exists('daftplugInstantifyAdmin')) {
 
         public function activateLicense() {
             $nonce = $_POST['nonce'];
-            $purchaseCode = 'B5E0B5F8-DD8689E6-ACA49DD6-E6E1A930';
-            update_option("{$this->optionName}_purchase_code", $purchaseCode);
-             wp_die('1');
+            $purchaseCode = trim($_POST['purchaseCode']);
+
+            if (!wp_verify_nonce($nonce, "{$this->optionName}_activate_license_nonce")) {
+                exit;
+            }
             
+            $verify = daftplugInstantify::handleLicense($purchaseCode, 'verify');
+
+            if ($verify->verification->valid) {
+                update_option("{$this->optionName}_purchase_code", $purchaseCode);
+                wp_die('1');
+            } else {
+                delete_option("{$this->optionName}_purchase_code");
+                wp_die($verify->error);
+            }
         }
 
         public function deactivateLicense() {
             $nonce = $_POST['nonce'];
             $purchaseCode = trim($this->purchaseCode);
+
+            if (!wp_verify_nonce($nonce, "{$this->optionName}_deactivate_license_nonce")) {
+                exit;
+            }
+
             $verify = daftplugInstantify::handleLicense($purchaseCode, 'deactivate');
 
-           
+            if ($verify->verification->valid) {
+                delete_option("{$this->optionName}_purchase_code");
+                wp_die('1');
+            } else {
+                wp_die($verify->error);
+            }
         }
 
         public function sendTicket() {
             $nonce = $_POST['nonce'];
-            $purchaseCode = 'B5E0B5F8-DD8689E6-ACA49DD6-E6E1A930';
+            $purchaseCode = trim($_POST['purchaseCode']);
             $firstName = $_POST['firstName'];
             $contactEmail = $_POST['contactEmail'];
             $problemDescription = $_POST['problemDescription'];
@@ -238,6 +263,8 @@ if (!class_exists('daftplugInstantifyAdmin')) {
             $headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
 
             $message = 'This email is the response of the submitted support ticket from '.$this->name.' Plugin with the following details:<br><br>';
+
+            $message .= 'Plugin Version: '.$this->version.'<br>';
 
             if (!empty($purchaseCode)) {
                 $message .= 'Purchase Code: '.$purchaseCode.'<br>';
@@ -269,14 +296,16 @@ if (!class_exists('daftplugInstantifyAdmin')) {
 
             $verify = daftplugInstantify::handleLicense($purchaseCode, 'verify');
 
-            
+            if (wp_verify_nonce($nonce, "{$this->optionName}_support_ticket_nonce") && $verify->verification->valid) {
                 $sent = wp_mail('support@daftplug.com', "[$this->name] New support ticket from {$firstName}", $message, $headers);
                 if ($sent) {
                     wp_die('1');
                 } else {
                     wp_die('0');
                 }
-           
+            } else {
+                wp_die('0');
+            }
         }
 
         public function saveSettings($newSettings) {
@@ -367,7 +396,7 @@ if (!class_exists('daftplugInstantifyAdmin')) {
                 }
             }
 
-            echo json_encode(array('data' => $data, 'dates' => $dates));
+            echo wp_json_encode(array('data' => $data, 'dates' => $dates));
 
             wp_die();
         }
@@ -392,7 +421,20 @@ if (!class_exists('daftplugInstantifyAdmin')) {
         }
 
         public function checkInfo($result, $action, $args) {
-            $result = true;
+            $result = false;
+
+            if (isset($args->slug) && $args->slug === $this->slug) {
+                $info = daftplugInstantify::handleLicense($this->purchaseCode, 'update');
+
+                if (is_object($info) && empty($info->error) && !empty($info->data)) {
+                    if (!empty($info->data->sections)) {
+                        $info->data->sections = (array)$info->data->sections;
+                    }
+
+                    $result = $info->data;
+                }
+            }
+
             return $result;
         }
 

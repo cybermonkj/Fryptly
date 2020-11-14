@@ -23,11 +23,11 @@ if (!class_exists('daftplugInstantifyPwaAdmin')) {
         public $daftplugInstantifyPwaAdminAddtohomescreen;
         public $daftplugInstantifyPwaAdminOfflineusage;
         public $daftplugInstantifyPwaAdminAccessibility;
-        public $daftplugInstantifyPwaAdminOptimizations;
+        public $daftplugInstantifyPwaAdminEnhancements;
         public $daftplugInstantifyPwaAdminPushnotifications;
 
     	public function __construct($config, $daftplugInstantifyPwaAdminAddtohomescreen, $daftplugInstantifyPwaAdminOfflineusage, $daftplugInstantifyPwaAdminAccessibility,
-                    $daftplugInstantifyPwaAdminOptimizations, $daftplugInstantifyPwaAdminPushnotifications) {
+                    $daftplugInstantifyPwaAdminEnhancements, $daftplugInstantifyPwaAdminPushnotifications) {
     		$this->name = $config['name'];
             $this->description = $config['description'];
             $this->slug = $config['slug'];
@@ -45,9 +45,9 @@ if (!class_exists('daftplugInstantifyPwaAdmin')) {
             $this->subpages = $this->generateSubpages();
 
             $this->daftplugInstantifyPwaAdminAddtohomescreen = $daftplugInstantifyPwaAdminAddtohomescreen;
-            $this->daftplugInstantifyPwaAdminOfflineusage = $daftplugInstantifyPwaAdminAddtohomescreen;
+            $this->daftplugInstantifyPwaAdminOfflineusage = $daftplugInstantifyPwaAdminOfflineusage;
             $this->daftplugInstantifyPwaAdminAccessibility = $daftplugInstantifyPwaAdminAccessibility;
-            $this->daftplugInstantifyPwaAdminOptimizations = $daftplugInstantifyPwaAdminOptimizations;
+            $this->daftplugInstantifyPwaAdminEnhancements = $daftplugInstantifyPwaAdminEnhancements;
             $this->daftplugInstantifyPwaAdminPushnotifications = $daftplugInstantifyPwaAdminPushnotifications;
 
             add_action('admin_enqueue_scripts', array($this, 'loadAssets'));
@@ -79,9 +79,9 @@ if (!class_exists('daftplugInstantifyPwaAdmin')) {
                     'template' => plugin_dir_path(__FILE__) . implode(DIRECTORY_SEPARATOR, array('templates', 'subpage-accessibility.php')),
                 ),
                 array(
-                    'id' => 'optimizations',
-                    'title' => esc_html__('Optimizations', $this->textDomain),
-                    'template' => plugin_dir_path(__FILE__) . implode(DIRECTORY_SEPARATOR, array('templates', 'subpage-optimizations.php'))
+                    'id' => 'enhancements',
+                    'title' => esc_html__('Enhancements', $this->textDomain),
+                    'template' => plugin_dir_path(__FILE__) . implode(DIRECTORY_SEPARATOR, array('templates', 'subpage-enhancements.php'))
                 ),
                 array(
                     'id' => 'pushnotifications',

@@ -4,11 +4,12 @@ if (!defined('ABSPATH')) exit;
 
 $backgroundColor = daftplugInstantify::getSetting('pwaPushButtonBgColor');
 $bellIconColor = daftplugInstantify::getSetting('pwaPushButtonIconColor');
-$buttonPosition = explode("-", daftplugInstantify::getSetting('pwaPushButtonPosition'));
+$buttonPosition = explode('-', daftplugInstantify::getSetting('pwaPushButtonPosition'));
+$tooltipFlow = ($buttonPosition[1] == 'left') ? 'right' : 'left';
 
 ?>
 
-<div class="daftplugPublicPushButton" style="background-color: <?php echo $backgroundColor; ?>; color: <?php echo $bellIconColor; ?>; <?php echo $buttonPosition[0]; ?>: 20px; <?php echo $buttonPosition[1]; ?>: 20px;">
+<div class="daftplugPublicPushButton" data-tooltip="<?php esc_html_e('Subscribe to notifications', $this->textDomain); ?>" data-tooltip-flow="<?php echo $tooltipFlow; ?>" style="background-color: <?php echo $backgroundColor; ?>; color: <?php echo $bellIconColor; ?>; <?php echo $buttonPosition[0]; ?>: 20px; <?php echo $buttonPosition[1]; ?>: 20px;">
     <svg class="daftplugPublicPushButton_icon -iconBell" style="fill: <?php echo $bellIconColor; ?>; stroke: <?php echo $bellIconColor; ?>;">
         <use href="#iconBell"></use>
     </svg>

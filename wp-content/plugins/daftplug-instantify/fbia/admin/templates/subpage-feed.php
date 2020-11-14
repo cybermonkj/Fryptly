@@ -9,7 +9,14 @@ if (!defined('ABSPATH')) exit;
             <form name="daftplugAdminSettings_form" class="daftplugAdminSettings_form" data-nonce="<?php echo wp_create_nonce("{$this->optionName}_settings_nonce"); ?>" spellcheck="false" autocomplete="off">
                 <fieldset class="daftplugAdminFieldset">
                     <h4 class="daftplugAdminFieldset_title"><?php esc_html_e('Feed Preferences', $this->textDomain); ?></h4>
-                    <p class="daftplugAdminFieldset_description"><?php esc_html_e('From this section you are allowed to set FBIA feed preferences. You can set custom copyright details, enable RTL publishing and define number of latest articles in your feed.', $this->textDomain); ?></p>
+                    <p class="daftplugAdminFieldset_description"><?php esc_html_e('From this section you are allowed to set FBIA feed preferences. You can assign your Instant Articles a custom style, set copyright details, enable RTL publishing and define number of latest articles in your feed.', $this->textDomain); ?></p>
+                    <div class="daftplugAdminField">
+                        <p class="daftplugAdminField_description"><?php esc_html_e('Enter the name of your custom article style.', $this->textDomain); ?></p>
+                        <label for="fbiaCopyright" class="daftplugAdminField_label -flex4"><?php esc_html_e('Article Style', $this->textDomain); ?></label>
+                        <div class="daftplugAdminInputText -flexAuto">
+                            <input type="text" name="fbiaArticleStyle" id="fbiaArticleStyle" class="daftplugAdminInputText_field" value="<?php echo daftplugInstantify::getSetting('fbiaArticleStyle'); ?>" data-placeholder="<?php esc_html_e('Article Style', $this->textDomain); ?>" autocomplete="off" required>
+                        </div>
+                    </div>
                     <div class="daftplugAdminField">
                         <p class="daftplugAdminField_description"><?php esc_html_e('Enter the standard copyright details for your instant articles.', $this->textDomain); ?></p>
                         <label for="fbiaCopyright" class="daftplugAdminField_label -flex4"><?php esc_html_e('Copyright', $this->textDomain); ?></label>

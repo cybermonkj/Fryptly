@@ -12,10 +12,10 @@ if (!defined('ABSPATH')) exit;
             <div class="daftplugAdminSettings -flexAuto">
                 <form name="daftplugAdminSettings_form" class="daftplugAdminSettings_form" data-nonce="<?php echo wp_create_nonce("{$this->optionName}_settings_nonce"); ?>" spellcheck="false" autocomplete="off">
                     <fieldset class="daftplugAdminFieldset">
-                        <h4 class="daftplugAdminFieldset_title"><?php esc_html_e('Subscription List', $this->textDomain); ?></h4>
-                        <p class="daftplugAdminFieldset_description"><?php esc_html_e('Below is a list of your users with their device information who subscribed your website for push notifications.', $this->textDomain); ?></p>
+                        <h4 class="daftplugAdminFieldset_title"><?php esc_html_e('Push Notifications Subscribers', $this->textDomain); ?></h4>
+                        <p class="daftplugAdminFieldset_description" style="text-align: center;"><?php esc_html_e('Below is a list of your users with their device information who subscribed your website for push notifications.', $this->textDomain); ?></p>
                         <?php
-                        if (!empty($this->daftplugInstantifyPwaAdminPushnotifications->subscribedDevicesNostatic)) {
+                        if (!empty($this->daftplugInstantifyPwaAdminPushnotifications->subscribedDevices)) {
                         ?>
                         <div class="daftplugAdminFieldset_button">
                             <span class="daftplugAdminButton -sendNotification" data-subscription="all" data-open-popup="pushModal"><?php esc_html_e('Send Push Notification', $this->textDomain); ?></span>
@@ -36,7 +36,7 @@ if (!defined('ABSPATH')) exit;
                                 </thead>
                                 <tbody>
                                 <?php
-                                if (empty($this->daftplugInstantifyPwaAdminPushnotifications->subscribedDevicesNostatic)) {
+                                if (empty($this->daftplugInstantifyPwaAdminPushnotifications->subscribedDevices)) {
                                 ?>
                                     <tr class="daftplugAdminTable_row">
                                         <td class="daftplugAdminTable_data" colspan="5">
@@ -45,7 +45,7 @@ if (!defined('ABSPATH')) exit;
                                     </tr>
                                 <?php 
                                 } else {
-                                    foreach($this->daftplugInstantifyPwaAdminPushnotifications->subscribedDevicesNostatic as $subscribedDevice) {
+                                    foreach($this->daftplugInstantifyPwaAdminPushnotifications->subscribedDevices as $subscribedDevice) {
                                     ?>
                                     <tr class="daftplugAdminTable_row">
                                         <td class="daftplugAdminTable_data -deviceInfo"><?php echo $subscribedDevice['deviceInfo']; ?></td>
@@ -57,12 +57,12 @@ if (!defined('ABSPATH')) exit;
                                             ?>
                                         </td>
                                         <td class="daftplugAdminTable_data -actions">
-                                            <span class="daftplugAdminTable_action -send" data-subscription="<?php echo $subscribedDevice['endpoint']; ?>" data-tooltip="<?php esc_html_e('Notify', $this->textDomain); ?>" data-open-popup="pushModal">
+                                            <span class="daftplugAdminTable_action -send" data-subscription="<?php echo $subscribedDevice['endpoint']; ?>" data-tooltip="<?php esc_html_e('Notify', $this->textDomain); ?>" data-tooltip-flow="top" data-open-popup="pushModal">
                                                 <svg class="daftplugAdminTable_icon -iconBell">
                                                     <use href="#iconBell"></use>
                                                 </svg>
                                             </span>
-                                            <span class="daftplugAdminTable_action -remove" data-subscription="<?php echo $subscribedDevice['endpoint']; ?>" data-tooltip="<?php esc_html_e('Remove', $this->textDomain); ?>">
+                                            <span class="daftplugAdminTable_action -remove" data-subscription="<?php echo $subscribedDevice['endpoint']; ?>" data-tooltip="<?php esc_html_e('Remove', $this->textDomain); ?>" data-tooltip-flow="top">
                                                 <svg class="daftplugAdminTable_icon -iconRemove">
                                                     <use href="#iconRemove"></use>
                                                 </svg>
@@ -94,6 +94,20 @@ if (!defined('ABSPATH')) exit;
                                 <textarea name="pwaPushPromptMessage" id="pwaPushPromptMessage" class="daftplugAdminInputTextarea_field" data-placeholder="<?php esc_html_e('Description', $this->textDomain); ?>" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" rows="4" required><?php echo daftplugInstantify::getSetting('pwaPushPromptMessage'); ?></textarea>
                             </div>
                         </div>
+                        <div class="daftplugAdminField -pwaPushPromptDependentDisableD">
+                            <p class="daftplugAdminField_description"><?php esc_html_e('Select the text color on your push notifications prompt.', $this->textDomain); ?></p>
+                            <label for="pwaPushPromptTextColor" class="daftplugAdminField_label -flex4"><?php esc_html_e('Prompt Text Color', $this->textDomain); ?></label>
+                            <div class="daftplugAdminInputColor -flexAuto">
+                                <input type="text" name="pwaPushPromptTextColor" id="pwaPushPromptTextColor" class="daftplugAdminInputColor_field" value="<?php echo daftplugInstantify::getSetting('pwaPushPromptTextColor'); ?>" data-placeholder="<?php esc_html_e('Prompt Text Color', $this->textDomain); ?>" required>
+                            </div>
+                        </div>
+                        <div class="daftplugAdminField -pwaPushPromptDependentDisableD">
+                            <p class="daftplugAdminField_description"><?php esc_html_e('Select the background color of your push notifications prompt.', $this->textDomain); ?></p>
+                            <label for="pwaPushPromptBgColor" class="daftplugAdminField_label -flex4"><?php esc_html_e('Prompt Background Color', $this->textDomain); ?></label>
+                            <div class="daftplugAdminInputColor -flexAuto">
+                                <input type="text" name="pwaPushPromptBgColor" id="pwaPushPromptBgColor" class="daftplugAdminInputColor_field" value="<?php echo daftplugInstantify::getSetting('pwaPushPromptBgColor'); ?>" data-placeholder="<?php esc_html_e('Prompt Background Color', $this->textDomain); ?>" required>
+                            </div>
+                        </div>
                     </fieldset>
                     <fieldset class="daftplugAdminFieldset">
                         <h4 class="daftplugAdminFieldset_title"><?php esc_html_e('Push Notifications Button', $this->textDomain); ?></h4>
@@ -113,14 +127,14 @@ if (!defined('ABSPATH')) exit;
                             </div>
                         </div>
                         <div class="daftplugAdminField -pwaPushButtonDependentDisableD">
-                            <p class="daftplugAdminField_description"><?php esc_html_e('Select the background color of your subscribe notifications button.', $this->textDomain); ?></p>
+                            <p class="daftplugAdminField_description"><?php esc_html_e('Select the background color of your push notifications button.', $this->textDomain); ?></p>
                             <label for="pwaPushButtonBgColor" class="daftplugAdminField_label -flex4"><?php esc_html_e('Button Background Color', $this->textDomain); ?></label>
                             <div class="daftplugAdminInputColor -flexAuto">
                                 <input type="text" name="pwaPushButtonBgColor" id="pwaPushButtonBgColor" class="daftplugAdminInputColor_field" value="<?php echo daftplugInstantify::getSetting('pwaPushButtonBgColor'); ?>" data-placeholder="<?php esc_html_e('Button Background Color', $this->textDomain); ?>" required>
                             </div>
                         </div>
                         <div class="daftplugAdminField -pwaPushButtonDependentDisableD">
-                            <p class="daftplugAdminField_description"><?php esc_html_e('Select position of your subscribe notifications button on your website.', $this->textDomain); ?></p>
+                            <p class="daftplugAdminField_description"><?php esc_html_e('Select position of your push notifications button on your website.', $this->textDomain); ?></p>
                             <label for="pwaPushButtonPosition" class="daftplugAdminField_label -flex4"><?php esc_html_e('Button Position', $this->textDomain); ?></label>
                             <div class="daftplugAdminInputSelect -flexAuto">
                                 <select name="pwaPushButtonPosition" id="pwaPushButtonPosition" class="daftplugAdminInputSelect_field" data-placeholder="<?php esc_html_e('Button Position', $this->textDomain); ?>" autocomplete="off" required>
@@ -131,61 +145,157 @@ if (!defined('ABSPATH')) exit;
                                 </select>
                             </div>
                         </div>
+                        <div class="daftplugAdminField -pwaPushButtonDependentDisableD">
+                            <p class="daftplugAdminField_description"><?php esc_html_e('Select behavior of your push notifications button on your website.', $this->textDomain); ?></p>
+                            <label for="pwaPushButtonBehavior" class="daftplugAdminField_label -flex4"><?php esc_html_e('Button Behavior', $this->textDomain); ?></label>
+                            <div class="daftplugAdminInputSelect -flexAuto">
+                                <select name="pwaPushButtonBehavior" id="pwaPushButtonBehavior" class="daftplugAdminInputSelect_field" data-placeholder="<?php esc_html_e('Button Behavior', $this->textDomain); ?>" autocomplete="off" required>
+                                    <option value="shown" <?php selected(daftplugInstantify::getSetting('pwaPushButtonBehavior'), 'shown') ?>><?php esc_html_e('Keep shown after user subscribes notifications', $this->textDomain); ?></option>
+                                    <option value="hidden" <?php selected(daftplugInstantify::getSetting('pwaPushButtonBehavior'), 'hidden') ?>><?php esc_html_e('Hide after user subscribes notifications', $this->textDomain); ?></option>
+                                </select>
+                            </div>
+                        </div>
                     </fieldset>
                     <fieldset class="daftplugAdminFieldset">
                         <h4 class="daftplugAdminFieldset_title"><?php esc_html_e('Push Notifications Automation', $this->textDomain); ?></h4>
                         <p class="daftplugAdminFieldset_description"><?php esc_html_e('From this section you can enable sending automatic predefined push notifications on certain events to re-engage your users and increase conversion. You will also be allowed to exclude particular post events from sending automatic push notification via meta boxes.', $this->textDomain); ?></p>
                         <div class="daftplugAdminField">
-                            <p class="daftplugAdminField_description"><?php esc_html_e('Enable or disable automatic notification on publishing new post. Notification will include post title, content and featured image.', $this->textDomain); ?></p>
-                            <label for="pwaPushNewPost" class="daftplugAdminField_label -flex5"><?php esc_html_e('New Post Publish', $this->textDomain); ?></label>
+                            <p class="daftplugAdminField_description"><?php esc_html_e('Enable or disable automatic notification on publishing new content. Notification will include content title, text and featured image.', $this->textDomain); ?></p>
+                            <label for="pwaPushNewContent" class="daftplugAdminField_label -flex5"><?php esc_html_e('New Content', $this->textDomain); ?></label>
                             <label class="daftplugAdminInputCheckbox -flexAuto">
-                                <input type="checkbox" name="pwaPushNewPost" id="pwaPushNewPost" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pwaPushNewPost'), 'on'); ?>>
+                                <input type="checkbox" name="pwaPushNewContent" id="pwaPushNewContent" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pwaPushNewContent'), 'on'); ?>>
                             </label>
                         </div>
-                        <div class="daftplugAdminField -pwaPushNewPostDependentHideD">
-                            <p class="daftplugAdminField_description"><?php esc_html_e('Select allowed post types for new post publish notification.', $this->textDomain); ?></p>
-                            <label for="pwaPushNewPostPostTypes" class="daftplugAdminField_label -flex5"><?php esc_html_e('New Post Publish Post Types', $this->textDomain); ?></label>
+                        <div class="daftplugAdminField -pwaPushNewContentDependentHideD">
+                            <p class="daftplugAdminField_description"><?php esc_html_e('Select allowed post types for new content notification.', $this->textDomain); ?></p>
+                            <label for="pwaPushNewContentPostTypes" class="daftplugAdminField_label -flex5"><?php esc_html_e('New Content Post Types', $this->textDomain); ?></label>
                             <div class="daftplugAdminInputSelect -flexAuto">
-                                <select multiple name="pwaPushNewPostPostTypes" id="pwaPushNewPostPostTypes" class="daftplugAdminInputSelect_field" data-placeholder="<?php esc_html_e('New Post Publish Post Types', $this->textDomain); ?>" autocomplete="off" required>
+                                <select multiple name="pwaPushNewContentPostTypes" id="pwaPushNewContentPostTypes" class="daftplugAdminInputSelect_field" data-placeholder="<?php esc_html_e('New Content Post Types', $this->textDomain); ?>" autocomplete="off" required>
                                     <?php foreach (array_map('get_post_type_object', $this->daftplugInstantifyPwaAdminPushnotifications->getPostTypes()) as $postType) { ?>
-                                        <option value="<?php echo $postType->name; ?>" <?php selected(true, in_array($postType->name, (array)daftplugInstantify::getSetting('pwaPushNewPostPostTypes'))); ?>><?php echo $postType->label; ?></option>
+                                        <option value="<?php echo $postType->name; ?>" <?php selected(true, in_array($postType->name, (array)daftplugInstantify::getSetting('pwaPushNewContentPostTypes'))); ?>><?php echo $postType->label; ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
                         </div>
                         <?php if (daftplugInstantify::isWooCommerceActive()) { ?>
-                        <div class="daftplugAdminField">
-                            <p class="daftplugAdminField_description"><?php esc_html_e('Enable or disable automatic notification on adding new product. Notification will include product title, content and featured image.', $this->textDomain); ?></p>
-                            <label for="pwaPushNewProduct" class="daftplugAdminField_label -flex5"><?php esc_html_e('WooCommerce New Product', $this->textDomain); ?></label>
-                            <label class="daftplugAdminInputCheckbox -flexAuto">
-                                <input type="checkbox" name="pwaPushNewProduct" id="pwaPushNewProduct" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pwaPushNewProduct'), 'on'); ?>>
-                            </label>
-                        </div>
-                        <div class="daftplugAdminField">
-                            <p class="daftplugAdminField_description"><?php esc_html_e('Enable or disable automatic notification on product price drop. Notification will include product title and featured image.', $this->textDomain); ?></p>
-                            <label for="pwaPushPriceDrop" class="daftplugAdminField_label -flex5"><?php esc_html_e('WooCommerce Price Drop', $this->textDomain); ?></label>
-                            <label class="daftplugAdminInputCheckbox -flexAuto">
-                                <input type="checkbox" name="pwaPushPriceDrop" id="pwaPushPriceDrop" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pwaPushPriceDrop'), 'on'); ?>>
-                            </label>
-                        </div>
-                        <div class="daftplugAdminField">
-                            <p class="daftplugAdminField_description"><?php esc_html_e('Enable or disable automatic notification when sale price is added to the product. Notification will include product title and featured image.', $this->textDomain); ?></p>
-                            <label for="pwaPushSalePrice" class="daftplugAdminField_label -flex5"><?php esc_html_e('WooCommerce Sale Price', $this->textDomain); ?></label>
-                            <label class="daftplugAdminInputCheckbox -flexAuto">
-                                <input type="checkbox" name="pwaPushSalePrice" id="pwaPushSalePrice" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pwaPushSalePrice'), 'on'); ?>>
-                            </label>
-                        </div>
-                        <div class="daftplugAdminField">
-                            <p class="daftplugAdminField_description"><?php esc_html_e('Enable or disable automatic notification when product is back in stock. Notification will include product title and featured image.', $this->textDomain); ?></p>
-                            <label for="pwaPushBackInStock" class="daftplugAdminField_label -flex5"><?php esc_html_e('WooCommerce Back In Stock', $this->textDomain); ?></label>
-                            <label class="daftplugAdminInputCheckbox -flexAuto">
-                                <input type="checkbox" name="pwaPushBackInStock" id="pwaPushBackInStock" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pwaPushBackInStock'), 'on'); ?>>
-                            </label>
-                        </div>
+                        <fieldset class="daftplugAdminFieldset -miniFieldset">
+                            <h5 class="daftplugAdminFieldset_title"><?php esc_html_e('WooCommerce', $this->textDomain); ?></h5>
+                            <div class="daftplugAdminField">
+                                <p class="daftplugAdminField_description"><?php esc_html_e('Enable or disable automatic notification on adding new product. Notification will include product title, content and featured image.', $this->textDomain); ?></p>
+                                <label for="pwaPushWooNewProduct" class="daftplugAdminField_label -flex5"><?php esc_html_e('New Product', $this->textDomain); ?></label>
+                                <label class="daftplugAdminInputCheckbox -flexAuto">
+                                    <input type="checkbox" name="pwaPushWooNewProduct" id="pwaPushWooNewProduct" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pwaPushWooNewProduct'), 'on'); ?>>
+                                </label>
+                            </div>
+                            <div class="daftplugAdminField">
+                                <p class="daftplugAdminField_description"><?php esc_html_e('Enable or disable automatic notification on product price drop. Notification will include product title and featured image.', $this->textDomain); ?></p>
+                                <label for="pwaPushWooPriceDrop" class="daftplugAdminField_label -flex5"><?php esc_html_e('Price Drop', $this->textDomain); ?></label>
+                                <label class="daftplugAdminInputCheckbox -flexAuto">
+                                    <input type="checkbox" name="pwaPushWooPriceDrop" id="pwaPushWooPriceDrop" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pwaPushWooPriceDrop'), 'on'); ?>>
+                                </label>
+                            </div>
+                            <div class="daftplugAdminField">
+                                <p class="daftplugAdminField_description"><?php esc_html_e('Enable or disable automatic notification when sale price is added to the product. Notification will include product title and featured image.', $this->textDomain); ?></p>
+                                <label for="pwaPushWooSalePrice" class="daftplugAdminField_label -flex5"><?php esc_html_e('Sale Price', $this->textDomain); ?></label>
+                                <label class="daftplugAdminInputCheckbox -flexAuto">
+                                    <input type="checkbox" name="pwaPushWooSalePrice" id="pwaPushWooSalePrice" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pwaPushWooSalePrice'), 'on'); ?>>
+                                </label>
+                            </div>
+                            <div class="daftplugAdminField">
+                                <p class="daftplugAdminField_description"><?php esc_html_e('Enable or disable automatic notification when product is back in stock. Notification will include product title and featured image.', $this->textDomain); ?></p>
+                                <label for="pwaPushWooBackInStock" class="daftplugAdminField_label -flex5"><?php esc_html_e('Back In Stock', $this->textDomain); ?></label>
+                                <label class="daftplugAdminInputCheckbox -flexAuto">
+                                    <input type="checkbox" name="pwaPushWooBackInStock" id="pwaPushWooBackInStock" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pwaPushWooBackInStock'), 'on'); ?>>
+                                </label>
+                            </div>
+                            <div class="daftplugAdminField">
+                                <p class="daftplugAdminField_description"><?php esc_html_e('Enable or disable automatic notification for admins when new order is placed.', $this->textDomain); ?></p>
+                                <label for="pwaPushWooNewOrder" class="daftplugAdminField_label -flex5"><?php esc_html_e('New Order', $this->textDomain); ?></label>
+                                <label class="daftplugAdminInputCheckbox -flexAuto">
+                                    <input type="checkbox" name="pwaPushWooNewOrder" id="pwaPushWooNewOrder" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pwaPushWooNewOrder'), 'on'); ?>>
+                                </label>
+                            </div>
+                            <div class="daftplugAdminField -pwaPushWooNewOrderDependentHideD">
+                                <p class="daftplugAdminField_description"><?php esc_html_e('Select the user role which will get notification when new order is placed.', $this->textDomain); ?></p>
+                                <label for="pwaPushWooNewOrderRole" class="daftplugAdminField_label -flex5"><?php esc_html_e('New Order Role', $this->textDomain); ?></label>
+                                <div class="daftplugAdminInputSelect -flexAuto">
+                                    <select name="pwaPushWooNewOrderRole" id="pwaPushWooNewOrderRole" class="daftplugAdminInputSelect_field" data-placeholder="<?php esc_html_e('New Order Role', $this->textDomain); ?>" autocomplete="off" required>
+                                        <?php foreach(wp_roles()->roles as $id => $role) { ?>
+                                            <option value="<?php echo $id; ?>" <?php selected(true, in_array($id, (array)daftplugInstantify::getSetting('pwaPushWooNewOrderRole'))); ?>><?php echo $role['name']; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="daftplugAdminField">
+                                <p class="daftplugAdminField_description"><?php esc_html_e('Enable or disable automatic notification for admins when product is low in stock.', $this->textDomain); ?></p>
+                                <label for="pwaPushWooLowStock" class="daftplugAdminField_label -flex5"><?php esc_html_e('Low Stock', $this->textDomain); ?></label>
+                                <label class="daftplugAdminInputCheckbox -flexAuto">
+                                    <input type="checkbox" name="pwaPushWooLowStock" id="pwaPushWooLowStock" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pwaPushWooLowStock'), 'on'); ?>>
+                                </label>
+                            </div>
+                            <div class="daftplugAdminField -pwaPushWooLowStockDependentHideD">
+                                <p class="daftplugAdminField_description"><?php esc_html_e('Select the user role which will get notification when product is low in stock.', $this->textDomain); ?></p>
+                                <label for="pwaPushWooLowStockRole" class="daftplugAdminField_label -flex5"><?php esc_html_e('Low Stock Role', $this->textDomain); ?></label>
+                                <div class="daftplugAdminInputSelect -flexAuto">
+                                    <select name="pwaPushWooLowStockRole" id="pwaPushWooLowStockRole" class="daftplugAdminInputSelect_field" data-placeholder="<?php esc_html_e('Low Stock Role', $this->textDomain); ?>" autocomplete="off" required>
+                                        <?php foreach(wp_roles()->roles as $id => $role) { ?>
+                                            <option value="<?php echo $id; ?>" <?php selected(true, in_array($id, (array)daftplugInstantify::getSetting('pwaPushWooLowStockRole'))); ?>><?php echo $role['name']; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="daftplugAdminField -pwaPushWooLowStockDependentHideD">
+                                <p class="daftplugAdminField_description"><?php esc_html_e('Choose low stock threshold number. Notification will be sent when a stock is less than this number. This low stock threshold will be used if it\'s not already set in product inventory data.', $this->textDomain); ?></p>
+                                <label for="pwaPushWooLowStockThreshold" class="daftplugAdminField_label -flex5"><?php esc_html_e('Low Stock Threshold', $this->textDomain); ?></label>
+                                <div class="daftplugAdminInputNumber -flexAuto">
+                                    <input type="number" name="pwaPushWooLowStockThreshold" id="pwaPushWooLowStockThreshold" class="daftplugAdminInputNumber_field" value="<?php echo daftplugInstantify::getSetting('pwaPushWooLowStockThreshold'); ?>" min="1" step="1" max="50" data-placeholder="<?php esc_html_e('Low Stock Threshold', $this->textDomain); ?>" required>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <?php }
+                        if (daftplugInstantify::isBuddyPressActive()) { ?>
+                        <fieldset class="daftplugAdminFieldset -miniFieldset">
+                            <h5 class="daftplugAdminFieldset_title"><?php esc_html_e('BuddyPress', $this->textDomain); ?></h5>
+                            <div class="daftplugAdminField">
+                                <p class="daftplugAdminField_description"><?php esc_html_e('Enable or disable automatic notification when a member mention someone in an update @username.', $this->textDomain); ?></p>
+                                <label for="pwaPushBpMemberMention" class="daftplugAdminField_label -flex5"><?php esc_html_e('Member Mention', $this->textDomain); ?></label>
+                                <label class="daftplugAdminInputCheckbox -flexAuto">
+                                    <input type="checkbox" name="pwaPushBpMemberMention" id="pwaPushBpMemberMention" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pwaPushBpMemberMention'), 'on'); ?>>
+                                </label>
+                            </div>
+                            <div class="daftplugAdminField">
+                                <p class="daftplugAdminField_description"><?php esc_html_e('Enable or disable automatic notification when a member replies to an update or comment.', $this->textDomain); ?></p>
+                                <label for="pwaPushBpMemberReply" class="daftplugAdminField_label -flex5"><?php esc_html_e('Member Reply', $this->textDomain); ?></label>
+                                <label class="daftplugAdminInputCheckbox -flexAuto">
+                                    <input type="checkbox" name="pwaPushBpMemberReply" id="pwaPushBpMemberReply" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pwaPushBpMemberReply'), 'on'); ?>>
+                                </label>
+                            </div>
+                            <div class="daftplugAdminField">
+                                <p class="daftplugAdminField_description"><?php esc_html_e('Enable or disable automatic notification when new message received.', $this->textDomain); ?></p>
+                                <label for="pwaPushBpNewMessage" class="daftplugAdminField_label -flex5"><?php esc_html_e('New Message', $this->textDomain); ?></label>
+                                <label class="daftplugAdminInputCheckbox -flexAuto">
+                                    <input type="checkbox" name="pwaPushBpNewMessage" id="pwaPushBpNewMessage" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pwaPushBpNewMessage'), 'on'); ?>>
+                                </label>
+                            </div>
+                            <div class="daftplugAdminField">
+                                <p class="daftplugAdminField_description"><?php esc_html_e('Enable or disable automatic notification when new friend request received.', $this->textDomain); ?></p>
+                                <label for="pwaPushBpFriendRequest" class="daftplugAdminField_label -flex5"><?php esc_html_e('Friend Request', $this->textDomain); ?></label>
+                                <label class="daftplugAdminInputCheckbox -flexAuto">
+                                    <input type="checkbox" name="pwaPushBpFriendRequest" id="pwaPushBpFriendRequest" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pwaPushBpFriendRequest'), 'on'); ?>>
+                                </label>
+                            </div>
+                            <div class="daftplugAdminField">
+                                <p class="daftplugAdminField_description"><?php esc_html_e('Enable or disable automatic notification when friend request accepted.', $this->textDomain); ?></p>
+                                <label for="pwaPushBpFriendAccepted" class="daftplugAdminField_label -flex5"><?php esc_html_e('Friend Accepted', $this->textDomain); ?></label>
+                                <label class="daftplugAdminInputCheckbox -flexAuto">
+                                    <input type="checkbox" name="pwaPushBpFriendAccepted" id="pwaPushBpFriendAccepted" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pwaPushBpFriendAccepted'), 'on'); ?>>
+                                </label>
+                            </div>
+                        </fieldset>
                         <?php } ?>
                     </fieldset>
                     <div class="daftplugAdminSettings_submit">
-                        <button type="submit" class="daftplugAdminButton -submit" data-submit="<?php esc_html_e('Save Settings', $this->textDomain); ?>" data-waiting="<?php esc_html_e('Waiting', $this->textDomain); ?>" data-submitted="<?php esc_html_e('Settings Saved', $this->textDomain); ?>" data-failed="<?php esc_html_e('Saving Failed', $this->textDomain); ?>"></button>
+                        <button type="submit" class="daftplugAdminButton -submit" data-submit="<?php esc_html_e('Save Settings', $this->textDomain); ?>" data-waiting="<?php esc_html_e('Saving', $this->textDomain); ?>" data-submitted="<?php esc_html_e('Settings Saved', $this->textDomain); ?>" data-failed="<?php esc_html_e('Saving Failed', $this->textDomain); ?>"></button>
                     </div>
                 </form>
             </div>
@@ -202,7 +312,7 @@ if (!defined('ABSPATH')) exit;
                                         <option value="mobile"><?php esc_html_e('Mobile Users', $this->textDomain); ?></option>
                                         <option value="desktop"><?php esc_html_e('Desktop Users', $this->textDomain); ?></option>
                                         <option value="registered"><?php esc_html_e('Registered Users', $this->textDomain); ?></option>
-                                        <?php foreach($this->daftplugInstantifyPwaAdminPushnotifications->subscribedDevicesNostatic as $subscribedDevice) { if(array_key_exists('user', $subscribedDevice)){if(is_numeric($subscribedDevice['user'])){$userName = get_userdata($subscribedDevice['user'])->display_name;}else{$userName = $subscribedDevice['user'];}}else{$userName = esc_html__('Unknown', $this->textDomain);}?>
+                                        <?php foreach($this->daftplugInstantifyPwaAdminPushnotifications->subscribedDevices as $subscribedDevice) { if(array_key_exists('user', $subscribedDevice)){if(is_numeric($subscribedDevice['user'])){$userName = get_userdata($subscribedDevice['user'])->display_name;}else{$userName = $subscribedDevice['user'];}}else{$userName = esc_html__('Unknown', $this->textDomain);}?>
                                             <option value="<?php echo $subscribedDevice['endpoint']; ?>"><?php echo $subscribedDevice['deviceInfo'].' / '.$subscribedDevice['date'].' / '.(array_key_exists('country', $subscribedDevice) ? $subscribedDevice['country'] : __('Unknown', $this->textDomain)).' / '.$userName; ?></option>
                                         <?php } ?>
                                     </select>
@@ -229,7 +339,7 @@ if (!defined('ABSPATH')) exit;
                             <div class="daftplugAdminField">
                                 <p class="daftplugAdminField_description"><?php esc_html_e('Enter the redirect URL of your notification. Your users will be redirected here after they click on your notification.', $this->textDomain); ?></p>
                                 <div class="daftplugAdminInputText -flexAuto">
-                                    <input type="url" name="pushUrl" id="pushUrl" class="daftplugAdminInputText_field" value="<?php echo trailingslashit(home_url('/', 'https')); ?>" data-placeholder="<?php esc_html_e('URL', $this->textDomain); ?>" autocomplete="off">
+                                    <input type="url" name="pushUrl" id="pushUrl" class="daftplugAdminInputText_field" value="<?php echo trailingslashit(home_url('/', 'https')); ?>" data-placeholder="<?php esc_html_e('URL', $this->textDomain); ?>" autocomplete="off" required>
                                 </div>
                             </div>
                             <div class="daftplugAdminField">
@@ -241,41 +351,27 @@ if (!defined('ABSPATH')) exit;
                             <div class="daftplugAdminField">
                                 <p class="daftplugAdminField_description"><?php esc_html_e('You can add up to two action buttons to the notification. Currently action buttons are only supported by Chrome browsers.', $this->textDomain); ?></p>
                             </div>
-                            <div class="daftplugAdminFieldset -miniFieldset -pushActionbutton1">
-                                <h5 class="daftplugAdminFieldset_title"><?php esc_html_e('Action Button 1', $this->textDomain); ?></h5>
+                            <?php for ($a = 1; $a <= 2; $a++) { ?>
+                            <div class="daftplugAdminFieldset -miniFieldset -pushActionbutton<?php echo $a; ?>">
+                                <h5 class="daftplugAdminFieldset_title"><?php printf(__('Action Button %s', $this->textDomain), $a); ?></h5>
                                 <label class="daftplugAdminInputCheckbox -flexAuto -hidden">
-                                    <input type="checkbox" name="pushActionbutton1" id="pushActionbutton1" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pushActionbutton1'), 'on'); ?>>
+                                    <input type="checkbox" name="pushActionbutton<?php echo $a; ?>" id="pushActionbutton<?php echo $a; ?>" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting(sprintf('pushActionbutton%s', $a)), 'on'); ?>>
                                 </label>
                                 <div class="daftplugAdminField">
                                     <div class="daftplugAdminInputText -flexAuto">
-                                        <input type="text" name="pushActionbutton1Text" id="pushActionbutton1Text" class="daftplugAdminInputText_field" value="" data-placeholder="<?php esc_html_e('Text', $this->textDomain); ?>" autocomplete="off" required>
+                                        <input type="text" name="pushActionbutton<?php echo $a; ?>Text" id="pushActionbutton<?php echo $a; ?>Text" class="daftplugAdminInputText_field" value="" data-placeholder="<?php esc_html_e('Text', $this->textDomain); ?>" autocomplete="off" required>
                                     </div>
                                 </div>
                                 <div class="daftplugAdminField">
                                     <div class="daftplugAdminInputText -flexAuto">
-                                        <input type="url" name="pushActionbutton1Url" id="pushActionbutton1Url" class="daftplugAdminInputText_field" value="" data-placeholder="<?php esc_html_e('URL', $this->textDomain); ?>" autocomplete="off" required>
+                                        <input type="url" name="pushActionbutton<?php echo $a; ?>Url" id="pushActionbutton<?php echo $a; ?>Url" class="daftplugAdminInputText_field" value="" data-placeholder="<?php esc_html_e('URL', $this->textDomain); ?>" autocomplete="off" required>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="daftplugAdminFieldset -miniFieldset -pushActionbutton2">
-                                <h5 class="daftplugAdminFieldset_title"><?php esc_html_e('Action Button 2', $this->textDomain); ?></h5>
-                                <label class="daftplugAdminInputCheckbox -flexAuto -hidden">
-                                    <input type="checkbox" name="pushActionbutton2" id="pushActionbutton2" class="daftplugAdminInputCheckbox_field" <?php checked(daftplugInstantify::getSetting('pushActionbutton2'), 'on'); ?>>
-                                </label>
-                                <div class="daftplugAdminField">
-                                    <div class="daftplugAdminInputText -flexAuto">
-                                        <input type="text" name="pushActionbutton2Text" id="pushActionbutton2Text" class="daftplugAdminInputText_field" value="" data-placeholder="<?php esc_html_e('Text', $this->textDomain); ?>" autocomplete="off" required>
-                                    </div>
-                                </div>
-                                <div class="daftplugAdminField">
-                                    <div class="daftplugAdminInputText -flexAuto">
-                                        <input type="url" name="pushActionbutton2Url" id="pushActionbutton2Url" class="daftplugAdminInputText_field" value="" data-placeholder="<?php esc_html_e('URL', $this->textDomain); ?>" autocomplete="off" required>
-                                    </div>
-                                </div>
-                            </div>
+                            </div>     
+                            <?php } ?>
                             <div class="daftplugAdminField">
                                 <div class="daftplugAdminInputAddField -flexAuto">
-                                    <span class="daftplugAdminButton -addField" data-add="pushActionbutton" data-max="2"><?php esc_html_e('+ Add Action Button', $this->textDomain); ?></span>
+                                    <span class="daftplugAdminButton -addField" data-add="pushActionbutton"><?php esc_html_e('+ Add Action Button', $this->textDomain); ?></span>
                                 </div>
                             </div>
                             <div class="daftplugAdminField">

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" version="1.1">
+	<defs>
+		<linearGradient id="linear0" gradientUnits="userSpaceOnUse" x1="31" y1="28.667" x2="31" y2="43.546" spreadMethod="reflect" gradientTransform="matrix(0.375,0,0,0.375,0,0)">
+			<stop offset="0" style="stop-color:rgb(42.745098%,78.039216%,100%);stop-opacity:1;"/>
+			<stop offset="1" style="stop-color:rgb(90.196078%,67.058824%,100%);stop-opacity:1;"/>
+		</linearGradient>
+		<linearGradient id="linear1" gradientUnits="userSpaceOnUse" x1="32" y1="9.75" x2="32" y2="54.584" spreadMethod="reflect" gradientTransform="matrix(0.375,0,0,0.375,0,0)">
+			<stop offset="0" style="stop-color:rgb(10.196078%,42.745098%,100%);stop-opacity:1;"/>
+			<stop offset="1" style="stop-color:rgb(78.431373%,13.333333%,100%);stop-opacity:1;"/>
+		</linearGradient>
+		<linearGradient id="linear2" gradientUnits="userSpaceOnUse" x1="23" y1="9.75" x2="23" y2="54.584" spreadMethod="reflect" gradientTransform="matrix(0.375,0,0,0.375,0,0)">
+			<stop offset="0" style="stop-color:rgb(10.196078%,42.745098%,100%);stop-opacity:1;"/>
+			<stop offset="1" style="stop-color:rgb(78.431373%,13.333333%,100%);stop-opacity:1;"/>
+		</linearGradient>
+		<linearGradient id="linear3" gradientUnits="userSpaceOnUse" x1="23" y1="9.75" x2="23" y2="54.584" spreadMethod="reflect" gradientTransform="matrix(0.375,0,0,0.375,0,0)">
+			<stop offset="0" style="stop-color:rgb(10.196078%,42.745098%,100%);stop-opacity:1;"/>
+			<stop offset="1" style="stop-color:rgb(78.431373%,13.333333%,100%);stop-opacity:1;"/>
+		</linearGradient>
+		<linearGradient id="linear4" gradientUnits="userSpaceOnUse" x1="17.5" y1="9.75" x2="17.5" y2="54.584" spreadMethod="reflect" gradientTransform="matrix(0.375,0,0,0.375,0,0)">
+			<stop offset="0" style="stop-color:rgb(10.196078%,42.745098%,100%);stop-opacity:1;"/>
+			<stop offset="1" style="stop-color:rgb(78.431373%,13.333333%,100%);stop-opacity:1;"/>
+		</linearGradient>
+		<linearGradient id="linear5" gradientUnits="userSpaceOnUse" x1="17.5" y1="9.75" x2="17.5" y2="54.584" spreadMethod="reflect" gradientTransform="matrix(0.375,0,0,0.375,0,0)">
+			<stop offset="0" style="stop-color:rgb(10.196078%,42.745098%,100%);stop-opacity:1;"/>
+			<stop offset="1" style="stop-color:rgb(78.431373%,13.333333%,100%);stop-opacity:1;"/>
+		</linearGradient>
+		<linearGradient id="linear6" gradientUnits="userSpaceOnUse" x1="17.5" y1="9.75" x2="17.5" y2="54.584" spreadMethod="reflect" gradientTransform="matrix(0.375,0,0,0.375,0,0)">
+			<stop offset="0" style="stop-color:rgb(10.196078%,42.745098%,100%);stop-opacity:1;"/>
+			<stop offset="1" style="stop-color:rgb(78.431373%,13.333333%,100%);stop-opacity:1;"/>
+		</linearGradient>
+		<linearGradient id="linear7" gradientUnits="userSpaceOnUse" x1="17.5" y1="9.75" x2="17.5" y2="54.584" spreadMethod="reflect" gradientTransform="matrix(0.375,0,0,0.375,0,0)">
+			<stop offset="0" style="stop-color:rgb(10.196078%,42.745098%,100%);stop-opacity:1;"/>
+			<stop offset="1" style="stop-color:rgb(78.431373%,13.333333%,100%);stop-opacity:1;"/>
+		</linearGradient>
+	</defs>
+	<g>
+		<path style="stroke:none;fill-rule:nonzero;fill:url(#linear0);" d="M 12.75 16.125 L 10.5 16.125 C 10.292969 16.125 10.125 15.957031 10.125 15.75 L 10.125 11.25 C 10.125 11.042969 10.292969 10.875 10.5 10.875 L 12.75 10.875 C 12.957031 10.875 13.125 11.042969 13.125 11.25 L 13.125 15.75 C 13.125 15.957031 12.957031 16.125 12.75 16.125 Z M 12.75 16.125 "/>
+		<path style=" stroke:none;fill-rule:nonzero;fill:url(#linear1);" d="M 20.058594 7.132812 C 19.996094 7.128906 19.9375 7.136719 19.875 7.136719 L 19.875 7.125 L 15.75 7.125 L 15.75 4.875 C 15.75 4.253906 15.246094 3.75 14.625 3.75 L 3.375 3.75 C 2.753906 3.75 2.25 4.253906 2.25 4.875 L 2.25 18.375 C 2.25 19.410156 3.089844 20.25 4.125 20.25 L 16.875 20.25 C 16.875 20.25 16.878906 20.25 16.878906 20.25 C 16.9375 20.25 16.996094 20.246094 17.058594 20.242188 C 18.007812 20.152344 18.75 19.304688 18.75 18.308594 L 18.75 17.25 L 21 17.25 C 21.414062 17.25 21.75 16.914062 21.75 16.5 L 21.75 9.066406 C 21.75 8.074219 21.007812 7.222656 20.058594 7.132812 Z M 15.75 11.625 L 16.5 11.625 L 16.5 15.375 L 15.75 15.375 Z M 3 18.375 L 3 4.875 C 3 4.667969 3.167969 4.5 3.375 4.5 L 14.625 4.5 C 14.832031 4.5 15 4.667969 15 4.875 L 15 18.375 C 15 18.785156 15.136719 19.175781 15.378906 19.5 L 4.125 19.5 C 3.503906 19.5 3 18.996094 3 18.375 Z M 18 9 L 18 18.3125 C 18 18.921875 17.554688 19.441406 16.988281 19.496094 C 16.664062 19.527344 16.355469 19.425781 16.117188 19.207031 C 15.882812 18.996094 15.75 18.691406 15.75 18.375 L 15.75 16.125 L 16.5 16.125 C 16.914062 16.125 17.25 15.789062 17.25 15.375 L 17.25 11.625 C 17.25 11.210938 16.914062 10.875 16.5 10.875 L 15.75 10.875 L 15.75 10.125 L 17.25 10.125 L 17.25 9.375 L 15.75 9.375 L 15.75 7.875 L 18.378906 7.875 C 18.136719 8.199219 18 8.589844 18 9 Z M 21 16.5 L 18.75 16.5 L 18.75 14.625 L 19.5 14.625 L 19.5 13.875 L 18.75 13.875 L 18.75 13.125 L 19.5 13.125 L 19.5 12.375 L 18.75 12.375 L 18.75 11.625 L 19.5 11.625 L 19.5 10.875 L 18.75 10.875 L 18.75 10.125 L 19.5 10.125 L 19.5 9.375 L 18.75 9.375 L 18.75 9 C 18.75 8.683594 18.882812 8.378906 19.117188 8.167969 C 19.355469 7.953125 19.660156 7.847656 19.988281 7.878906 C 20.554688 7.933594 21 8.453125 21 9.066406 Z M 21 16.5 "/>
+		<path style="stroke:none;fill-rule:nonzero;fill:url(#linear2);" d="M 4.125 7.875 L 13.125 7.875 L 13.125 8.625 L 4.125 8.625 Z M 4.125 7.875 "/>
+		<path style="stroke:none;fill-rule:nonzero;fill:url(#linear3);" d="M 4.125 9.375 L 13.125 9.375 L 13.125 10.125 L 4.125 10.125 Z M 4.125 9.375 "/>
+		<path style="stroke:none;fill-rule:nonzero;fill:url(#linear4);" d="M 4.125 10.875 L 9 10.875 L 9 11.625 L 4.125 11.625 Z M 4.125 10.875 "/>
+		<path style="stroke:none;fill-rule:nonzero;fill:url(#linear5);" d="M 4.125 12.375 L 9 12.375 L 9 13.125 L 4.125 13.125 Z M 4.125 12.375 "/>
+		<path style="stroke:none;fill-rule:nonzero;fill:url(#linear6);" d="M 4.125 13.875 L 9 13.875 L 9 14.625 L 4.125 14.625 Z M 4.125 13.875 "/>
+		<path style="stroke:none;fill-rule:nonzero;fill:url(#linear7);" d="M 4.125 15.375 L 9 15.375 L 9 16.125 L 4.125 16.125 Z M 4.125 15.375 "/>
+	</g>
+</svg>

@@ -51,7 +51,12 @@ if (!class_exists('daftplugInstantifyAmpAdminGeneral')) {
             }
             
 			if (daftplugInstantify::getSetting('ampOnAll') == 'on') {
-				AMP_Options_Manager::update_option('all_templates_supported', true);
+                AMP_Options_Manager::update_option('all_templates_supported', true);
+                $allPostTypes = array();
+                foreach (array_map('get_post_type_object', AMP_Post_Type_Support::get_eligible_post_types()) as $postType) {
+                    $allPostTypes[] = $postType->name;
+                }
+                AMP_Options_Manager::update_option('supported_post_types', (array)$allPostTypes);
 			} else {
 				AMP_Options_Manager::update_option('all_templates_supported', false);
 				AMP_Options_Manager::update_option('supported_post_types', (array)daftplugInstantify::getSetting('ampOnPostTypes'));

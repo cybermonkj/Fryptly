@@ -175,37 +175,4 @@ jQuery(function() {
             }
         });
     });
-
-    // Clear cache
-    daftplugAdmin.on('click', '.daftplugAdminCacheInfo_button', function(e) {
-        var self = jQuery(this);
-        var cacheMeta = jQuery('.daftplugAdminCacheInfo_meta');
-        var action = optionName + '_clear_cache';
-
-        jQuery.ajax({
-            url: ajaxurl,
-            dataType: 'json',
-            type: 'POST',
-            data: {
-                action: action
-            },
-            beforeSend: function() {
-                self.css({
-                    'cursor':'default',
-                    'pointer-events':'none',
-                }).text('Clearing...');
-            },
-            success: function(response, textStatus, jqXhr) {
-                self.addClass('-disabled').text('Clear Cache');
-                cacheMeta.text('0 Files, 0 B');
-            },
-            complete: function() {
-
-            },
-            error: function(jqXhr, textStatus, errorThrown) {
-                self.addClass('-disabled').text('Clear Cache');
-                cacheMeta.text('0 Files, 0 B');
-            }
-        });
-    });
 });

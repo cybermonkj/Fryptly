@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" version="1.1">
+	<defs>
+		<linearGradient id="linear0" gradientUnits="userSpaceOnUse" x1="32" y1="8" x2="32" y2="55.044" spreadMethod="reflect" gradientTransform="matrix(0.375,0,0,0.375,0,0)">
+			<stop offset="0" style="stop-color:rgb(10.196078%,42.745098%,100%);stop-opacity:1;"/>
+			<stop offset="1" style="stop-color:rgb(78.431373%,13.333333%,100%);stop-opacity:1;"/>
+		</linearGradient>
+		<linearGradient id="linear1" gradientUnits="userSpaceOnUse" x1="29" y1="8" x2="29" y2="55.044" spreadMethod="reflect" gradientTransform="matrix(0.375,0,0,0.375,0,0)">
+			<stop offset="0" style="stop-color:rgb(10.196078%,42.745098%,100%);stop-opacity:1;"/>
+			<stop offset="1" style="stop-color:rgb(78.431373%,13.333333%,100%);stop-opacity:1;"/>
+		</linearGradient>
+		<linearGradient id="linear2" gradientUnits="userSpaceOnUse" x1="26" y1="8" x2="26" y2="55.044" spreadMethod="reflect" gradientTransform="matrix(0.375,0,0,0.375,0,0)">
+			<stop offset="0" style="stop-color:rgb(10.196078%,42.745098%,100%);stop-opacity:1;"/>
+			<stop offset="1" style="stop-color:rgb(78.431373%,13.333333%,100%);stop-opacity:1;"/>
+		</linearGradient>
+		<linearGradient id="linear3" gradientUnits="userSpaceOnUse" x1="23" y1="8" x2="23" y2="55.044" spreadMethod="reflect" gradientTransform="matrix(0.375,0,0,0.375,0,0)">
+			<stop offset="0" style="stop-color:rgb(10.196078%,42.745098%,100%);stop-opacity:1;"/>
+			<stop offset="1" style="stop-color:rgb(78.431373%,13.333333%,100%);stop-opacity:1;"/>
+		</linearGradient>
+		<linearGradient id="linear4" gradientUnits="userSpaceOnUse" x1="37" y1="45.875" x2="37" y2="52.136" spreadMethod="reflect" gradientTransform="matrix(0.375,0,0,0.375,0,0)">
+			<stop offset="0" style="stop-color:rgb(42.745098%,78.039216%,100%);stop-opacity:1;"/>
+			<stop offset="1" style="stop-color:rgb(90.196078%,67.058824%,100%);stop-opacity:1;"/>
+		</linearGradient>
+		<linearGradient id="linear5" gradientUnits="userSpaceOnUse" x1="19" y1="45.875" x2="19" y2="52.136" spreadMethod="reflect" gradientTransform="matrix(0.375,0,0,0.375,0,0)">
+			<stop offset="0" style="stop-color:rgb(42.745098%,78.039216%,100%);stop-opacity:1;"/>
+			<stop offset="1" style="stop-color:rgb(90.196078%,67.058824%,100%);stop-opacity:1;"/>
+		</linearGradient>
+	</defs>
+	<g>
+		<path style="stroke:none;fill-rule:nonzero;fill:url(#linear0);" d="M 20.625 6.75 L 7.5 6.75 L 7.5 4.875 C 7.5 4.253906 6.996094 3.75 6.375 3.75 L 3.375 3.75 C 2.753906 3.75 2.25 4.253906 2.25 4.875 C 2.25 5.496094 2.753906 6 3.375 6 L 6.75 6 L 6.75 9 L 16.875 9 L 16.875 8.25 L 7.5 8.25 L 7.5 7.5 L 20.625 7.5 C 20.832031 7.5 21 7.667969 21 7.875 L 21 9.375 C 21 9.726562 20.832031 10.0625 20.550781 10.273438 L 15.550781 14.023438 C 15.355469 14.171875 15.117188 14.25 14.875 14.25 L 7.875 14.25 C 7.253906 14.25 6.75 14.753906 6.75 15.375 L 6.75 16.539062 C 5.894531 16.710938 5.25 17.46875 5.25 18.375 C 5.25 19.410156 6.089844 20.25 7.125 20.25 C 8.03125 20.25 8.789062 19.605469 8.960938 18.75 L 12.039062 18.75 C 12.210938 19.605469 12.96875 20.25 13.875 20.25 C 14.910156 20.25 15.75 19.410156 15.75 18.375 C 15.75 17.339844 14.910156 16.5 13.875 16.5 C 12.96875 16.5 12.210938 17.144531 12.039062 18 L 8.960938 18 C 8.8125 17.265625 8.234375 16.6875 7.5 16.539062 L 7.5 15.375 C 7.5 15.167969 7.667969 15 7.875 15 L 14.875 15 C 15.277344 15 15.679688 14.867188 16 14.625 L 21 10.875 C 21.46875 10.523438 21.75 9.960938 21.75 9.375 L 21.75 7.875 C 21.75 7.253906 21.246094 6.75 20.625 6.75 Z M 3.375 5.25 C 3.167969 5.25 3 5.082031 3 4.875 C 3 4.667969 3.167969 4.5 3.375 4.5 L 6.375 4.5 C 6.582031 4.5 6.75 4.667969 6.75 4.875 L 6.75 5.25 Z M 13.875 17.25 C 14.496094 17.25 15 17.753906 15 18.375 C 15 18.996094 14.496094 19.5 13.875 19.5 C 13.253906 19.5 12.75 18.996094 12.75 18.375 C 12.75 17.753906 13.253906 17.25 13.875 17.25 Z M 8.25 18.375 C 8.25 18.996094 7.746094 19.5 7.125 19.5 C 6.503906 19.5 6 18.996094 6 18.375 C 6 17.753906 6.503906 17.25 7.125 17.25 C 7.746094 17.25 8.25 17.753906 8.25 18.375 Z M 8.25 18.375 "/>
+		<path style="stroke:none;fill-rule:nonzero;fill:url(#linear1);" d="M 6.75 9.75 L 15 9.75 L 15 10.5 L 6.75 10.5 Z M 6.75 9.75 "/>
+		<path style="stroke:none;fill-rule:nonzero;fill:url(#linear2);" d="M 6.75 11.25 L 12.75 11.25 L 12.75 12 L 6.75 12 Z M 6.75 11.25 "/>
+		<path style="stroke:none;fill-rule:nonzero;fill:url(#linear3);" d="M 6.75 12.75 L 10.5 12.75 L 10.5 13.5 L 6.75 13.5 Z M 6.75 12.75 "/>
+		<path style="stroke:none;fill-rule:nonzero;fill:url(#linear4);" d="M 13.875 17.25 C 13.253906 17.25 12.75 17.753906 12.75 18.375 C 12.75 18.996094 13.253906 19.5 13.875 19.5 C 14.496094 19.5 15 18.996094 15 18.375 C 15 17.753906 14.496094 17.25 13.875 17.25 Z M 13.875 17.25 "/>
+		<path style="stroke:none;fill-rule:nonzero;fill:url(#linear5);" d="M 7.125 17.25 C 6.503906 17.25 6 17.753906 6 18.375 C 6 18.996094 6.503906 19.5 7.125 19.5 C 7.746094 19.5 8.25 18.996094 8.25 18.375 C 8.25 17.753906 7.746094 17.25 7.125 17.25 Z M 7.125 17.25 "/>
+	</g>
+</svg>

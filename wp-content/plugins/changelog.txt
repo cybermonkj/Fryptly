@@ -1,0 +1,198 @@
+Version 3.5 - 8 November, 2020
+- Replaced Optimizations with Enhancements
+- Added background sync API support
+- Added persistent storage API support
+- Added web share API support with button
+- Added web share target API support
+- Added screen wake lock API support
+- Added skeleton loading option to preloader
+- Added new icons to navigation tab bar
+- Added two new icon styles on navigation tab bar
+- Added pills for indicating new and beta features
+- Improved preloaders performance
+- Fixed related application property issue
+
+Version 3.4 - 3 November, 2020
+- Improved toast messages
+- Fixed minor admin UI issues
+
+Version 3.3 - 3 November, 2020
+- Redesigned navigation tab bar
+- Added icon style option to navigation tab bar
+- Added WooCommerce cart count on navigation tab bar cart icon
+- Added related application propery to Manifest
+- Added tooltip on subscribe notification button
+- Added automated push notifications for BuddyPress
+- Added option to select additional components to Ajaxify
+- Added various styled preloaders
+- Added custom style option to FBIA
+- Fixed minor ServiceWorker preload issue
+- Fixed license deactivation every week issue
+
+Version 3.2 - 16 October, 2020
+- Added categories property in Manifest
+- Added related application properties in Manifest
+- Improved Manifest and ServiceWorker generation
+- Improved AMP
+- Fixed page caching
+
+Version 3.1 - 6 October, 2020
+- Added styling options for push notifications prompt
+- Added push notifications button behavior option
+- Added new order and low stock automatic notifications for admins
+- Improved AMP
+- Improved Manifest and ServiceWorker generation
+- Improved page caching and offline experience
+- Improved compatibility with OneSignal
+- Maskable icon is now enabled by default
+- Fixed AMP all content serving
+
+Version 3.0 - 20 September, 2020
+- Improved AMP
+- Direct push prompt is now replaced with custom prompt
+- Fixed push payload issue
+- Fixed errors within push subscribers list
+
+Version 2.9 - 6 September, 2020
+- Added automatic push subscription updating
+- Improved Chrome installation prompts performance
+- Fixed minor issues in AMP
+- Fixed subscribers list not showing sometimes
+- Fixed alternative prompt display issue
+- Fixed dynamic manifest front page detection
+- Fixed OneSignal compability issue
+- Removed AMP generation strategy option
+
+Version 2.8 - 1 September, 2020
+- Added mobile redirection option for AMP
+- Added paird browsing mode on AMP
+- Improved AMP
+- Fixed settings page not loading sometimes
+
+Version 2.7 - 18 August, 2020
+- Added alternative push subscribe prompt option
+- Added registered users in push subscribers list
+- Added option to enable preloader only for mobile
+- Migrated some JS strings into PHP for translations
+- Made send notification function static for better usage
+- Fixed unexpected errors on post editing screens
+- Fixed support ticket sending issue
+- Fixed WP rocket compability issue
+
+Version 2.6 - 22 July, 2020
+- Improved push notifications debugging
+- Fixed app shortcodes causing invalid Manifest
+- Fixed license removing issue
+
+Version 2.5 - 18 July, 2020
+- Added new types of content to push notification messages
+- Added segmentation ability to push subscribe users
+- Added scope propery in Manifest
+- Added screenshots propery in Manifest
+- Added app shortcuts option
+- Added dynamic Manifest option
+- Added maskable icon as option
+- Added more options on navigation tab bar with direct search
+- Added sending automated push notifications on certain events
+- Added PWA to APK generation option via Trusted Web Activity
+- Improved AMP
+- Fixed prealoder icon moving right glitch
+- Fixed preloader causing notice on Firefox and Safari
+- Fixed navigation tab bar covering subscribe button and toast messages
+- Fixed problem with security plugins
+- Fixed unexpected license deactivation issue
+
+Version 2.4 - 21 June, 2020
+- Added app like mobile tab bar menu
+- Added ajaxify website option
+- Fixed notice error on plugins screen
+- Fixed new installation overlay option missing from settings
+- Fixed buttons not fitting texts on admin panel
+- Fixed apple touch icon problem
+- Improved asset dependency loading
+
+Version 2.3 - 10 June, 2020
+- Added new type of installation overlay
+- Added license information section into Overview tab
+- Added maskable icon support for PWA
+- Added AMP generation strategies
+- Fixed offline content issue in ServiceWorker
+- Fixed push subscribers list overflow
+- Improved installation overlays performance
+- Improved preloader performance
+- Improved verification for more security
+
+Version 2.2 - May 24, 2020
+- Added more functionality to shortcode install button
+- Added options to completly disable PWA, AMP or FBIA
+- Added caching strategies for assets, images, fonts and other content
+- Added offline support option for Google Analytics
+- Added UTM tracking for homescreen app and push notifications
+- Improved compatibility with subfolder installations
+- Improved overall performance of the application
+
+Version 2.1 - May 14, 2020
+- Fixed select input issue
+- Fixed subscribe button not showing sometimes
+- Fixed install button appearing on PWA version
+- Improved page caching for offline usage
+- Improved preloader performance
+- Improved push notification payload sending
+
+Version 2.0 - April 27, 2020
+- Fixed offline pages causing ServiceWorker to fail
+- Improved code for stability
+- Improved AMP generation
+- Added new analytics in AMP
+- Added support for older PHP versions
+- Added support for WP Rocket
+- Added requires plugin header information
+
+Version 1.9 – April 11, 2020
+- Optimized code for more security
+- Fixed push notification error
+
+Version 1.8 – April 10, 2020
+- Fixed some AMP errors
+- Small stability improvements
+- Migrated Firebase push notifications to VAPID
+- Added automatic renewal of push subscribers list
+- Added custom copyright to FBIA
+- Added RTL Publishing support to FBIA
+- Added option to controll number of articles in FBIA Feed
+- Added article interaction option in FBIA
+- Added option to exclude particular posts from AMP and FBIA
+
+Version 1.7 – April 03, 2020
+- Improved AMP
+- Fixed 500 error on Facebook Instant Articles feed
+- Fixed push notifications Firebase credentials error
+
+Version 1.6 – March 19, 2020
+- Fixed error on push subscribed users list
+- Fixed subscribe button not displaying sometimes
+
+Version 1.5 – March 08, 2020
+- Updated AMP to new version
+
+Version 1.4 – March 08, 2020
+- Improved selecting pages for offline content
+- Optimized code for more stability
+- Removed Reactify feature as it is not usefull in modern browsers
+
+Version 1.3 – February 24, 2020
+- Minor bugs fixed
+- Added shortcode support for inline installation banners
+
+Version 1.2 – February 23, 2020
+- Fixed unexpected deactivation issue
+- Improved service worker and offline usage
+- Added inline installation banners
+- Small stability improvements for JavaScript
+
+Version 1.1 – February 15, 2020
+- Fixed some minor UI issues
+- Improved purchase code verification process
+
+Version 1.0 – February 15, 2020
+- Initial release

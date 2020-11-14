@@ -33,14 +33,21 @@ if (!class_exists('daftplugInstantifyPwaPublicAccessibility')) {
 
             $this->daftplugInstantifyPwaPublic = $daftplugInstantifyPwaPublic;
 
+            if (daftplugInstantify::getSetting('pwaPreloader') == 'on') {
+                add_filter("{$this->optionName}_public_html", array($this, 'renderPreloader'));
+            }
+            
             if (wp_is_mobile()) {
-                if (daftplugInstantify::getSetting('pwaPreloader') == 'on' && (daftplugInstantify::getSetting('pwaPreloaderDeviceTypes') == 'both' || daftplugInstantify::getSetting('pwaPreloaderDeviceTypes') == 'mobile')) {
-                    add_filter("{$this->optionName}_public_html", array($this, 'handlePreloader'));
-                }
-
             	if (daftplugInstantify::getSetting('pwaNavigationTabBar') == 'on') {
-                	add_filter("{$this->optionName}_public_html", array($this, 'handleNavigationTabBar'));
-            	}
+                    add_filter("{$this->optionName}_public_html", array($this, 'renderNavigationTabBar'));
+                    if (daftplugInstantify::isWooCommerceActive()) {
+                        add_filter('woocommerce_add_to_cart_fragments', array($this, 'refreshCartItemsCount'));
+                    }
+                }
+                
+                if (daftplugInstantify::getSetting('pwaWebShareButton') == 'on') {
+                    add_filter("{$this->optionName}_public_html", array($this, 'renderWebShareButton'));
+                }
 
             	if (daftplugInstantify::getSetting('pwaToastMessages') == 'on') {
                 	add_filter("{$this->optionName}_public_js", array($this, 'handleToastMessages'));
@@ -49,14 +56,10 @@ if (!class_exists('daftplugInstantifyPwaPublicAccessibility')) {
                 if (daftplugInstantify::getSetting('pwaSwipeNavigation') == 'on') {
                     add_filter("{$this->optionName}_public_js_vars", array($this, 'addSwipeJsVars'));
                 }
-            } else {
-                if (daftplugInstantify::getSetting('pwaPreloader') == 'on' && (daftplugInstantify::getSetting('pwaPreloaderDeviceTypes') == 'both' || daftplugInstantify::getSetting('pwaPreloaderDeviceTypes') == 'desktop')) {
-                    add_filter("{$this->optionName}_public_html", array($this, 'handlePreloader'));
-                }
             }
     	}
         
-        public function handlePreloader() {
+        public function renderPreloader() {
             if (function_exists('is_amp_endpoint') && is_amp_endpoint()) {
                 return;
             }
@@ -64,12 +67,28 @@ if (!class_exists('daftplugInstantifyPwaPublicAccessibility')) {
             include_once($this->daftplugInstantifyPwaPublic->partials['preloader']);
         }
 
-        public function handleNavigationTabBar() {
+        public function renderNavigationTabBar() {
             if (function_exists('is_amp_endpoint') && is_amp_endpoint()) {
                 return;
             }
 
             include_once($this->daftplugInstantifyPwaPublic->partials['navigationTabBar']);
+        }
+
+        public function refreshCartItemsCount($fragments) {
+            ob_start();
+            echo '<span class="daftplugPublicNavigationTabBar_cartcount">'.sizeof(WC()->cart->get_cart()).'</span>';
+            $fragments['.daftplugPublicNavigationTabBar_cartcount'] = ob_get_clean();
+
+            return $fragments;
+        }
+        
+        public function renderWebShareButton() {
+            if (function_exists('is_amp_endpoint') && is_amp_endpoint()) {
+                return;
+            }
+
+            include_once($this->daftplugInstantifyPwaPublic->partials['webShareButton']);
         }
 
         public function handleToastMessages() {
@@ -79,11 +98,14 @@ if (!class_exists('daftplugInstantifyPwaPublicAccessibility')) {
 
             $home = esc_html__('Homepage Opened', $this->textDomain);
             $post = esc_html__('Post Opened', $this->textDomain);
+            $product = esc_html__('Product Opened', $this->textDomain);
             $page = esc_html__('Page Opened', $this->textDomain);
+            $cart = esc_html__('Cart Opened', $this->textDomain);
+            $checkout = esc_html__('Checkout Opened', $this->textDomain);
             $notFound = esc_html__('Page Not Found', $this->textDomain);
             $search = esc_html__('Search Results', $this->textDomain);
             $category = esc_html__('Category Opened', $this->textDomain);
-            $archive = esc_html__('Archive Opened', $this->textDomain);
+            $shop = esc_html__('Shop Opened', $this->textDomain);
             $tag = esc_html__('Tag Opened', $this->textDomain);
             $author = esc_html__('Author Opened', $this->textDomain);
 
@@ -94,17 +116,39 @@ if (!class_exists('daftplugInstantifyPwaPublicAccessibility')) {
                           position: 'bottom',
                       });";
             } elseif (is_single()) {
-                echo "jQuery.toast({
-                          title: '{$post}',
-                          duration: 3000,
-                          position: 'bottom',
-                      });";
+                if (function_exists('is_product') && is_product()) {
+                    echo "jQuery.toast({
+                        title: '{$product}',
+                        duration: 3000,
+                        position: 'bottom',
+                    });";
+                } else {
+                    echo "jQuery.toast({
+                        title: '{$post}',
+                        duration: 3000,
+                        position: 'bottom',
+                    });";
+                }
             } elseif (is_page()) {
-                echo "jQuery.toast({
-                          title: '{$page}',
-                          duration: 3000,
-                          position: 'bottom',
-                      });";
+                if (function_exists('is_cart') && is_cart()) {
+                    echo "jQuery.toast({
+                        title: '{$cart}',
+                        duration: 3000,
+                        position: 'bottom',
+                    });";
+                } elseif (function_exists('is_checkout') && is_checkout()) {
+                    echo "jQuery.toast({
+                        title: '{$checkout}',
+                        duration: 3000,
+                        position: 'bottom',
+                    });";
+                } else {
+                    echo "jQuery.toast({
+                        title: '{$page}',
+                        duration: 3000,
+                        position: 'bottom',
+                    });";
+                }
             } elseif (is_404()) {
                 echo "jQuery.toast({
                           title: '{$notFound}',
@@ -123,9 +167,9 @@ if (!class_exists('daftplugInstantifyPwaPublicAccessibility')) {
                           duration: 3000,
                           position: 'bottom',
                       });";
-            } elseif (is_archive()) {
+            } elseif (function_exists('is_shop') && is_shop()) {
                 echo "jQuery.toast({
-                          title: '{$archive}',
+                          title: '{$shop}',
                           duration: 3000,
                           position: 'bottom',
                       });";

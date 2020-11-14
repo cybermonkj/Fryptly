@@ -3,7 +3,7 @@
 Plugin Name: DaftPlug Instantify - PWA & Google AMP & Facebook IA
 Description: Take the user experience to the next level with future of mobile web: Progressive Web Apps (PWA), Google Accelerated Mobile Pages (AMP) and Facebook Instant Articles (FBIA).
 Plugin URI: https://daftplug.com/applications/instantify
-Version: 3.0
+Version: 3.5
 Author: DaftPlug
 Author URI: https://daftplug.com/
 Text Domain: daftplug-instantify
@@ -15,13 +15,12 @@ Requires PHP: 7.0
 if (!defined('ABSPATH')) exit;
 
 require_once('includes/class-plugin.php');
-update_option("daftplug_instantify_purchase_code", "05801BAD-536B47CC-85DBCBD3-91FD5EAB");
-
+update_option( 'daftplug_instantify_purchase_code', '*************' );
 new daftplugInstantify(array(
         'name' => esc_html__('DaftPlug Instantify - PWA & Google AMP & Facebook IA'),
         'description' => esc_html__('Take the user experience to the next level with future of mobile web: Progressive Web Apps (PWA), Google Accelerated Mobile Pages (AMP) and Facebook Instant Articles (FBIA).'),
         'slug' => 'daftplug-instantify',
-        'version' => '3.0',
+        'version' => '3.5',
         'text_domain' => 'daftplug-instantify',
         'option_name' => 'daftplug_instantify',
 

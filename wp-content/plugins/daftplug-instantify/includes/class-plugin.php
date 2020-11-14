@@ -55,7 +55,7 @@ if (!class_exists('daftplugInstantify')) {
 
             self::$website = parse_url(site_url(), PHP_URL_HOST);
 
-            $this->purchaseCode = "B5E0B5F8-DD8689E6-ACA49DD6-E6E1A930";
+            $this->purchaseCode = get_option("{$this->optionName}_purchase_code");
 
             $this->capability = 'manage_options';
 
@@ -69,12 +69,16 @@ if (!class_exists('daftplugInstantify')) {
                 'pwaStartPage' => trailingslashit(home_url('/', 'https')),
                 'pwaDescription' => get_bloginfo('description'),
                 'pwaIcon' => '',
-                'pwaIconMaskable' => 'off',
                 'pwaDisplayMode' => 'standalone',
                 'pwaOrientation' => 'any',
                 'pwaIosStatusBarStyle' => 'default',
-                'pwaThemeColor' => '',
-                'pwaBackgroundColor' => '',
+                'pwaThemeColor' => '#FFFFFF',
+                'pwaBackgroundColor' => '#FFFFFF',
+                'pwaCategories' => array(),
+                'pwaRelatedApplication' => 'off',
+                'pwaRelatedApplicationPlatform' => '',
+                'pwaRelatedApplicationUrl' => '',
+                'pwaRelatedApplicationId' => '',
                 'pwaAppShortcut1' => '',
                 'pwaAppShortcut1Name' => '',
                 'pwaAppShortcut1Url' => '',
@@ -103,63 +107,94 @@ if (!class_exists('daftplugInstantify')) {
                 'pwaInstallButtonText' => 'Install App',
                 'pwaInstallButtonBackgroundColor' => '#0A10FF',
                 'pwaInstallButtonTextColor' => '#FFFFFF',
-                'pwaOfflinePage' => '',
-                'pwaOfflineContent' => array(''),
+                'pwaOfflineFallbackPage' => '',
                 'pwaOfflineNotification' => 'on',
                 'pwaOfflineForms' => 'off',
                 'pwaOfflineGoogleAnalytics' => 'off',
-                'pwaOfflineDefaultStrategy' => 'networkFirst',
-                'pwaOfflineAssetsStrategy' => 'staleWhileRevalidate',
-                'pwaOfflineFontsStrategy' => 'cacheFirst',
-                'pwaOfflineImagesStrategy' => 'cacheFirst',
-                'pwaAjaxify' => 'off',
-                'pwaAjaxifyForms' => 'off',
+                'pwaOfflineHtmlStrategy' => 'StaleWhileRevalidate',
+                'pwaOfflineJavascriptStrategy' => 'StaleWhileRevalidate',
+                'pwaOfflineStylesheetsStrategy' => 'StaleWhileRevalidate',
+                'pwaOfflineImagesStrategy' => 'StaleWhileRevalidate',
+                'pwaOfflineFontsStrategy' => 'StaleWhileRevalidate',
                 'pwaNavigationTabBar' => 'off',
                 'pwaNavigationTabBarBgColor' => '#FFFFFF',
-                'pwaNavigationTabBarIconColor' => '#99A3BA',
-                'pwaNavigationTabBarIconActiveColor' => '#2552FE',
-                'pwaNavigationTabBarHome' => '',
-                'pwaNavigationTabBarSearch' => '*directSearch*',
-                'pwaNavigationTabBarShop' => '',
-                'pwaNavigationTabBarCart' => '',
-                'pwaNavigationTabBarCheckout' => '',
-                'pwaNavigationTabBarNotifications' => '',
-                'pwaNavigationTabBarCategories' => '',
-                'pwaNavigationTabBarProfile' => '',
-                'pwaNavigationTabBarAbout' => '',
-                'pwaNavigationTabBarContact' => '',
-                'pwaNavigationTabBarSettings' => '',
+                'pwaNavigationTabBarIconColor' => '#B3B9CA',
+                'pwaNavigationTabBarIconActiveColor' => '#FFFFFF',
+                'pwaNavigationTabBarIconActiveBgColor' => '#2552FE',
+                'pwaNavigationTabBarIconStyle' => 'default',
+                'pwaNavigationTabBarItem1' => '',
+                'pwaNavigationTabBarItem1Icon' => '',
+                'pwaNavigationTabBarItem1Page' => '',
+                'pwaNavigationTabBarItem2' => '',
+                'pwaNavigationTabBarItem2Icon' => '',
+                'pwaNavigationTabBarItem2Page' => '',
+                'pwaNavigationTabBarItem3' => '',
+                'pwaNavigationTabBarItem3Icon' => '',
+                'pwaNavigationTabBarItem3Page' => '',
+                'pwaNavigationTabBarItem4' => '',
+                'pwaNavigationTabBarItem4Icon' => '',
+                'pwaNavigationTabBarItem4Page' => '',
+                'pwaNavigationTabBarItem5' => '',
+                'pwaNavigationTabBarItem5Icon' => '',
+                'pwaNavigationTabBarItem5Page' => '',
+                'pwaNavigationTabBarItem6' => '',
+                'pwaNavigationTabBarItem6Icon' => '',
+                'pwaNavigationTabBarItem6Page' => '',
+                'pwaNavigationTabBarItem7' => '',
+                'pwaNavigationTabBarItem7Icon' => '',
+                'pwaNavigationTabBarItem7Page' => '',
+                'pwaWebShareButton' => 'off',
+                'pwaWebShareButtonIconColor' => '#FFFFFF',
+                'pwaWebShareButtonBgColor' => '#3740FF',
+                'pwaWebShareButtonPosition' => 'bottom-right',
                 'pwaPullDownNavigation' => 'off',
-                'pwaPullDownNavigationBgColor' => '',
-                'pwaToastMessages' => 'on',
+                'pwaPullDownNavigationBgColor' => '#3740FF',
                 'pwaSwipeNavigation' => 'off',
                 'pwaShakeToRefresh' => 'off',
-                'pwaVibration' => 'off',
                 'pwaPreloader' => 'off',
-                'pwaPreloaderDeviceTypes' => 'both',
-                'pwaCssDeliveryOptimization' => 'off',
-                'pwaJsDeliveryOptimization' => 'off',
-                'pwaCacheMinify' => 'off',
-                'pwaCompression' => 'off',
-                'pwaCachingHeaders' => 'off',
+                'pwaPreloaderStyle' => 'default',
+                'pwaToastMessages' => 'on',
+                'pwaAjaxify' => 'off',
+                'pwaAjaxifyForms' => 'off',
+                'pwaAjaxifySelectors' => '',
+                'pwaBackgroundSync' => 'off',
+                'pwaPersistentStorage' => 'off',
+                'pwaWebShareTarget' => 'off',
+                'pwaWebShareTargetAction' => '',
+                'pwaWebShareTargetUrlQuery' => '',
+                'pwaVibration' => 'off',
+                'pwaScreenWakeLock' => 'off',
                 'pwaPushPrompt' => 'on',
                 'pwaPushPromptMessage' => 'We would like to show you notifications for the latest news and updates.',
+                'pwaPushPromptTextColor' => '#444F5B',
+                'pwaPushPromptBgColor' => '#FFFFFF',
                 'pwaPushButton' => 'on',
                 'pwaPushButtonIconColor' => '#FFFFFF',
                 'pwaPushButtonBgColor' => '#FF3838',
                 'pwaPushButtonPosition' => 'bottom-left',
-                'pwaPushNewPost'=> 'off',
-                'pwaPushNewPostPostTypes'=> array('post'),
-                'pwaPushNewProduct'=> 'off',
-                'pwaPushPriceDrop'=> 'off',
-                'pwaPushSalePrice'=> 'off',
-                'pwaPushBackInStock'=> 'off',
+                'pwaPushButtonBehavior' => 'shown',
+                'pwaPushNewContent' => 'off',
+                'pwaPushNewContentPostTypes' => array('post'),
+                'pwaPushWooNewProduct' => 'off',
+                'pwaPushWooPriceDrop' => 'off',
+                'pwaPushWooSalePrice' => 'off',
+                'pwaPushWooBackInStock' => 'off',
+                'pwaPushWooNewOrder' => 'off',
+                'pwaPushWooNewOrderRoles' => array('administrator'),
+                'pwaPushWooLowStock' => 'off',
+                'pwaPushWooLowStockRole' => array('administrator'),
+                'pwaPushWooLowStockThreshold' => '5',
+                'pwaPushBpMemberMention' => 'off',
+                'pwaPushBpMemberReply' => 'off',
+                'pwaPushBpNewMessage' => 'off',
+                'pwaPushBpFriendRequest' => 'off',
+                'pwaPushBpFriendAccepted' => 'off',
                 'amp' => 'on',
                 'ampMode' => 'paired',
                 'ampMobileRedirect' => 'off',
                 'ampOnAll' => 'on',
-                'ampOnPages' => '',
-                'ampOnPostTypes' => '',
+                'ampOnPages' => array('post'),
+                'ampOnPostTypes' => array('is_singular'),
                 'ampAdSenseAutoAds' => 'off',
                 'ampAdSenseAutoAdsClient' => '',
                 'ampAdAboveContentSize' => 'responsive',
@@ -201,6 +236,7 @@ if (!class_exists('daftplugInstantify')) {
                 'fbia' => 'on',
                 'fbiaPageId' => '',
                 'fbiaPostTypes' => array('post'),
+                'fbiaArticleStyle' => 'default',
                 'fbiaCopyright' => '',
                 'fbiaRtlPublishing' => 'off',
                 'fbiaArticleQuantity' => '10',
@@ -232,8 +268,8 @@ if (!class_exists('daftplugInstantify')) {
                    $this->daftplugInstantifyFbia = new daftplugInstantifyFbia($config);
                 }
 
-                if (!wp_next_scheduled("{$this->optionName}_verify_license_schedule")) {
-                    wp_schedule_event(time(), 'weekly', "{$this->optionName}_verify_license_schedule");
+                if (!wp_next_scheduled("{$this->optionName}_verify_license_schedule_weekly")) {
+                    wp_schedule_event(time(), 'weekly', "{$this->optionName}_verify_license_schedule_weekly");
                 }
             }
 
@@ -252,8 +288,7 @@ if (!class_exists('daftplugInstantify')) {
             register_activation_hook($this->pluginFile, array($this, 'onActivate'));
             add_action('upgrader_process_complete', array($this, 'onUpdate'), 10, 2);
             register_deactivation_hook($this->pluginFile, array($this, 'onDeactivate'));
-            add_action("{$this->optionName}_verify_license_schedule", array($this, 'verifyLicenseSchedule'));
-            add_filter('cron_schedules', array($this, 'addWeeklySchedules'));
+            add_action("{$this->optionName}_verify_license_schedule_weekly", array($this, 'verifyLicenseSchedule'));
         }
 
         public function loadTextDomain() {
@@ -343,17 +378,12 @@ if (!class_exists('daftplugInstantify')) {
         public function verifyLicenseSchedule() {
             $verify = $this->handleLicense($this->purchaseCode, 'verify');
 
-           
+            if ($verify->verification->code == '404' || $verify->verification->code == '403') {
+                delete_option("{$this->optionName}_purchase_code");
+                include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+                deactivate_plugins($this->pluginBasename);
+            }
         }
-
-        public function addWeeklySchedules($schedules) {
-            $schedules['weekly'] = array(
-                'interval' => 604800,
-                'display' => __('Once Weekly')
-            );
-
-            return $schedules;
-         }
 
         public static function handleLicense($purchaseCode, $action) {
             $params = array(
@@ -361,17 +391,19 @@ if (!class_exists('daftplugInstantify')) {
                     'action' => $action,
                     'slug' => urlencode(self::$slug),
                     'item_id' => urlencode(self::$itemId),
-                    'purchase_code' => urlencode('B5E0B5F8-DD8689E6-ACA49DD6-E6E1A930'),
+                    'purchase_code' => urlencode($purchaseCode),
                     'website' => self::$website
                 ),
                 'user-agent' => 'WordPress/'.get_bloginfo('version').'; '.get_bloginfo('url')
             );
         
-            $response = 200;
+            $response = wp_remote_post(self::$verifyUrl, $params);
         
-            
-            $result = json_decode(wp_remote_retrieve_body($response));
-            
+            if (!is_wp_error($response) || wp_remote_retrieve_response_code($response) === 200) {
+                $result = json_decode(wp_remote_retrieve_body($response));
+            } else {
+				$result = $response->get_error_message();
+			}
 
             return $result;
         }
@@ -438,13 +470,14 @@ if (!class_exists('daftplugInstantify')) {
 
         public static function isWooCommerceActive() {
             include_once(ABSPATH . 'wp-admin/includes/plugin.php');
-            if (is_plugin_active('woocommerce/woocommerce.php')) {
-                return true;
-            } else {
-                return false;
-            }
+            return is_plugin_active('woocommerce/woocommerce.php');
         }
 
+        public static function isBuddyPressActive() {
+            include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+            return is_plugin_active('buddypress/bp-loader.php');
+        }
+        
         public static function getCurrentUrl() {
             $http = 'http';
             if (isset($_SERVER['HTTPS'])) {

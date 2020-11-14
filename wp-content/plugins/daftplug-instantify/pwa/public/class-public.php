@@ -68,6 +68,11 @@ if (!class_exists('daftplugInstantifyPwaPublic')) {
             if (wp_is_mobile()) {
                 wp_enqueue_script("{$this->slug}-pwa-garlic", plugins_url('pwa/public/assets/js/script-garlic.js', $this->pluginFile), array('jquery'), $this->version, true);
 
+                if (daftplugInstantify::getSetting('pwaNavigationTabBar') == 'on') {
+                    wp_enqueue_script("{$this->slug}-pwa-svginject", plugins_url('pwa/public/assets/js/script-svginject.js', $this->pluginFile), array('jquery'), $this->version, true);
+                    $this->dependencies[] = "{$this->slug}-pwa-svginject";
+                }
+
                 if (daftplugInstantify::getSetting('pwaPullDownNavigation') == 'on') {
                     wp_enqueue_script("{$this->slug}-pwa-pulltonavigate", plugins_url('pwa/public/assets/js/script-pulltonavigate.js', $this->pluginFile), array(), $this->version, true);
                     $this->dependencies[] = "{$this->slug}-pwa-pulltonavigate";
@@ -95,7 +100,7 @@ if (!class_exists('daftplugInstantifyPwaPublic')) {
 
     	public function generatePartials() {
             $partials = array(
-                'manifestMetaTags' => plugin_dir_path(__FILE__) . implode(DIRECTORY_SEPARATOR, array('partials', 'display-manifestmetatags.php')),
+                'metaTags' => plugin_dir_path(__FILE__) . implode(DIRECTORY_SEPARATOR, array('partials', 'display-metatags.php')),
                 'rotateNotice' => plugin_dir_path(__FILE__) . implode(DIRECTORY_SEPARATOR, array('partials', 'display-rotatenotice.php')),
                 'fullscreenOverlays' => plugin_dir_path(__FILE__) . implode(DIRECTORY_SEPARATOR, array('partials', 'display-fullscreenoverlays.php')),
                 'headerOverlay' => plugin_dir_path(__FILE__) . implode(DIRECTORY_SEPARATOR, array('partials', 'display-headeroverlay.php')),
@@ -106,6 +111,7 @@ if (!class_exists('daftplugInstantifyPwaPublic')) {
                 'pushPrompt' => plugin_dir_path(__FILE__) . implode(DIRECTORY_SEPARATOR, array('partials', 'display-pushprompt.php')),
                 'pushButton' => plugin_dir_path(__FILE__) . implode(DIRECTORY_SEPARATOR, array('partials', 'display-pushbutton.php')),
                 'navigationTabBar' => plugin_dir_path(__FILE__) . implode(DIRECTORY_SEPARATOR, array('partials', 'display-navigationtabbar.php')),
+                'webShareButton' => plugin_dir_path(__FILE__) . implode(DIRECTORY_SEPARATOR, array('partials', 'display-websharebutton.php')),
             );
 
             return $partials;

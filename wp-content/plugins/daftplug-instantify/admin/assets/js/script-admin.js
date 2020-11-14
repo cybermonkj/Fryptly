@@ -211,9 +211,8 @@ jQuery(function() {
     // Handle add field button
     daftplugAdmin.find('.daftplugAdminButton.-addField').each(function(e) {
         var self = jQuery(this);
-        var addTaget = self.attr('data-add');
-        var max = parseInt(self.attr('data-max'));
-        var miniFieldset = daftplugAdmin.find('.-miniFieldset[class*="-'+addTaget+'"]');
+        var addTarget = self.attr('data-add');
+        var miniFieldset = daftplugAdmin.find('.-miniFieldset[class*="-'+addTarget+'"]');
         var i = 0;
 
         miniFieldset.each(function(e) {
@@ -230,7 +229,7 @@ jQuery(function() {
         });
 
         miniFieldset.prepend(`
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="daftplugAdminMinifielset_close -iconClose">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="daftplugAdminMiniFieldset_close -iconClose">
                 <g stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="10" cy="10" r="10" id="circle"></circle>
                     <path d="M7,7 L13,13" id="line"></path>
@@ -239,21 +238,21 @@ jQuery(function() {
             </svg>
         `);
 
-        var close = miniFieldset.find('.daftplugAdminMinifielset_close');
+        var close = miniFieldset.find('.daftplugAdminMiniFieldset_close');
 
         self.click(function(e) {  
             i++;
-            miniFieldset.filter('.-miniFieldset[class*="-'+addTaget+i+'"]').show();
-            miniFieldset.find('.daftplugAdminInputCheckbox_field[id="'+addTaget+i+'"]').prop('checked', true).change();
-            if (i == max) {
+            miniFieldset.filter('.-miniFieldset[class*="-'+addTarget+i+'"]').show();
+            miniFieldset.find('.daftplugAdminInputCheckbox_field[id="'+addTarget+i+'"]').prop('checked', true).change();
+            if (!miniFieldset.filter('.-miniFieldset[class*="-'+addTarget+(i+1)+'"]').length) {
                 self.hide();
             }
         });
 
         close.click(function(e) {
             self.show();
-            miniFieldset.filter('.-miniFieldset[class*="-' + addTaget+i+'"]').hide();
-            miniFieldset.find('.daftplugAdminInputCheckbox_field[id="'+addTaget+i+'"]').prop('checked', false).change();
+            miniFieldset.filter('.-miniFieldset[class*="-'+addTarget+i+'"]').hide();
+            miniFieldset.find('.daftplugAdminInputCheckbox_field[id="'+addTarget+i+'"]').prop('checked', false).change();
             if (i != 0) {
                 i--;
             }
@@ -264,9 +263,47 @@ jQuery(function() {
     daftplugAdmin.on('mouseenter mouseleave', '[data-tooltip]', function(e) {
         var self = jQuery(this);
         var tooltip = self.attr('data-tooltip');
+        var flow = self.attr('data-tooltip-flow');
 
         if (e.type === 'mouseenter') {
             self.append(`<span class="daftplugAdminTooltip">${tooltip}</span>`);
+            var tooltipEl = self.find('.daftplugAdminTooltip');
+            switch (flow) {
+                case 'top':
+                    tooltipEl.css({
+                        'bottom': 'calc(100% + 5px)',
+                        'left': '50%',
+                        '-webkit-transform': 'translate(-50%, -.5em)',
+                        'transform': 'translate(-50%, -.5em)',
+                    });
+                    break;
+                case 'right':
+                    tooltipEl.css({
+                        'top': '50%',
+                        'left': 'calc(100% + 5px)',
+                        '-webkit-transform': 'translate(.5em, -50%)',
+                        'transform': 'translate(.5em, -50%)',
+                    });
+                    break;
+                case 'bottom':
+                    tooltipEl.css({
+                        'top': 'calc(100% + 5px)',
+                        'left': '50%',
+                        '-webkit-transform': 'translate(-50%, .5em)',
+                        'transform': 'translate(-50%, .5em)',
+                    });
+                    break;
+                case 'left':
+                    tooltipEl.css({
+                        'top': '50%',
+                        'right': 'calc(100% + 5px)',
+                        '-webkit-transform': 'translate(-.5em, -50%)',
+                        'transform': 'translate(-.5em, -50%)',
+                    });
+                    break;
+                default:
+                    
+            }
         }
 
         if (e.type === 'mouseleave') {
@@ -306,6 +343,24 @@ jQuery(function() {
                 <div></div>
             </div>
         `).attr('style', `--size:${size};--duration:${duration}`);
+    });
+
+    // Handle feature pills
+    daftplugAdmin.find('.daftplugAdminFieldset[data-feature-type]').each(function(e) {
+        var self = jQuery(this);
+        var featureType = self.attr('data-feature-type');
+        var title = self.find('.daftplugAdminFieldset_title');
+
+        switch(featureType) {
+            case 'new':
+                title.append(`<span class="daftplugAdminFeaturePill" style="background-color: #F44336;">${featureType}</span>`);
+                break;
+            case 'beta':
+                title.append(`<span class="daftplugAdminFeaturePill" style="background-color: #FFB13E;">${featureType}</span>`);
+                break;
+            default:
+                title.append(`<span class="daftplugAdminFeaturePill">${featureType}</span>`);
+        }
     });
 
     // Handle popup
@@ -482,6 +537,7 @@ jQuery(function() {
         var fieldOption = field.find('option');
         var label = jQuery('label[for="'+field.attr('id')+'"]');
         var placeholder = field.attr('data-placeholder');
+        var maxSelections = field.attr('data-max');
 
         field.after(`<div class="daftplugAdminInputSelect_dropdown"></div>
                      <span class="daftplugAdminInputSelect_placeholder">${placeholder}</span>
@@ -512,42 +568,56 @@ jQuery(function() {
 		            	var self = jQuery(this);
 		                e.stopPropagation();
 		                self.remove();
-		                list.find('.daftplugAdminInputSelect_option[data-value="'+self.attr('data-value')+'"]').removeClass('-selected');
+		                list.find('.daftplugAdminInputSelect_option[data-value="'+self.attr('data-value')+'"]').removeClass('-selected').show();
 		                list.css('top', dropdown.height() + 5).find('.daftplugAdminInputSelect_noselections').remove();
 		                field.find('option[value="'+self.attr('data-value')+'"]').prop('selected', false);
 			            if (dropdown.children(':visible').length === 0) {
 			            	dropdown.removeClass('-hasValue');
-			            }
+                        }
+                        if (dropdown.children().length < maxSelections) {
+                            option.not('.-selected').show();
+                        }
         			});
         		}).addClass('-hasValue');
-                list.find('.daftplugAdminInputSelect_option[data-value="'+self.val()+'"]').addClass('-selected');
+                list.find('.daftplugAdminInputSelect_option[data-value="'+self.val()+'"]').addClass('-selected').hide();
             });
             if (!option.not('.-selected').length) {
-            	list.append('<h5 class="daftplugAdminInputSelect_noselections">No Selections</h5>');
+                list.append('<h5 class="daftplugAdminInputSelect_noselections">No Selections</h5>');
+            }
+            if (option.filter('.-selected').length >= maxSelections) {
+                option.not('.-selected').hide();
+                list.append('<h5 class="daftplugAdminInputSelect_noselections">No Selections</h5>');
             }
         	list.css('top', dropdown.height() + 5);
         	option.click(function(e) {
         		var self = jQuery(this);
 				e.stopPropagation();
-	        	self.addClass('-selected');
+	        	self.addClass('-selected').hide();
 	        	field.find('option[value="'+self.attr('data-value')+'"]').prop('selected', true);
         		dropdown.append(function(e) {
         			return jQuery('<span class="daftplugAdminInputSelect_choice" data-value="'+self.attr('data-value')+'">'+self.children().text()+'<svg class="daftplugAdminInputSelect_deselect -iconX"><use href="#iconX"></use></svg></span>').click(function(e) {
 		            	var self = jQuery(this);
 		                e.stopPropagation();
-		                self.remove();
-		                list.find('.daftplugAdminInputSelect_option[data-value="'+self.attr('data-value')+'"]').removeClass('-selected');
+                        self.remove();
+		                list.find('.daftplugAdminInputSelect_option[data-value="'+self.attr('data-value')+'"]').removeClass('-selected').show();
 		                list.css('top', dropdown.height() + 5).find('.daftplugAdminInputSelect_noselections').remove();
 		                field.find('option[value="'+self.attr('data-value')+'"]').prop('selected', false);
 			            if (dropdown.children(':visible').length === 0) {
 			            	dropdown.removeClass('-hasValue');
-			            }
+                        }
+                        if (dropdown.children().length < maxSelections) {
+                            option.not('.-selected').show();
+                        }
         			});
         		}).addClass('-hasValue');
 	        	list.css('top', dropdown.height() + 5);
 	            if (!option.not('.-selected').length) {
 	            	list.append('<h5 class="daftplugAdminInputSelect_noselections">No Selections</h5>');
-	            }
+                }
+                if (option.filter('.-selected').length >= maxSelections) {
+                    option.not('.-selected').hide();
+                    list.append('<h5 class="daftplugAdminInputSelect_noselections">No Selections</h5>');
+                }
         	});
 	        dropdown.add(label).click(function(e) {
 	            e.stopPropagation();
@@ -558,12 +628,12 @@ jQuery(function() {
         } else {
 	        if (field.find('option:selected').length) {
 	            dropdown.attr('data-value', jQuery(this).find('option:selected').val()).text(jQuery(this).find('option:selected').text()).addClass('-hasValue');
-	            list.find('.daftplugAdminInputSelect_option[data-value="'+jQuery(this).find('option:selected').val()+'"]').addClass('-selected');
+	            list.find('.daftplugAdminInputSelect_option[data-value="'+jQuery(this).find('option:selected').val()+'"]').addClass('-selected').hide();
 	        }
 	        option.click(function(e) {
 	        	var self = jQuery(this);
-	        	option.removeClass('-selected');
-            	self.addClass('-selected');
+	        	option.removeClass('-selected').show();
+            	self.addClass('-selected').hide();
             	fieldOption.prop('selected', false);
             	field.find('option[value="'+self.attr('data-value')+'"]').prop('selected', true);
             	dropdown.text(self.children().text()).addClass('-hasValue');
@@ -796,9 +866,7 @@ jQuery(function() {
                 button.addClass('-loading');
             },
             success: function(response, textStatus, jqXhr) {
-                
-				response = 1;
-				if (response == 1) {
+                if (response == 1) {
                     button.addClass('-success');
                     setTimeout(function() {
                         button.removeClass('-loading -success');
@@ -1164,7 +1232,7 @@ jQuery(function() {
 		var secondsSpent = Number(localStorage.getItem('secondsSpent'));
 		setInterval(function() {
 		    localStorage.setItem('secondsSpent', ++secondsSpent);
-		    if (secondsSpent == 60) {
+		    if (secondsSpent == 400) {
 		        self.addClass('-active');
 		    }
 		}, 1000);
