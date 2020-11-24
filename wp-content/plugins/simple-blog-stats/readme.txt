@@ -9,9 +9,9 @@ Author URI: https://plugin-planet.com/
 Donate link: https://monzillamedia.com/donate.html
 Contributors: specialk
 Requires at least: 4.1
-Tested up to: 5.5
-Stable tag: 20200808
-Version: 20200808
+Tested up to: 5.6
+Stable tag: 20201114
+Version: 20201114
 Requires PHP: 5.6.20
 Text Domain: simple-blog-stats
 Domain Path: /languages
@@ -24,6 +24,7 @@ Displays a wealth of useful statistics about your site.
 == Description ==
 
 [Simple Blog Stats](https://perishablepress.com/simple-blog-stats/) (SBS) provides shortcodes and tags to display site stats in posts, pages, and anywhere in your theme.
+
 
 **Display Statistics**
 
@@ -45,19 +46,23 @@ Displays a wealth of useful statistics about your site.
 
 __NEW!__ Display current number of logged-in users
 
+
 **Plugin Features**
 
 * Uses caching for better performance
 * Provides shortcodes to display stats in Posts and Pages
 * Provides template tags to display stats anywhere in your theme
-* Configure text/markup to appear before and/or after each shortcode
+* Configure text/markup to appear before/after each shortcode
 * Built with the WP API for optimal performance and security
 * Provides slick settings screen with toggling panels
 * Provides option to restore default plugin settings
 * Displays your stats with clean, valid markup
 * Works with or without Gutenberg Block Editor
-* Regularly updated and "future proof"
-* NEW! Display stats via Dashboard widget
+* Plugin is regularly updated and "future proof"
+* Display list of stats via Dashboard widget
+
+__NEW!__ Display number of logged-in users via Dashboard widget
+
 
 **More Statistics**
 
@@ -69,6 +74,7 @@ __NEW!__ Display current number of logged-in users
 * Configure all shortcodes via the plugin settings
 * Eat a bowl of ice cream :)
 
+
 **Privacy**
 
 This plugin does not collect or store any user data. It does not set any cookies, and it does not connect to any third-party locations. Thus, this plugin does not affect user privacy in any way.
@@ -77,7 +83,7 @@ This plugin does not collect or store any user data. It does not set any cookies
 
 == Installation ==
 
-**Installation**
+### How to install ###
 
 1. Upload the plugin to your blog and activate
 2. Visit the settings to configure your options
@@ -85,48 +91,52 @@ This plugin does not collect or store any user data. It does not set any cookies
 [More info on installing WP plugins](https://wordpress.org/support/article/managing-plugins/#installing-plugins)
 
 
-**Usage**
 
-Visit the SBS settings page to configure your shortcodes. Then copy/paste the shortcodes in any Post, Page, or Widget to display your stats. To display your stats anywhere in your theme template, visit the Template Tags section of the settings page.
+### How to use ###
+
+Visit the plugin settings page to configure your shortcodes. Then copy/paste the shortcodes in any Post, Page, or Widget to display your stats. To display your stats anywhere in your theme template, visit the "Template Tags" section of the settings page.
 
 
-**Shortcodes**
+
+### Meet the shortcodes ###
 
 Visit the plugin settings page for a complete list of shortcodes. There you may customize the output of each shortcode. Here is a list of all SBS shortcodes:
 
-
-	[sbs_posts]                = number of posts
-	[sbs_posts_alt]            = number of posts (for sites with LOTS of posts)
+	[sbs_posts]                = number of posts *
+	[sbs_posts_alt]            = number of posts *
 	[sbs_pages]                = number of pages
 	[sbs_drafts]               = number of drafts
-	[sbs_comments]             = number of comments
+	[sbs_comments]             = number of comments *
 	[sbs_moderated]            = moderated comments
 	[sbs_approved]             = approved comments
 	[sbs_users]                = number of users
 	[sbs_cats]                 = number of categories
 	[sbs_tags]                 = number of tags
 	[sbs_tax tax="tax_name"]   = number of taxonomy terms
-	[sbs_word_count id="1"]    = number of words in post 1
+	[sbs_tax_posts ...]        = number of posts for tax term(s) *
+	[sbs_word_count]           = number of words in post *
 	[sbs_word_count_all]       = number of words in all posts
 	[sbs_updated]              = site last updated
 	[sbs_latest_posts]         = displays recent posts
 	[sbs_latest_comments]      = displays recent comments
-	[sbs_roles role="all"]     = number of users per role
+	[sbs_roles]                = number of users per role *
 	[sbs_cpts_count]           = list of CPT counts
 	[sbs_cpt_count cpt="post"] = number of any post type
 	[sbs_blog_stats]           = displays list of blog stats
-	[sbs_logged_users]         = number of logged-in users
-	[sbs_media_count]          = number of media files (see note below)
+	[sbs_logged_users]         = number of logged-in users *
+	[sbs_media_count]          = number of media files *
+	
+	* See notes below.
 
 
 **[sbs_posts]**
 
 The `[sbs_posts]` shortcode accepts several attributes that can be used to customize your post stats:
 
-* `cat` - limit by category (default: empty = all cats)
-* `tag` - limit by tag (default: empty = all tags)
-* `type` - limit by post type (default: empty = post)
-* `status` - limit by post status (default: empty = publish)
+	cat    - limit by category    (default: empty = all cats)
+	tag    - limit by tag         (default: empty = all tags)
+	type   - limit by post type   (default: empty = post)
+	status - limit by post status (default: empty = publish)
 
 So by default, `[sbs_posts]` with no attributes will display the total number of published posts in any category or tag. 
 
@@ -136,11 +146,65 @@ Here is an example that makes use of the attributes:
 
 So this will display all drafts of the custom post type "movie" that are in the "sci-fi" category and tagged as "sequel".
 
-For the `[sbs_posts_alt]` shortcode, it is not as flexible, but does provide a couple of attributes:
+More information about the possible values for these attributes:
+
+* [cat](https://developer.wordpress.org/reference/classes/wp_query/#category-parameters)
+* [tag](https://developer.wordpress.org/reference/classes/wp_query/#tag-parameters)
+* [type](https://developer.wordpress.org/reference/classes/wp_query/#post-type-parameters)
+* [status](https://developer.wordpress.org/reference/classes/wp_query/#status-parameters)
+
+
+**[sbs_posts_alt]**
+
+The `[sbs_posts_alt]` shortcode is for sites with __LOTS__ of posts (like 10,000+). It is not as flexible as `[sbs_posts]`, but does provide a couple of attributes:
 
 	[sbs_posts_alt type="page" status="draft"]
 
-You can change the `type` and `status` of the posts that should be counted.
+You can change the `type` and `status` of the posts that should be counted. Again, this shortcode should be used only for sites with extreme numbers of posts.
+
+
+**[sbs_comments]**
+
+By default, the `[sbs_comments]` shortcode displays the total number of comments for all posts on your site. To display the number of comments only for a specific category, add the `cat` attribute, like so:
+
+	[sbs_comments cat="1"]
+
+You can change the category ID to display number of comments for any category.
+
+
+**[sbs_tax_posts]**
+
+The `[sbs_tax_posts]` shortcode displays the number of posts that belong to a specific post type and taxonomy term(s). Here is an example:
+
+	[sbs_tax_posts tax="taxonomy" terms="term-1, term-2, term-3" type="custom-post-type"]
+
+Then change the attribute values to match your taxonomy, terms, and post type, respectively.
+
+
+**[sbs_word_count]**
+
+The `[sbs_word_count]` displays the number of words in post content. By default it displays number of words in the current post. Or you can specify any post ID:
+
+	[sbs_word_count]         // displays word count of current post
+	[sbs_word_count id="1"]  // displays word count of post with ID = 1
+
+To display the word count for __all posts__, use the shortcode `[sbs_word_count_all]`.
+
+
+**[sbs_roles]**
+
+The `[sbs_roles]` shortcode displays a list of all user roles and corresponding number of users. To display the number of users for a specific role, add the `role` attribute. Examples:
+
+	[sbs_roles]                // displays list of roles and number of users
+	[sbs_roles role="author"]  // displays number of users for specified role
+	[sbs_roles role="all"]     // displays list of roles and number of users
+
+The `role` attribute accepts a value of `all` or any valid user role.
+
+
+**[sbs_logged_users]**
+
+The `[sbs_logged_users]` shortcode can be used to display the number of currently logged-in users. This shortcode does not have any attributes, but does provide a widget that displays the current logged-in user count on the WP Dashboard.
 
 
 **[sbs_media_count]**
@@ -155,63 +219,54 @@ The `[sbs_media_count]` shortcode can display stats for any media type(s). Here 
 	[sbs_media_count]                     = displays number of all media files
 
 
-__Tip:__ you can display only the number (and no text) for certain shortcodes. For example:
 
-	[sbs_cpt_count cpt="post" txt="null"]
-	[sbs_roles role="subscriber" txt="null"]
+### Customize output ###
 
-By setting the value of `txt` to `null`, only the number is displayed. Or you can change the `txt` value to whatever you want.
+Most of the shortcodes display only a number. To customize the number with your own text, visit the plugin settings. There you can add any text or markup that should be displayed before/after each shortcode.
 
-More information about the possible values for these attributes:
+There are three shortcodes that output some default text along with the stats number:
 
-* [cat](https://codex.wordpress.org/Class_Reference/WP_Query#Category_Parameters)
-* [tag](https://codex.wordpress.org/Class_Reference/WP_Query#Tag_Parameters)
-* [type](https://codex.wordpress.org/Class_Reference/WP_Query#Type_Parameters)
-* [status](https://codex.wordpress.org/Class_Reference/WP_Query#Status_Parameters)
+	[sbs_roles]
+	[sbs_cpt_count]
+	[sbs_media_count]
 
+So to customize the text for these shortcodes, you can add a `txt` attribute and set the value to whatever you want, for example:
 
-**More Shortcodes**
+	[sbs_roles txt="Whatever you want"]
+	[sbs_cpt_count txt="Whatever you want"]
+	[sbs_media_count txt="Whatever you want"]
 
-Here you can find information about any new/custom shortcodes and attributes.
+Or if you want to just disable the extra text and display only the number, set the `txt` attribute to `null`, like so:
 
-__Get number of posts with taxonomy term__
+	[sbs_roles txt="null"]
+	[sbs_cpt_count txt="null"]
+	[sbs_media_count txt="null"]
 
-To get the number of posts that belong to a specific post type and taxonomy term, add the following shortcode:
-
-`[sbs_tax_posts tax="taxonomy" terms="term-1, term-2, term-3" type="custom-post-type"]`
-
-Then change the attribute values to match your taxonomy, terms, and post type, respectively.
+That way only the number will be displayed without any other text.
 
 
-__Display the number of comments for any category__
 
-To display the number of comments that exist for a specific category, add the `cat` attribute to the `[sbs_comments]` shortcode, like so:
-
-`[sbs_comments cat="1"]`
-
-Then you can change the category ID to your category.
-
-
-**Like the plugin?**
+### Like the plugin? ###
 
 If you like Simple Blog Stats, please take a moment to [give a 5-star rating](https://wordpress.org/support/plugin/simple-blog-stats/reviews/?rate=5#new-post). It helps to keep development and support going strong. Thank you!
 
 
-**Upgrades**
+
+### Upgrades ###
 
 To upgrade SBS, remove the old version and replace with the new version. Or just click "Update" from the Plugins screen and let WordPress do it for you automatically.
 
-__Note:__ uninstalling the plugin from the WP Plugins screen results in the removal of all settings from the WP database. 
 
 
-**Restore Default Options**
+### Restore Default Options ###
 
 To restore default plugin options, either uninstall/reinstall the plugin, or visit the plugin settings &gt; Restore Default Options.
 
 
-**Uninstalling**
 
-Simple Blog Stats cleans up after itself. All plugin settings will be removed from your database when the plugin is uninstalled via the Plugins screen.
+### Uninstalling ###
+
+Simple Blog Stats cleans up after itself. All plugin settings will be removed from your database when the plugin is uninstalled via the Plugins screen. Any shortcodes that you have added to your posts and pages will __not__ be removed. Likewise any template tags that have been added to your theme template will __not__ be removed.
 
 
 
@@ -232,24 +287,6 @@ More screenshots and information available at the [SBS Homepage](https://perisha
 
 
 == Frequently Asked Questions ==
-
-**How do I use the count-word shortcode?**
-
-There are three ways to count words:
-
-	[sbs_word_count]         // displays word count of current post
-	[sbs_word_count id="1"]  // displays word count of post with ID = 1
-	[sbs_word_count_all]     // displays word count for all published posts
-
-
-**How do I use the user-role shortcode?**
-
-There are three ways to display user roles:
-
-	[sbs_roles]                // displays list of roles and number of users
-	[sbs_roles role="author"]  // displays number of users for specified role
-	[sbs_roles role="all"]     // displays list of roles and number of users
-
 
 **How to limit/customize the number of counted posts?**
 
@@ -281,7 +318,7 @@ And/or purchase one of my premium WordPress plugins:
 * [BBQ Pro](https://plugin-planet.com/bbq-pro/) - Super fast WordPress firewall
 * [Blackhole Pro](https://plugin-planet.com/blackhole-pro/) - Automatically block bad bots
 * [Banhammer Pro](https://plugin-planet.com/banhammer-pro/) - Monitor traffic and ban the bad guys
-* [GA Google Analytics Pro](https://plugin-planet.com/ga-google-analytics-pro/) - Connect your WordPress to Google Analytics
+* [GA Google Analytics Pro](https://plugin-planet.com/ga-google-analytics-pro/) - Connect WordPress to Google Analytics
 * [USP Pro](https://plugin-planet.com/usp-pro/) - Unlimited front-end forms
 
 Links, tweets and likes also appreciated. Thanks! :)
@@ -292,6 +329,13 @@ Links, tweets and likes also appreciated. Thanks! :)
 
 If you like Simple Blog Stats, please take a moment to [give a 5-star rating](https://wordpress.org/support/plugin/simple-blog-stats/reviews/?rate=5#new-post). It helps to keep development and support going strong. Thank you!
 
+
+**20201114**
+
+* Fixes some bugs with PHP 8.0
+* Updates/improves readme.txt/docs
+* Tests on PHP 7.4 and 8.0
+* Tests on WordPress 5.6
 
 **20200808**
 

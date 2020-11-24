@@ -9,9 +9,9 @@
 	Donate link: https://monzillamedia.com/donate.html
 	Contributors: specialk
 	Requires at least: 4.1
-	Tested up to: 5.5
-	Stable tag: 20200808
-	Version: 20200808
+	Tested up to: 5.6
+	Stable tag: 20201114
+	Version: 20201114
 	Requires PHP: 5.6.20
 	Text Domain: simple-blog-stats
 	Domain Path: /languages
@@ -40,7 +40,7 @@ if (!defined('ABSPATH')) die();
 
 
 $sbs_wp_vers = '4.1';
-$sbs_version = '20200808';
+$sbs_version = '20201114';
 $sbs_plugin  = esc_html__('Simple Blog Stats', 'simple-blog-stats');
 $sbs_options = get_option('sbs_options');
 $sbs_path    = plugin_basename(__FILE__); // 'simple-blog-stats/simple-blog-stats.php';
@@ -1049,7 +1049,7 @@ add_filter('plugin_row_meta', 'add_sbs_links', 10, 2);
 function sbs_delete_plugin_options() {
 	delete_option('sbs_options');
 }
-if ($sbs_options['default_options'] == 1) {
+if (isset($sbs_options['default_options']) && $sbs_options['default_options'] == 1) {
 	register_uninstall_hook (__FILE__, 'sbs_delete_plugin_options');
 }
 
@@ -1057,7 +1057,7 @@ if ($sbs_options['default_options'] == 1) {
 
 function sbs_add_defaults() {
 	$tmp = get_option('sbs_options');
-	if(($tmp['default_options'] == '1') || (!is_array($tmp))) {
+	if ((isset($sbs_options['default_options']) && $tmp['default_options'] == '1') || (!is_array($tmp))) {
 		$arr = array(
 			'default_options'    => 0,
 			'count_posts_before' => '<span class="sbs-count-posts">',
